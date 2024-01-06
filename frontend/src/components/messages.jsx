@@ -1,5 +1,7 @@
 import Alert from "@mui/material/Alert"
 import Stack from "@mui/material/Stack"
+import Collapse from '@mui/material/Collapse';
+import Box from '@mui/material/Box';
 
 import { createContext, useState } from "react";
 
@@ -12,10 +14,19 @@ function getLastKey(dict) {
 	return last_key;
 }
 
+function RenderMessage({info}) {
+	return (
+		<Box sx={{width: '20rem'}}>
+			<Collapse in={info.open}>
+				<Alert onClose={info.onDestroy} {...info.props}>{info.content}</Alert>
+			</Collapse>
+		</Box>
+	)
+}
 
 function simpleMakeMessage(
     content,
-	sx,
+	props,
 	messages,
 	setMessages,
 ) {
@@ -30,16 +41,32 @@ function simpleMakeMessage(
 		});
 	}
 
-	const timeout = setTimeout(dismissMessage, 7500);
 
-	function dismissNow() {
+
+	function dismissNow(collapse=true) {
+		if (collapse) {
+			setTimeout(() => dismissNow(false), 1000)
+			setMessages((prevList) => {
+				const newList = { ...prevList };
+				newList[key].open = false;
+				return newList;
+			});
+			return
+		}
 		clearTimeout(timeout);
 		dismissMessage();
 	}
 
-	return (
-		<Alert sx={sx} key={key} onClose={dismissNow}>{content}</Alert>
-	);
+	const timeout = setTimeout(dismissNow, 7500);
+
+	const currentMessageInfo = {
+		content: content,
+		open: true,
+		onDestroy: dismissNow,
+		props: props
+
+	}
+	return currentMessageInfo
 }
 function addMessageToMessages(dict, value) {
 	const last_key = getLastKey(dict);
@@ -56,9 +83,9 @@ function addMessageWithSetMessage(messageElement, setMessages) {
 export function geAllMessages(messages, setMessages) {
 	const addMessage = (message) =>
 		addMessageWithSetMessage(message, setMessages);
-	const simpleAddMessage = (content = "", sx = {}) =>
+	const simpleAddMessage = (content = "", props) =>
 		addMessage(
-			simpleMakeMessage(content, sx, messages, setMessages)
+			simpleMakeMessage(content, props, messages, setMessages)
 		);
 
 	return { simpleAddMessage, addMessage };
@@ -84,7 +111,7 @@ export default function ProvideAndRenderMessages({children, ...props}) {
             >
                 {Object.keys(messages)
                     .reverse()
-                    .map((message) => messages[message])}
+                    .map((message) => <RenderMessage info={messages[message]} />)}
             </Stack>
             {children}
         </MessagesContext.Provider>
