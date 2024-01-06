@@ -14,7 +14,9 @@ function getLastKey(dict) {
 
 
 function simpleMakeMessage(
-    content,
+    content="",
+	messages,
+	setMessages,
 	...props
 ) {
 
@@ -31,12 +33,13 @@ function simpleMakeMessage(
 	const timeout = setTimeout(dismissMessage, 4500);
 
 	function dismissNow() {
+		console.log("happened")
 		clearTimeout(timeout);
 		dismissMessage();
 	}
 
 	return (
-		<Alert {...props} onClose={dismissNow}>{content}</Alert>
+		<Alert {...props} key={key} onClose={dismissNow}>{content}</Alert>
 	);
 }
 function addMessageToMessages(dict, value) {
@@ -54,9 +57,9 @@ function addMessageWithSetMessage(messageElement, setMessages) {
 export function geAllMessages(messages, setMessages) {
 	const addMessage = (message) =>
 		addMessageWithSetMessage(message, setMessages);
-	const simpleAddMessage = (message, type, boldMessage = "") =>
+	const simpleAddMessage = (content = "") =>
 		addMessage(
-			simpleMakeMessage(message, type, boldMessage, messages, setMessages)
+			simpleMakeMessage(content, messages, setMessages)
 		);
 
 	return { simpleAddMessage, addMessage };
