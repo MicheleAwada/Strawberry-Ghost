@@ -1,15 +1,20 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import ProvideAndRenderMessages from "./components/messages";
 
-import T from "@mui/material/Typography"
-import Button from "@mui/material/Button"
+import { MessagesContext } from "./components/messages";
 
 export default function Root() {
     return (
         <ThemeProvider theme={THEME}>
-            <Button variant="contained">Make a Message Pop Up (currently unavailable)</Button>
+            <ProvideAndRenderMessages>
+
+            </ProvideAndRenderMessages>
         </ThemeProvider>
     )
 }
 
 const THEME = createTheme({
  });
+
+
+ export {MessagesContext}
