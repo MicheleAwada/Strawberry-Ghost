@@ -14,10 +14,10 @@ function getLastKey(dict) {
 
 
 function simpleMakeMessage(
-    content="",
+    content,
+	sx,
 	messages,
 	setMessages,
-	...props
 ) {
 
 	const key = getLastKey(messages) + 1; //doesnt exist yet
@@ -30,16 +30,15 @@ function simpleMakeMessage(
 		});
 	}
 
-	const timeout = setTimeout(dismissMessage, 4500);
+	const timeout = setTimeout(dismissMessage, 7500);
 
 	function dismissNow() {
-		console.log("happened")
 		clearTimeout(timeout);
 		dismissMessage();
 	}
 
 	return (
-		<Alert {...props} key={key} onClose={dismissNow}>{content}</Alert>
+		<Alert sx={sx} key={key} onClose={dismissNow}>{content}</Alert>
 	);
 }
 function addMessageToMessages(dict, value) {
@@ -57,9 +56,9 @@ function addMessageWithSetMessage(messageElement, setMessages) {
 export function geAllMessages(messages, setMessages) {
 	const addMessage = (message) =>
 		addMessageWithSetMessage(message, setMessages);
-	const simpleAddMessage = (content = "") =>
+	const simpleAddMessage = (content = "", sx = {}) =>
 		addMessage(
-			simpleMakeMessage(content, messages, setMessages)
+			simpleMakeMessage(content, sx, messages, setMessages)
 		);
 
 	return { simpleAddMessage, addMessage };
@@ -77,6 +76,8 @@ export default function ProvideAndRenderMessages({children, ...props}) {
                     position: "fixed",
                     top: "1rem",
                     right: "1rem",
+					width: '20rem',
+					gap: 1,
                     zIndex: 10000,
                 }}
                 id="messagesStack"
