@@ -96,8 +96,9 @@ const MessagesContext = createContext();
 
 export default function MessagesProvider({children}) {
     const [messages, setMessages] = useState({});
+	const ProviderValue = {...geAllMessages(messages,setMessages), messages, setMessages}
 	return (
-		<MessagesContext.Provider value={geAllMessages(messages,setMessages).simpleAddMessage}>
+		<MessagesContext.Provider value={ProviderValue}>
 			{children}
         </MessagesContext.Provider>
 	);
@@ -105,7 +106,7 @@ export default function MessagesProvider({children}) {
 
 export function RenderMessages({messages = null}) {
 	if (messages===null) {
-		messages = useContext(MessagesContext);
+		messages = useContext(MessagesContext).messages;
 	}
 	return (
 		<Stack
