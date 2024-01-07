@@ -9,6 +9,8 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 
+import useMediaQuery from "@mui//material/useMediaQuery"
+
 export function ProductCategory({ categories }) {
 	//TODO
 }
@@ -58,22 +60,22 @@ export function ProductPrice({ price }) {
 }
 
 export default function ProductItem({ info }) {
+    const isMd = useMediaQuery(theme => theme.breakpoints.up('md'));
 	return (
-		<Grid item xs={12} sm={6} md={4} sx={{ width: "18rem" }}>
-			<Card sx={{ height: "100%" }}>
-				<a href="#">
-					<CardMedia
-						component="div"
-						sx={{
-							pt: "56.25%",
-							bgcolor: "inherit",
-						}}
-						image={info.thumbnail}
-					/>
-				</a>
+		<Grid item xs={12} sm={6} md={4} lg={3}>
+			<Card elevation={4} sx={{ height: "100%", width: "100%" }}>
+                <CardMedia
+                    component="a"
+                    href="#"
+                    sx={{
+                        pt: "75%", //4/3 aspect ratio
+                        bgcolor: "inherit",
+                    }}
+                    image={info.thumbnail}
+                />
 				<CardContent sx={{ flexGrow: 1 }}>
-					<Link href="#" variant="h5" sx={{ display: "inline-block" }}>
-						<Typography variant="h5" component="h2">
+					<Link href="#" variant={isMd ? "h5" : "h6"} sx={{ display: "inline-block" }}>
+						<Typography variant={isMd ? "h5" : "h6"} component="h2">
 							{info.title}
 						</Typography>
 					</Link>
@@ -86,37 +88,5 @@ export default function ProductItem({ info }) {
 				</CardActions>
 			</Card>
 		</Grid>
-	);
-}
-export function ProductItemStretch({ info }) {
-	return (
-		<Card sx={{ width: "100%", height: "12rem", display: "flex", flexDirection: "row" }}>
-                <CardMedia
-                    component="a"
-                    href="#"
-                    sx={{
-                        objectFit: "cover",
-                        aspectRatio: "4/3",
-                        maxHeight: "100%",
-                        bgcolor: "inherit",
-                        flexGrow: 1,
-                    }}
-                    image={info.thumbnail}
-                />
-
-			<Box sx={{ display: "flex", flexDirection: "column", pr: {xs: 2, sm: 6} }}>
-				<CardContent sx={{ flexGrow: 1 }}>
-					<Link href="#" variant="h6" sx={{ display: "inline-block" }}>
-						<Typography variant="h6" component="h2">
-							{info.title}
-						</Typography>
-					</Link>
-					<ProductPrice price={info.price} />
-				</CardContent>
-				<CardActions>
-					<Button variant="contained" size="small">Add to Cart</Button>
-				</CardActions>
-			</Box>
-		</Card>
 	);
 }

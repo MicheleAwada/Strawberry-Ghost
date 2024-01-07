@@ -1,7 +1,8 @@
-import ProductItem, {ProductItemStretch} from "./productItem";
+import ProductItem from "./productItem";
 
 import Stack from "@mui/material/Stack"
 import Box from "@mui/material/Box"
+import Grid from "@mui/material/Grid"
 import Container from "@mui/material/Container"
 
 const products = [
@@ -73,12 +74,9 @@ const products = [
 export default function ProductListView() {
     return (
         <Container maxWidth="lg" sx={{paddingY: 4}}>
-            <Stack flexWrap="wrap" flexDirection="row" sx={{ display: { xs: 'none', md: 'flex' }, gap:2, justifyContent: "space-around"}}>
+            <Grid container spacing={2} sx={{ width: "100%" }}>
                 {products.map((info) => <ProductItem key={info.id} info={info} />)}
-            </Stack>
-            <Stack id="batata" flexWrap="wrap" flexDirection="column" sx={{display: { xs: 'flex', md: 'none' }, gap:2, justifyContent: "space-around"}}>
-                {products.map((info) => <ProductItemStretch key={info.id} info={info} />)}
-            </Stack>
+            </Grid>
         </Container>
     )
 }
