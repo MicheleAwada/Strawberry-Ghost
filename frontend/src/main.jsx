@@ -1,31 +1,45 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-import Root from './root'
 import './index.scss'
+
+import MessagesProvider from "./components/messages";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import {pink, orange} from '@mui/material/colors';
 
-import ProvideAndRenderMessages from "./components/messages";
-
-import { MessagesContext } from "./components/messages";
-
 const THEME = createTheme({
-  palette : {
-    primary: {'main': pink[300]},
-    secondary: {'main': orange[500]},
-  } 
-});
+    palette : {
+      primary: {'main': pink[300]},
+      secondary: {'main': orange[500]},
+    } 
+  });
+
+
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+
+import Root from './root'
+import Index from './routes';
+
+const router = createBrowserRouter(createRoutesFromElements(
+  <Route path='/' element={<Root />}>
+    <Route index element={<Index />} />
+  </Route>
+));
+
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider theme={THEME}>
-      <ProvideAndRenderMessages>
-        <Root />
-      </ProvideAndRenderMessages>
+      <MessagesProvider>
+        <RouterProvider router={router} />
+      </MessagesProvider>
     </ThemeProvider>
   </React.StrictMode>,
 )
-
- export {MessagesContext}
