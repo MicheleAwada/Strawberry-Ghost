@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack"
 import Collapse from '@mui/material/Collapse';
 import Box from '@mui/material/Box';
 
-import { createContext, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 
 function getLastKey(dict) {
 	if (!dict) {
@@ -17,8 +17,10 @@ function getLastKey(dict) {
 function RenderMessage({info}) {
 	return (
 		<Box sx={{width: '20rem'}}>
-			<Collapse in={info.open}>
-				<Alert onClose={info.onDestroy} {...info.props}>{info.content}</Alert>
+			<Collapse in={info.open} onExited={() => info.onDestroy(false)} >
+				<Box sx={{paddingY: 1}}>
+					<Alert onClose={info.onDestroy} {...info.props}>{info.content}</Alert>
+				</Box>
 			</Collapse>
 		</Box>
 	)
@@ -44,8 +46,8 @@ function simpleMakeMessage(
 
 
 	function dismissNow(collapse=true) {
+		clearTimeout(timeout);
 		if (collapse) {
-			setTimeout(() => dismissNow(false), 1000)
 			setMessages((prevList) => {
 				const newList = { ...prevList };
 				newList[key].open = false;
@@ -53,7 +55,6 @@ function simpleMakeMessage(
 			});
 			return
 		}
-		clearTimeout(timeout);
 		dismissMessage();
 	}
 
@@ -63,6 +64,7 @@ function simpleMakeMessage(
 		content: content,
 		open: true,
 		onDestroy: dismissNow,
+		key: key,
 		props: props
 
 	}
@@ -104,14 +106,14 @@ export default function ProvideAndRenderMessages({children, ...props}) {
                     top: "1rem",
                     right: "1rem",
 					width: '20rem',
-					gap: 1,
+					gap: 0,
                     zIndex: 10000,
                 }}
                 id="messagesStack"
             >
                 {Object.keys(messages)
                     .reverse()
-                    .map((message) => <RenderMessage info={messages[message]} />)}
+                    .map((message) => <RenderMessage key={messages[message].key} info={messages[message]} />)}
             </Stack>
             {children}
         </MessagesContext.Provider>
