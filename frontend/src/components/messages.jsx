@@ -64,7 +64,6 @@ function simpleMakeMessage(
 		content: content,
 		open: true,
 		onDestroy: dismissNow,
-		key: key,
 		props: props
 
 	}
@@ -95,29 +94,34 @@ export function geAllMessages(messages, setMessages) {
 
 const MessagesContext = createContext();
 
-export default function ProvideAndRenderMessages({children, ...props}) {
+export default function MessagesProvider({children}) {
     const [messages, setMessages] = useState({});
 	return (
 		<MessagesContext.Provider value={geAllMessages(messages,setMessages).simpleAddMessage}>
-            <Stack
-                {...props}
-                sx={{
-                    position: "fixed",
-                    top: "1rem",
-                    right: "1rem",
-					width: '20rem',
-					gap: 0,
-                    zIndex: 10000,
-                }}
-                id="messagesStack"
-            >
-                {Object.keys(messages)
-                    .reverse()
-                    .map((message) => <RenderMessage key={messages[message].key} info={messages[message]} />)}
-            </Stack>
-            {children}
+			{children}
         </MessagesContext.Provider>
 	);
+}
+
+export function RenderMessages({messages}) {
+	return (
+		<Stack
+		{...props}
+		sx={{
+			position: "fixed",
+			top: "1rem",
+			right: "1rem",
+			width: '20rem',
+			gap: 0,
+			zIndex: 10000,
+		}}
+		id="messagesStack"
+	>
+		{Object.keys(messages)
+			.reverse()
+			.map((messageKey) => <RenderMessage key={messageKey} info={messages[messageKey]} />)}
+	</Stack>
+	)
 }
 
 export { MessagesContext };
