@@ -5,9 +5,9 @@ function sleep(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function lag() {
-	const randomLagLatency = Math.random * 1000 + 600;
-	return sleep(randomLagLatency);
+async function lag() {
+	const randomLagLatency = Math.random() * 1000 + 600;
+	return await sleep(randomLagLatency);
 }
 
 
