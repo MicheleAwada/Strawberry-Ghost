@@ -24,11 +24,11 @@ import {
 } from "react-router-dom";
 
 import Root from './root'
-import Index from './routes';
+import Index, { loader as indexLoader} from './routes/index';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Root />}>
-    <Route index element={<Index />} />
+    <Route index element={<Index />} loader={indexLoader} />
   </Route>
 ));
 
