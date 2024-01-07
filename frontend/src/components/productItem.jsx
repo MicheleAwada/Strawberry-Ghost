@@ -11,10 +11,6 @@ import Link from "@mui/material/Link";
 
 import useMediaQuery from "@mui//material/useMediaQuery"
 
-export function ProductCategory({ categories }) {
-	//TODO
-}
-
 export function ProductPrice({ price, sx, ...props }) {
 	const wholeNumber = Math.floor(price);
 	const decimalNumber = price - wholeNumber;
