@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack"
 import Collapse from '@mui/material/Collapse';
 import Box from '@mui/material/Box';
 
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 function getLastKey(dict) {
 	if (!dict) {
@@ -103,10 +103,12 @@ export default function MessagesProvider({children}) {
 	);
 }
 
-export function RenderMessages({messages}) {
+export function RenderMessages({messages = null}) {
+	if (messages===null) {
+		messages = useContext(MessagesContext);
+	}
 	return (
 		<Stack
-		{...props}
 		sx={{
 			position: "fixed",
 			top: "1rem",
