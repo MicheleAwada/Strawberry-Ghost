@@ -14,7 +14,28 @@ export function ProductCategory({ categories}) {
 }
 
 export function ProductPrice({ price }) {
-    //TODO
+    const wholeNumber = Math.floor(price)
+    const decimalNumber = price - wholeNumber
+    const wholeNumberString = wholeNumber.toString()
+    const decimalNumberString = decimalNumber.toString().padStart(2, "0")
+
+    const baseFontSize = 1.5
+
+    return (
+        <Box sx={{px:1}}>
+            <Stack flexDirection="row" sx={{position: "relative", display: "inline-flex"}}>
+                <Typography color={"initial"} fontSize={`${baseFontSize/2}rem`} sx={{position: "absolute", top: `${baseFontSize/4}rem`, left: `${1 * (baseFontSize / -3.5)}rem`}}>
+                    {"$"}
+                </Typography>
+                <Typography color={"initial"} fontSize={`${baseFontSize}rem`}>
+                    {wholeNumberString}
+                </Typography>
+                <Typography color={"initial"} fontSize={`${baseFontSize/2}rem`} sx={{position: "absolute", top: `${baseFontSize/4}rem`, right: `${2 * (baseFontSize / -3.5)}rem`}}>
+                    {decimalNumberString}
+                </Typography>
+            </Stack>
+        </Box>
+    )
 }
 
 export default function ProductItem({ info }) {
@@ -32,12 +53,10 @@ export default function ProductItem({ info }) {
                     />
                 </a>
                 <CardContent sx={{ flexGrow: 1 }}>
-                        <Link href="#" gutterBottom variant="h5">
-                            <Typography gutterBottom variant="h5" component="h2">{info.title}</Typography>
+                        <Link href="#"  variant="h5">
+                            <Typography  variant="h5" component="h2">{info.title}</Typography>
                         </Link>
-                    <Typography>
-                        {info.price}
-                    </Typography>
+                    <ProductPrice price={info.price} />
                 </CardContent>
 				<CardActions>
 					<Button variant="contained" size="small">Add to Cart</Button>
