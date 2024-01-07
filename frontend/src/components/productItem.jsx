@@ -15,7 +15,7 @@ export function ProductCategory({ categories }) {
 	//TODO
 }
 
-export function ProductPrice({ price }) {
+export function ProductPrice({ price, sx, ...props }) {
 	const wholeNumber = Math.floor(price);
 	const decimalNumber = price - wholeNumber;
 	const wholeNumberString = wholeNumber.toString();
@@ -24,18 +24,15 @@ export function ProductPrice({ price }) {
 	const baseFontSize = 1.5;
 
 	return (
-		<Box sx={{ px: 1 }}>
-			<Stack
-				flexDirection="row"
-				sx={{ position: "relative", display: "inline-flex" }}
-			>
+		<Box sx={{ display: "inline", ...sx }} {...props} >
+			<Stack flexDirection="row">
 				<Typography
 					color={"initial"}
 					fontSize={`${baseFontSize / 2}rem`}
 					sx={{
-						position: "absolute",
+						position: "relative",
 						top: `${baseFontSize / 4}rem`,
-						left: `${1 * (baseFontSize / -3.5)}rem`,
+						left: 0,
 					}}
 				>
 					{"$"}
@@ -47,9 +44,9 @@ export function ProductPrice({ price }) {
 					color={"initial"}
 					fontSize={`${baseFontSize / 2}rem`}
 					sx={{
-						position: "absolute",
+						position: "relative",
 						top: `${baseFontSize / 4}rem`,
-						right: `${2 * (baseFontSize / -3.5)}rem`,
+						right: 0,
 					}}
 				>
 					{decimalNumberString}
@@ -79,7 +76,8 @@ export default function ProductItem({ info }) {
 							{info.title}
 						</Typography>
 					</Link>
-					<ProductPrice price={info.price} />
+                    <br />
+					<ProductPrice price={info.price} sx={{display: "inline-block", pr: 4}} />
 				</CardContent>
 				<CardActions>
 					<Button variant="contained" size="small">
