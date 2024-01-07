@@ -1,15 +1,15 @@
-import { useContext } from "react";
-import { MessagesContext } from "../main";
+import Button from '@mui/material/Button'
 
-import Header from "../components/header";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
+import { MessagesContext } from '../root'
+import { useContext } from 'react';
 
 export default function Index() {
-	const simpleAddMessage = useContext(MessagesContext);
+    const simpleAddMessage = useContext(MessagesContext).simpleAddMessage;
 	return (
-		<Box>
-			<Header />
-		</Box>
-	);
+        <>
+        <Button variant="contained" color="primary" onClick={() => {simpleAddMessage("Hooray", {severity: "error"})}}>
+          CLICK ME FOR MESSAGE
+        </Button>
+        </>
+	)
 }
