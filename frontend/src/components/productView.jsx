@@ -82,7 +82,7 @@ export default function ProductView() {
             </Grid>
             <Box sx={{visibility: "hidden"}}> {/* helps with loading other image colors */}
                 {product.colors.map((color,index) => 
-                    (<Box>{color.images.map((imageSrc, index) => <img style={{width:0,height:0, ...transpanretFullSizeBorderlessStyles}} src={imageSrc} alt={imageAlt} loading='lazy' />)}</Box>)
+                    (<Box key={index}>{color.images.map((imageSrc, index) => <img key={index} style={{width:0,height:0, ...transpanretFullSizeBorderlessStyles}} src={imageSrc} alt={imageAlt} loading='lazy' />)}</Box>)
                 )}
             </Box>
         </Container>
