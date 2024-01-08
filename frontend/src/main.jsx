@@ -25,10 +25,12 @@ import {
 
 import Root from './root'
 import Index, { loader as indexLoader} from './routes/index';
+import ProductView, { loader as productViewLoader } from './components/productView';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Root />}>
     <Route index element={<Index />} loader={indexLoader} />
+    <Route path='products/:id' element={<ProductView />} loader={productViewLoader} />
   </Route>
 ));
 
