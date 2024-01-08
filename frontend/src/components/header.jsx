@@ -14,8 +14,13 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import Stack from "@mui/material/Stack";
+
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import {Link as ReactRouterLink} from "react-router-dom"
+
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -115,35 +120,44 @@ export default function Header() {
 								</Button>
 							))}
 						</Box>
-						<Box sx={{ flexGrow: 0 }}>
-							<Tooltip title="Open settings">
-								<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-									<Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-								</IconButton>
-							</Tooltip>
-							<Menu
-								sx={{ mt: "45px" }}
-								id="menu-appbar"
-								anchorEl={anchorElUser}
-								anchorOrigin={{
-									vertical: "top",
-									horizontal: "right",
-								}}
-								keepMounted
-								transformOrigin={{
-									vertical: "top",
-									horizontal: "right",
-								}}
-								open={Boolean(anchorElUser)}
-								onClose={handleCloseUserMenu}
-							>
-								{settings.map((setting) => (
-									<MenuItem key={setting} onClick={handleCloseUserMenu}>
-										<Typography textAlign="center">{setting}</Typography>
-									</MenuItem>
-								))}
-							</Menu>
-						</Box>
+						<Stack flexDirection="row" gap={2} sx={{ flexGrow: 0, mr: {md: "1rem", lg: "2rem"} }}>
+							<Box>
+								<Tooltip title="Open cart">
+									<IconButton LinkComponent={ReactRouterLink} to="/cart" size="large" color="inherit" sx={{ p: 0 }} aria-label="go to cart">
+										<ShoppingCartIcon sx={{ width: { md: "2rem", lg: "2.5rem" }, height: { md: "2rem", lg: "2.5rem" } }} />
+									</IconButton>
+								</Tooltip>
+							</Box>
+							<Box>
+								<Tooltip title="Open settings">
+									<IconButton color="inherit" onClick={handleOpenUserMenu} size="large" sx={{ height: "100%", p: 0 }} aria-label="account of current user">
+										<AccountCircleIcon sx={{ width: { md: "2rem", lg: "2.5rem" }, height: { md: "2rem", lg: "2.5rem" } }} />
+									</IconButton>
+								</Tooltip>
+								<Menu
+									sx={{ mt: "45px" }}
+									id="menu-appbar"
+									anchorEl={anchorElUser}
+									anchorOrigin={{
+										vertical: "top",
+										horizontal: "right",
+									}}
+									keepMounted
+									transformOrigin={{
+										vertical: "top",
+										horizontal: "right",
+									}}
+									open={Boolean(anchorElUser)}
+									onClose={handleCloseUserMenu}
+								>
+									{settings.map((setting, index) => (
+										<MenuItem key={index} onClick={handleCloseUserMenu}>
+											<Typography textAlign="center">{setting}</Typography>
+										</MenuItem>
+									))}
+								</Menu>
+							</Box>
+						</Stack>
 					</Toolbar>
 				</Container>
 			</AppBar>
