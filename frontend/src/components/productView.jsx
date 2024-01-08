@@ -52,7 +52,7 @@ export default function ProductView() {
                                                 if (currentColorImageLength <= selectedImage) {
                                                     setSelectedImage(0)
                                                 }
-                                            }} style={{...transpanretFullSizeBorderlessStyles}}>
+                                            }} style={{...transpanretFullSizeBorderlessStyles }}>
                                                 <Stack alignItems="center" flexDirection="row" sx={{width: "100%", height: "auto", mx:"1rem"}}>
                                                     <Typography component="p" variant='body2'>{color.name}</Typography>
                                                     <Divider flexItem orientation="vertical" variant="fullWidth" light sx={{mx: 1}} />
@@ -62,13 +62,15 @@ export default function ProductView() {
                                     </Paper>
                             ))}
                         </Stack>
-                        <Stack flexDirection="row" flexWrap="wrap" gap={2}>
+                        <Stack flexDirection="row" flexWrap="wrap" gap={4}>
                             {getImages().map((imageSrc, index) => (
-                                <Paper key={[selectedColor, index]} elevation={selectedImage === index ? 12 : 0} sx={{borderRadius: "0.75rem", width: "3rem", height: "3rem", overflow: "hidden", borderColor: "white", borderStyle: "none", borderWidth: selectedImage === index ? `${0+0.125}rem` : "0.125rem", boxSizing: "border-box"}}>
-                                    <button onClick={() => setSelectedImage(index)} style={{...transpanretFullSizeBorderlessStyles}}>
-                                        <img loading='eager' src={imageSrc} alt={imageAlt} style={{objectFit: "cover", width: "100%", height: "100%"}} />
-                                    </button>
-                                </Paper>
+                                <Stack justifyContent="center" alignItems="center" sx={{width: "3.5rem", height: "3.5rem" }}>
+                                        <Paper key={[selectedColor, index]} elevation={selectedImage === index ? 12 : 4} sx={{ aspectRatio: "1/1", width: "100%", height: "100%", borderRadius: "0.5rem", p: "0.125rem", boxSizing: "border-box" }}>
+                                            <button onClick={() => setSelectedImage(index)} style={{ ...transpanretFullSizeBorderlessStyles, cursor: "pointer", p: "0.25rem" }}>
+                                                <img loading='eager' src={imageSrc} alt={imageAlt} style={{ aspectRatio: "1/1", objectFit: "cover", width: "100%", height: "100%", borderRadius: "0.5rem" }} />
+                                            </button>
+                                        </Paper>
+                                </Stack>
                             ))}
                         </Stack>
                     </Stack>
@@ -80,7 +82,7 @@ export default function ProductView() {
                     </Box>
                 </Grid>
             </Grid>
-            <Box sx={{visibility: "hidden"}}> {/* helps with loading other image colors */}
+            <Box sx={{display: "none"}}> {/* helps with loading other image colors */}
                 {product.colors.map((color,index) => 
                     (<Box key={index}>{color.images.map((imageSrc, index) => <img key={index} style={{width:0,height:0, ...transpanretFullSizeBorderlessStyles}} src={imageSrc} alt={imageAlt} loading='lazy' />)}</Box>)
                 )}
