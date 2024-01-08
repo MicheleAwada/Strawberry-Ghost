@@ -27,7 +27,7 @@ export const products = [
 			{ color: "#00f", name: "Blue version", images: [
                 ...randomImages()
             ] },
-			{ color: "0f0", name: "green", images: [
+			{ color: "#0f0", name: "green", images: [
                 ...randomImages()
             ] },
 		],
@@ -48,7 +48,7 @@ export const products = [
 			{ color: "#00f", name: "Blue version", images: [
                 ...randomImages()
             ] },
-			{ color: "0f0", name: "green", images: [
+			{ color: "#0f0", name: "green", images: [
                 ...randomImages()
             ] },
 		],
@@ -69,7 +69,7 @@ export const products = [
 			{ color: "#00f", name: "Blue version", images: [
                 ...randomImages()
             ] },
-			{ color: "0f0", name: "green", images: [
+			{ color: "#0f0", name: "green", images: [
                 ...randomImages()
             ] },
 		],
@@ -90,7 +90,7 @@ export const products = [
 			{ color: "#00f", name: "Blue version", images: [
                 ...randomImages()
             ] },
-			{ color: "0f0", name: "green", images: [
+			{ color: "#0f0", name: "green", images: [
                 ...randomImages()
             ] },
 		],
@@ -111,7 +111,7 @@ export const products = [
 			{ color: "#00f", name: "Blue version", images: [
                 ...randomImages()
             ] },
-			{ color: "0f0", name: "green", images: [
+			{ color: "#0f0", name: "green", images: [
                 ...randomImages()
             ] },
 		],
@@ -132,7 +132,7 @@ export const products = [
 			{ color: "#00f", name: "Blue version", images: [
                 ...randomImages()
             ] },
-			{ color: "0f0", name: "green", images: [
+			{ color: "#0f0", name: "green", images: [
                 ...randomImages()
             ] },
 		],
@@ -153,7 +153,7 @@ export const products = [
 			{ color: "#00f", name: "Blue version", images: [
                 ...randomImages()
             ] },
-			{ color: "0f0", name: "green", images: [
+			{ color: "#0f0", name: "green", images: [
                 ...randomImages()
             ] },
 		],
