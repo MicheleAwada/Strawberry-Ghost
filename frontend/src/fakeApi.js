@@ -24,5 +24,6 @@ export async function getProducts() {
 
 export async function getProduct(id) {
     const products = await getProducts()
+    id = parseInt(id)
     return products.find((product) => product.id === id)
 }
