@@ -1,5 +1,5 @@
 function randomImage() {
-    const size = (Math.floor(Math.random() * 50)) + 100;
+    const size = (Math.floor(Math.random() * 1000)) + 100;
     const width = size*4;
     const height = size*3;
     return `https://picsum.photos/${width}/${height}?random=${Math.random()}`
