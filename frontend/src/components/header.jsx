@@ -15,6 +15,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
+import {Link as ReactRouterLink} from "react-router-dom"
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -51,9 +52,9 @@ export default function Header() {
 								mr: 3,
 							}}
 						>
-							<a href="#" style={{ height: "100%", width: "auto" }}>
+							<ReactRouterLink to="/" style={{ height: "100%", width: "auto" }}>
 								<DarkLogo style={{ height: "100%", width: "auto" }} />
-							</a>
+							</ReactRouterLink>
 						</Box>
 						<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
 							<IconButton
@@ -99,9 +100,9 @@ export default function Header() {
 								mr: 3,
 							}}
 						>
-							<a href="#" style={{ height: "100%", width: "auto" }}>
+							<ReactRouterLink to="/" style={{ height: "100%", width: "auto" }}>
 								<DarkLogo style={{ height: "100%", width: "auto" }} />
-							</a>
+							</ReactRouterLink>
 						</Box>
 						<Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
 							{pages.map((page) => (
@@ -157,9 +158,9 @@ export default function Header() {
 								mr: 3,
 							}}
 						>
-							<a href="#" style={{ height: "100%", width: "auto" }}>
+							<ReactRouterLink to="/" style={{ height: "100%", width: "auto" }}>
 								<DarkLogo style={{ height: "100%", width: "auto" }} />
-							</a>
+							</ReactRouterLink>
 						</Box>
 						<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
 							<IconButton
@@ -205,9 +206,9 @@ export default function Header() {
 								mr: 3,
 							}}
 						>
-							<a href="#" style={{ height: "100%", width: "auto" }}>
+							<ReactRouterLink to="/" style={{ height: "100%", width: "auto" }}>
 								<DarkLogo style={{ height: "100%", width: "auto" }} />
-							</a>
+							</ReactRouterLink>
 						</Box>
 						<Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
 							{pages.map((page) => (

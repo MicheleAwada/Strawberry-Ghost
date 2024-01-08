@@ -9,6 +9,8 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 
+import { Link as ReactRouterLink } from "react-router-dom"
+
 import useMediaQuery from "@mui//material/useMediaQuery"
 
 export function ProductPrice({ price, sx, ...props }) {
@@ -52,28 +54,29 @@ export function ProductPrice({ price, sx, ...props }) {
 	);
 }
 
-export default function ProductItem({ info }) {
+export default function ProductItem({ product }) {
     const isMd = useMediaQuery(theme => theme.breakpoints.up('md'));
+	const productLink = `/products/${product.id}`
 	return (
 		<Grid item xs={12} sm={6} md={4} lg={3}>
 			<Card elevation={4} sx={{ height: "100%", width: "100%" }}>
                 <CardMedia
-                    component="a"
-                    href="#"
+                    component={ReactRouterLink}
+                    to={productLink}
                     sx={{
                         pt: "75%", //4/3 aspect ratio
                         bgcolor: "inherit",
                     }}
-                    image={info.thumbnail}
+                    image={product.thumbnail}
                 />
 				<CardContent sx={{ flexGrow: 1 }}>
-					<Link href="#" variant={isMd ? "h5" : "h6"} sx={{ display: "inline-block" }}>
+					<Link to={productLink} component={ReactRouterLink} variant={isMd ? "h5" : "h6"} sx={{ display: "inline-block" }}>
 						<Typography variant={isMd ? "h5" : "h6"} component="h2">
-							{info.title}
+							{product.title}
 						</Typography>
 					</Link>
                     <br />
-					<ProductPrice price={info.price} sx={{display: "inline-block", pr: 4}} />
+					<ProductPrice price={product.price} sx={{display: "inline-block", pr: 4}} />
 				</CardContent>
 				<CardActions>
 					<Button variant="contained" size="small">
