@@ -52,7 +52,7 @@ export default function ProductView() {
                                                 if (currentColorImageLength <= selectedImage) {
                                                     setSelectedImage(0)
                                                 }
-                                            }} style={{...transpanretFullSizeBorderlessStyles }}>
+                                            }} style={{...transpanretFullSizeBorderlessStyles, cursor: "pointer"}}>
                                                 <Stack alignItems="center" flexDirection="row" sx={{width: "100%", height: "auto", mx:"1rem"}}>
                                                     <Typography component="p" variant='body2'>{color.name}</Typography>
                                                     <Divider flexItem orientation="vertical" variant="fullWidth" light sx={{mx: 1}} />
