@@ -82,7 +82,7 @@ export default function ProductView() {
         return (<Stack flexDirection="row" flexWrap="wrap" gap={4} {...props}>
             {getImages().map((imageSrc, index) => (
                 <Stack key={[selectedColor, index]} justifyContent="center" alignItems="center" sx={{width: "3.5rem", height: "3.5rem" }}>
-                        <Paper  elevation={selectedImage === index ? 12 : 0} sx={{ aspectRatio: "1/1", width: "100%", height: "100%", borderRadius: "0.5rem", p: "0.125rem", boxSizing: "border-box" }}>
+                        <Paper  elevation={selectedImage === index ? 12 : 2} sx={{ aspectRatio: "1/1", width: "100%", height: "100%", borderRadius: "0.5rem", bgcolor: "secondary.main" , p: selectedImage === index ? "0.25rem" : "0.125rem" }}>
                             <button onClick={() => setSelectedImage(index)} style={{ ...transpanretFullSizeBorderlessStyles, cursor: "pointer", p: "0.25rem" }}>
                                 <img loading='eager' className='currentColorImages' src={imageSrc} alt={imageAlt} style={{ aspectRatio: "1/1", objectFit: "cover", width: "100%", height: "100%", borderRadius: "0.5rem" }} />
                             </button>
@@ -151,12 +151,12 @@ export default function ProductView() {
                         </Box>
                         <Divider sx={{my: {xs:"1.5rem", md: "2rem", lg: "2.5rem"}}} />
                         <Grid container spacing={2}>
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} lg={6}>
                                 <Button variant="contained" color="primary" sx={{width: "100%"}} startIcon={<ShoppingCartCheckoutIcon />}>
                                     Buy Now!
                                 </Button>
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} lg={6}>
                                 <Button variant="outlined" color="primary" sx={{width: "100%"}} startIcon={<AddShoppingCartIcon />}>
                                     Add to Cart
                                 </Button>
