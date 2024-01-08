@@ -68,7 +68,7 @@ export default function ProductView() {
                             {getImages().map((imageSrc, index) => (
                                 <Paper key={[selectedColor, index]} elevation={2} sx={{borderRadius: "0.75rem", width: "3rem", height: "3rem", overflow: "hidden", borderColor: "pink", borderStyle: "solid", borderWidth: selectedImage === index ? `${0.25+0.125}rem` : "0.125rem", boxSizing: "border-box"}}>
                                     <button onClick={() => setSelectedImage(index)} style={{...transpanretFullSizeBorderlessStyles}}>
-                                        <img src={imageSrc} alt={imageAlt} style={{objectFit: "cover", width: "100%", height: "100%"}} />
+                                        <img loading='eager' src={imageSrc} alt={imageAlt} style={{objectFit: "cover", width: "100%", height: "100%"}} />
                                     </button>
                                 </Paper>
                             ))}
@@ -82,6 +82,11 @@ export default function ProductView() {
                     </Box>
                 </Grid>
             </Grid>
+            <Box sx={{visibility: "hidden"}}> {/* helps with loading other image colors */}
+                {product.colors.map((color,index) => 
+                    (<Box>{color.images.map((imageSrc, index) => <img style={{width:0,height:0, ...transpanretFullSizeBorderlessStyles}} src={imageSrc} alt={imageAlt} loading='lazy' />)}</Box>)
+                )}
+            </Box>
         </Container>
     )
 }
