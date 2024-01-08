@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 
 import { getProduct } from "../fakeApi"
 
@@ -42,23 +43,27 @@ export default function ProductView() {
                         <Box sx={{overflow: "hidden", aspectRatio: "4/3", borderRadius: "1rem", width: "100%"}}>
                             <img src={getSelectedImageSrc()} alt={imageAlt} style={{...transpanretFullSizeBorderlessStyles, objectFit: "cover"}} />
                         </Box>
-                        <Stack flexDirection="row" flexWrap={"wrap"} gap={4}>
+                        <Grid container spacing={4}>
                             {product.colors.map((color, index) => (
-                                <Paper key={index} elevation={4} sx={{borderRadius: "0.75rem", width: "4rem", height: "4rem", overflow: "hidden"}}>
-                                        <button onClick={() => {
-                                            setSelectedColor(index)
-                                            const currentColorImageLength = color.images.length
-                                            if (currentColorImageLength <= selectedImage) {
-                                                setSelectedImage(0)
-                                            }
-                                        }} style={{...transpanretFullSizeBorderlessStyles}}>
-                                            <Stack justifyContent="center" alignItems="center" sx={{width: "100%", height: "100%"}}>
-                                                <Box sx={{width: "50%", height: "50%", borderRadius: "50%", bgcolor: color.color}}></Box>
-                                            </Stack>
-                                        </button>
-                                </Paper>
+                                <Grid item xs={12} sm={12} md={6} lg={4} xl={3} key={index}>
+                                    <Paper variant="elevation" elevation={selectedColor===index ? 6 : 2} sx={{borderRadius: "0.75rem", width: "auto", height: "4rem", overflow: "hidden"}}>
+                                            <button onClick={() => {
+                                                setSelectedColor(index)
+                                                const currentColorImageLength = color.images.length
+                                                if (currentColorImageLength <= selectedImage) {
+                                                    setSelectedImage(0)
+                                                }
+                                            }} style={{...transpanretFullSizeBorderlessStyles}}>
+                                                <Stack alignItems="center" flexDirection="row" sx={{width: "100%", height: "auto", mx:"1rem"}}>
+                                                    <Typography component="p" variant='body2'>{color.name}</Typography>
+                                                    <Divider flexItem orientation="vertical" variant="fullWidth" light sx={{mx: 1}} />
+                                                    <Box sx={{width: "1rem", height: "1rem", borderRadius: "50%", bgcolor: color.color}}></Box>
+                                                </Stack>
+                                            </button>
+                                    </Paper>
+                                </Grid>
                             ))}
-                        </Stack>
+                        </Grid>
                         <Stack flexDirection="row" flexWrap="wrap" gap={2}>
                             {getImages().map((imageSrc, index) => (
                                 <Paper key={[selectedColor, index]} elevation={2} sx={{borderRadius: "0.75rem", width: "3rem", height: "3rem", overflow: "hidden", borderColor: "pink", borderStyle: "solid", borderWidth: selectedImage === index ? `${0.25+0.125}rem` : "0.125rem", boxSizing: "border-box"}}>
