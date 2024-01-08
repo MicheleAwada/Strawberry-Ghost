@@ -36,17 +36,16 @@ export default function ProductView() {
     const imageAlt = `${product.title}'s image`
     const transpanretFullSizeBorderlessStyles = {width: "100%", height: "100%", border: "none", backgroundColor: "transparent", padding:0}
     return (
-        <Container maxWidth="lg" sx={{pb:"8rem"}}>
+        <Container maxWidth="xl" sx={{pb:"8rem"}}>
             <Grid container spacing={8}>
                 <Grid xs={6} item>
                     <Stack gap={4}>
                         <Box sx={{overflow: "hidden", aspectRatio: "4/3", borderRadius: "1rem", width: "100%"}}>
                             <img src={getSelectedImageSrc()} alt={imageAlt} style={{...transpanretFullSizeBorderlessStyles, objectFit: "cover"}} />
                         </Box>
-                        <Grid container spacing={4}>
+                        <Stack flexDirection={{xs: "column", md: "row"}} flexWrap="wrap" gap={4}>
                             {product.colors.map((color, index) => (
-                                <Grid item xs={12} sm={12} md={6} lg={4} xl={3} key={index}>
-                                    <Paper variant="elevation" elevation={selectedColor===index ? 6 : 2} sx={{borderRadius: "0.75rem", width: "auto", height: "4rem", overflow: "hidden"}}>
+                                    <Paper key={index} variant="elevation" elevation={selectedColor===index ? 8 : 2} sx={{borderRadius: "0.75rem", width: "auto", height: "4rem", overflow: "hidden"}}>
                                             <button onClick={() => {
                                                 setSelectedColor(index)
                                                 const currentColorImageLength = color.images.length
@@ -61,12 +60,11 @@ export default function ProductView() {
                                                 </Stack>
                                             </button>
                                     </Paper>
-                                </Grid>
                             ))}
-                        </Grid>
+                        </Stack>
                         <Stack flexDirection="row" flexWrap="wrap" gap={2}>
                             {getImages().map((imageSrc, index) => (
-                                <Paper key={[selectedColor, index]} elevation={2} sx={{borderRadius: "0.75rem", width: "3rem", height: "3rem", overflow: "hidden", borderColor: "pink", borderStyle: "solid", borderWidth: selectedImage === index ? `${0.25+0.125}rem` : "0.125rem", boxSizing: "border-box"}}>
+                                <Paper key={[selectedColor, index]} elevation={selectedImage === index ? 12 : 0} sx={{borderRadius: "0.75rem", width: "3rem", height: "3rem", overflow: "hidden", borderColor: "white", borderStyle: "none", borderWidth: selectedImage === index ? `${0+0.125}rem` : "0.125rem", boxSizing: "border-box"}}>
                                     <button onClick={() => setSelectedImage(index)} style={{...transpanretFullSizeBorderlessStyles}}>
                                         <img loading='eager' src={imageSrc} alt={imageAlt} style={{objectFit: "cover", width: "100%", height: "100%"}} />
                                     </button>
