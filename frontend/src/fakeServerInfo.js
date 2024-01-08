@@ -24,10 +24,10 @@ export const products = [
 			{ color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Blue version", images: [
+			{ color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "green", images: [
+			{ color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
 		],
@@ -45,10 +45,10 @@ export const products = [
 			{ color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Blue version", images: [
+			{ color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "green", images: [
+			{ color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
 		],
@@ -66,10 +66,10 @@ export const products = [
 			{ color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Blue version", images: [
+			{ color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "green", images: [
+			{ color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
 		],
@@ -87,10 +87,10 @@ export const products = [
 			{ color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Blue version", images: [
+			{ color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "green", images: [
+			{ color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
 		],
@@ -108,10 +108,10 @@ export const products = [
 			{ color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Blue version", images: [
+			{ color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "green", images: [
+			{ color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
 		],
@@ -129,10 +129,10 @@ export const products = [
 			{ color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Blue version", images: [
+			{ color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "green", images: [
+			{ color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
 		],
@@ -150,10 +150,10 @@ export const products = [
 			{ color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Blue version", images: [
+			{ color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "green", images: [
+			{ color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
 		],
