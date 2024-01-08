@@ -9,9 +9,12 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 
-import { Link as ReactRouterLink } from "react-router-dom"
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 import useMediaQuery from "@mui//material/useMediaQuery"
+
+import { Link as ReactRouterLink } from "react-router-dom"
+
 
 export function ProductPrice({ price, sx, ...props }) {
 	const wholeNumber = Math.floor(price);
@@ -80,7 +83,7 @@ export default function ProductItem({ product }) {
 					<ProductPrice price={product.price} sx={{display: "inline-block", pr: 4}} />
 				</CardContent>
 				<CardActions>
-					<Button variant="contained" size="small">
+					<Button variant="contained" size="small" startIcon={<AddShoppingCartIcon />}>
 						Add to Cart
 					</Button>
 				</CardActions>

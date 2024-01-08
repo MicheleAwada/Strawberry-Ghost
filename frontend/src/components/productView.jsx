@@ -4,13 +4,16 @@ import Stack from '@mui/material/Stack'
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 
 import { getProduct } from "../fakeApi"
 
-import {useLoaderData} from "react-router-dom"
-import Typography from '@mui/material/Typography'
 import { useEffect, useState } from 'react'
-import Button from '@mui/material/Button'
+import {useLoaderData} from "react-router-dom"
 
 
 
@@ -149,12 +152,12 @@ export default function ProductView() {
                         <Divider sx={{my: {xs:"1.5rem", md: "2rem", lg: "2.5rem"}}} />
                         <Grid container spacing={2}>
                             <Grid item xs={12} md={6}>
-                                <Button variant="contained" color="primary" sx={{width: "100%"}}>
+                                <Button variant="contained" color="primary" sx={{width: "100%"}} startIcon={<ShoppingCartCheckoutIcon />}>
                                     Buy Now!
                                 </Button>
                             </Grid>
                             <Grid item xs={12} md={6}>
-                                <Button variant="outlined" color="primary" sx={{width: "100%"}}>
+                                <Button variant="outlined" color="primary" sx={{width: "100%"}} startIcon={<AddShoppingCartIcon />}>
                                     Add to Cart
                                 </Button>
                             </Grid>
