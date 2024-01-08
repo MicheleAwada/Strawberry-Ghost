@@ -64,7 +64,8 @@ export default function ProductItem({ product }) {
                     component={ReactRouterLink}
                     to={productLink}
                     sx={{
-                        pt: "75%", //4/3 aspect ratio
+						aspectRatio: "4/3",
+						width: "100%",
                         bgcolor: "inherit",
                     }}
                     image={product.thumbnail}
