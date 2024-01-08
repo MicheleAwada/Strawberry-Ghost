@@ -9,7 +9,7 @@ import { getProduct } from "../fakeApi"
 
 import {useLoaderData} from "react-router-dom"
 import Typography from '@mui/material/Typography'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
 
 
@@ -26,6 +26,46 @@ export default function ProductView() {
     const [selectedImage, setSelectedImage] = useState(0)
     const [selectedColor, setSelectedColor] = useState(0)
 
+    const [loadAllImages, setLoadAllImages] = useState(false)
+    let visibleImagesArray = []
+    function checkImagesLoaded() {
+        const allLoaded = visibleImagesArray.every((image) => image.complete);
+        setLoadAllImages(allLoaded);
+      };
+    function addImagesEventListeners() {
+        visibleImagesArray.forEach((image) => {
+            image.addEventListener('load', checkImagesLoaded);
+            image.addEventListener('error', checkImagesLoaded);
+          });
+    }
+    function removeImagesEventListeners() {
+        visibleImagesArray.forEach((image) => {
+            image.removeEventListener('load', checkImagesLoaded);
+            image.removeEventListener('error', checkImagesLoaded);
+          });
+    }
+    function setVisibleImages() {
+        const images = document.querySelectorAll('.currentColorImages'); // Replace '.your-image-class' with your specific class name
+        const imagesArray = Array.from(images);
+        visibleImagesArray = imagesArray
+    }
+    useEffect(() => {
+        setVisibleImages()
+
+        checkImagesLoaded();
+    
+        addImagesEventListeners()
+    
+        return removeImagesEventListeners;
+      }, []);
+      useEffect(() => {
+        removeImagesEventListeners()
+        setVisibleImages()
+        addImagesEventListeners()
+
+        return removeImagesEventListeners
+      }, [selectedColor])
+
     function getSelectedColor() {
         return product.colors[selectedColor]
     }
@@ -41,7 +81,7 @@ export default function ProductView() {
                 <Stack key={[selectedColor, index]} justifyContent="center" alignItems="center" sx={{width: "3.5rem", height: "3.5rem" }}>
                         <Paper  elevation={selectedImage === index ? 12 : 0} sx={{ aspectRatio: "1/1", width: "100%", height: "100%", borderRadius: "0.5rem", p: "0.125rem", boxSizing: "border-box" }}>
                             <button onClick={() => setSelectedImage(index)} style={{ ...transpanretFullSizeBorderlessStyles, cursor: "pointer", p: "0.25rem" }}>
-                                <img loading='eager' src={imageSrc} alt={imageAlt} style={{ aspectRatio: "1/1", objectFit: "cover", width: "100%", height: "100%", borderRadius: "0.5rem" }} />
+                                <img loading='eager' className='currentColorImages' src={imageSrc} alt={imageAlt} style={{ aspectRatio: "1/1", objectFit: "cover", width: "100%", height: "100%", borderRadius: "0.5rem" }} />
                             </button>
                         </Paper>
                 </Stack>
@@ -123,11 +163,11 @@ export default function ProductView() {
                 </Grid>
 
             </Grid>
-            <Box sx={{display: "none"}}> {/* helps with loading other image colors */}
+            {loadAllImages && <Box sx={{display: "none"}}> {/* helps with loading other image colors */}
                 {product.colors.map((color,index) => 
                     (<Box key={index}>{color.images.map((imageSrc, index) => <img key={index} style={{width:0,height:0, ...transpanretFullSizeBorderlessStyles}} src={imageSrc} alt={imageAlt} loading='lazy' />)}</Box>)
                 )}
-            </Box>
+            </Box>}
         </Container>
     )
 }
