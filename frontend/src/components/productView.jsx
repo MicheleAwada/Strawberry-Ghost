@@ -12,7 +12,7 @@ import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 
 import { getProduct } from "../fakeApi"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {useLoaderData} from "react-router-dom"
 
 
@@ -30,19 +30,19 @@ export default function ProductView() {
     const [selectedColor, setSelectedColor] = useState(0)
 
     const [loadAllImages, setLoadAllImages] = useState(false)
-    let visibleImagesArray = []
+    let visibleImagesArray = useRef([])
     function checkImagesLoaded() {
-        const allLoaded = visibleImagesArray.every((image) => image.complete);
+        const allLoaded = visibleImagesArray.current.every((image) => image.complete);
         setLoadAllImages(allLoaded);
       };
     function addImagesEventListeners() {
-        visibleImagesArray.forEach((image) => {
+        visibleImagesArray.current.forEach((image) => {
             image.addEventListener('load', checkImagesLoaded);
             image.addEventListener('error', checkImagesLoaded);
           });
     }
     function removeImagesEventListeners() {
-        visibleImagesArray.forEach((image) => {
+        visibleImagesArray.current.forEach((image) => {
             image.removeEventListener('load', checkImagesLoaded);
             image.removeEventListener('error', checkImagesLoaded);
           });
@@ -50,7 +50,7 @@ export default function ProductView() {
     function setVisibleImages() {
         const images = document.querySelectorAll('.currentColorImages'); // Replace '.your-image-class' with your specific class name
         const imagesArray = Array.from(images);
-        visibleImagesArray = imagesArray
+        visibleImagesArray.current = imagesArray
     }
     useEffect(() => {
         setVisibleImages()
