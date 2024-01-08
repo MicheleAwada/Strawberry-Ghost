@@ -17,8 +17,8 @@ function randomImages() {
 
 export const products = [
 	{
-		title: "Johny Earings",
-		price: 24,
+		title: "Lawrence Earings",
+		price: 64.78,
 		inCart: false,
 		colors: [
 			{ color: "#f00", name: "Red version", images: [
@@ -32,14 +32,14 @@ export const products = [
             ] },
 		],
 		thumbnail:
-			"https://t3.ftcdn.net/jpg/03/25/61/62/360_F_325616239_jPMacbnlr5hNYLBOazcKMtwvLWGKUEy3.jpg",
+			randomImage(),
 		id: 1,
 		description:
 			"direction better sun corner having glass feathers distant fierce construction orbit just hollow quiet floating darkness cow loud would difference bicycle strike bear dawn",
 	},
 	{
-		title: "Johny Earings",
-		price: 24,
+		title: "Elijah Earings",
+		price: 21.24,
 		inCart: false,
 		colors: [
 			{ color: "#f00", name: "Red version", images: [
@@ -53,14 +53,14 @@ export const products = [
             ] },
 		],
 		thumbnail:
-			"https://t3.ftcdn.net/jpg/03/25/61/62/360_F_325616239_jPMacbnlr5hNYLBOazcKMtwvLWGKUEy3.jpg",
+			randomImage(),
 		id: 2,
 		description:
 			"cool choose require knowledge hit represent fair whom ride dozen farmer dirt gain metal new bow relationship four break goose men saw nation across",
 	},
 	{
-		title: "Johny Earings",
-		price: 24,
+		title: "Beulah Earings",
+		price: 80.72,
 		inCart: false,
 		colors: [
 			{ color: "#f00", name: "Red version", images: [
@@ -74,14 +74,14 @@ export const products = [
             ] },
 		],
 		thumbnail:
-			"https://static.vecteezy.com/system/resources/previews/008/550/662/original/strawberry-fruit-transparent-png.png",
+			randomImage(),
 		id: 3,
 		description:
 			"winter board period refused nervous route bigger member clothes dropped verb essential piano chapter secret had coach trade have date paragraph farm ear charge",
 	},
 	{
-		title: "Johny Earings",
-		price: 24,
+		title: "Edna Earings",
+		price: 65.84,
 		inCart: false,
 		colors: [
 			{ color: "#f00", name: "Red version", images: [
@@ -95,14 +95,14 @@ export const products = [
             ] },
 		],
 		thumbnail:
-			"https://t3.ftcdn.net/jpg/03/25/61/62/360_F_325616239_jPMacbnlr5hNYLBOazcKMtwvLWGKUEy3.jpg",
+			randomImage(),
 		id: 4,
 		description:
 			"audience outside for old missing wool fairly duty location total tool different weigh community object guard year climate repeat peace lying piano distance moment",
 	},
 	{
-		title: "Johny Earings",
-		price: 24,
+		title: "Jayden Earings",
+		price: 13.59,
 		inCart: false,
 		colors: [
 			{ color: "#f00", name: "Red version", images: [
@@ -116,14 +116,14 @@ export const products = [
             ] },
 		],
 		thumbnail:
-			"https://t3.ftcdn.net/jpg/03/25/61/62/360_F_325616239_jPMacbnlr5hNYLBOazcKMtwvLWGKUEy3.jpg",
+			randomImage(),
 		id: 5,
 		description:
 			"had shadow habit satisfied upward though refer function best art paragraph invented brush golden exist begun taste nest rose round clothing sold prove white",
 	},
 	{
-		title: "Johny Earings",
-		price: 24,
+		title: "Sophia Earings",
+		price: 56.80,
 		inCart: false,
 		colors: [
 			{ color: "#f00", name: "Red version", images: [
@@ -137,14 +137,14 @@ export const products = [
             ] },
 		],
 		thumbnail:
-			"https://t3.ftcdn.net/jpg/03/25/61/62/360_F_325616239_jPMacbnlr5hNYLBOazcKMtwvLWGKUEy3.jpg",
+			randomImage(),
 		id: 6,
 		description:
 			"partly constantly machine rope mental fear jar column hard glad jump create prove pipe breathe fireplace solid model clock her deer wagon bent measure",
 	},
 	{
-		title: "Johny Earings",
-		price: 24,
+		title: "Lily Earings",
+		price: 59.42,
 		inCart: false,
 		colors: [
 			{ color: "#f00", name: "Red version", images: [
@@ -158,7 +158,7 @@ export const products = [
             ] },
 		],
 		thumbnail:
-			"https://t3.ftcdn.net/jpg/03/25/61/62/360_F_325616239_jPMacbnlr5hNYLBOazcKMtwvLWGKUEy3.jpg",
+			randomImage(),
 		id: 7,
 		description:
 			"next stretch thin alone cent somewhere swimming terrible call these view bread pour moment huge something fighting zoo union identity monkey spin by describe",
