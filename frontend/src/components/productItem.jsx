@@ -15,7 +15,7 @@ import useMediaQuery from "@mui//material/useMediaQuery"
 
 export function ProductPrice({ price, sx, ...props }) {
 	const wholeNumber = Math.floor(price);
-	const decimalNumber = price - wholeNumber;
+	const decimalNumber = Math.floor((price - wholeNumber)*100);
 	const wholeNumberString = wholeNumber.toString();
 	const decimalNumberString = decimalNumber.toString().padStart(2, "0");
 
