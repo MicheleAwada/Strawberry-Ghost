@@ -1,4 +1,4 @@
-import { products } from "./fakeServerInfo.js";
+import { products, user } from "./fakeServerInfo.js";
 
 
 function sleep(ms) {
@@ -26,4 +26,14 @@ export async function getProduct(id) {
     const products = await getProducts()
     id = parseInt(id)
     return products.find((product) => product.id === id)
+}
+
+
+export async function getUser() {
+    if (localStorage.getItem("user") !== null) {
+        return JSON.parse(localStorage.getItem("user"))
+    }
+    await lag()
+    localStorage.setItem("user", JSON.stringify(user))
+    return user
 }

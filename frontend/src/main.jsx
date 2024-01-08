@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client'
 import './index.scss'
 
 import MessagesProvider from "./components/messages";
+import UserProvider from "./components/user";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import {pink, orange} from '@mui/material/colors';
@@ -39,9 +40,11 @@ const router = createBrowserRouter(createRoutesFromElements(
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider theme={THEME}>
-      <MessagesProvider>
-        <RouterProvider router={router} />
-      </MessagesProvider>
+      <UserProvider>
+        <MessagesProvider>
+          <RouterProvider router={router} />
+        </MessagesProvider>
+      </UserProvider>
     </ThemeProvider>
   </React.StrictMode>,
 )

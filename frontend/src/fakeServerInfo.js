@@ -164,3 +164,41 @@ export const products = [
 			"next stretch thin alone cent somewhere swimming terrible call these view bread pour moment huge something fighting zoo union identity monkey spin by describe",
 	},
 ];
+
+export const user = {
+	isAuthenticated: true,
+	firstname: "Etta",
+	lastname: "Roberson",
+	email: "ettaroberson@gmail.com",
+	address: "123 Main Street",
+	id: 2,
+	orders: [
+		{
+			id: 2,
+			products: [
+				{
+					id: 2,
+					title: "Beulah Earings",
+					price: 80.72
+				}
+			],
+			status: "shipping"
+		},
+		{
+			id: 3,
+			products: [
+				{
+					id: 3,
+					title: "Edna Earings",
+					price: 65.84
+				}
+			],
+			status: "shipped"
+		}
+	],
+	cart: [
+		{...products.find(p => p.id === 4)},
+		{...products.find(p => p.id === 5)},
+		{...products.find(p => p.id === 7)},
+	]
+}
