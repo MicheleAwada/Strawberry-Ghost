@@ -10,7 +10,7 @@ export default function ProductListView({products}) {
     return (
         <Container maxWidth="lg" sx={{paddingY: 4}}>
             <Grid container spacing={2} sx={{ width: "100%" }}>
-                {products.map((info) => <ProductItem key={info.id} info={info} />)}
+                {products.map((product) => <ProductItem key={product.id} product={product} />)}
             </Grid>
         </Container>
     )
