@@ -11,7 +11,7 @@ import {pink, orange} from '@mui/material/colors';
 
 const THEME = createTheme({
     palette : {
-      primary: {'main': pink[300]},
+      primary: {'main': pink[300], contrastText: '#fff', dark: pink[500], extraDark: pink[600], light: pink[200], extraLight: pink[100]},
       secondary: {'main': orange[500]},
     } 
   });
