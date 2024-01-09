@@ -79,16 +79,14 @@ export default function ProductView() {
         return getImages()[selectedImage]
     }
     function RenderSelectImages({...props}) {
-        return (<Stack flexDirection="row" flexWrap="wrap" gap={4} {...props}>
-            {getImages().map((imageSrc, index) => (
-                <Stack key={[selectedColor, index]} justifyContent="center" alignItems="center" sx={{width: "3.5rem", height: "3.5rem" }}>
-                        <Paper  elevation={selectedImage === index ? 12 : 2} sx={{ aspectRatio: "1/1", width: "100%", height: "100%", borderRadius: "0.5rem", bgcolor: "secondary.main" , p: selectedImage === index ? "0.25rem" : "0.125rem" }}>
-                            <button onClick={() => setSelectedImage(index)} style={{ ...transpanretFullSizeBorderlessStyles, cursor: "pointer", p: "0.25rem" }}>
-                                <img loading='eager' className='currentColorImages' src={imageSrc} alt={imageAlt} style={{ aspectRatio: "1/1", objectFit: "cover", width: "100%", height: "100%", borderRadius: "0.5rem" }} />
-                            </button>
+        return (<Stack flexDirection="row" justifyContent="center" flexWrap="wrap" gap={4} {...props}>
+            {getImages().map((imageSrc, index) => {
+                const borderColorSpread = {}
+                if (index === selectedImage) {borderColorSpread.borderColor = "primary.main"}
+                return <Paper component="button" onClick={() => setSelectedImage(index)} key={[selectedColor, index]} variant='outlined' sx={{ borderRadius: "0.5rem", overflow: "hidden", aspectRatio: "1/1", width:"3rem", height: "3rem",  p: "1rem", boxSizing: "content-box", cursor: "pointer", ...borderColorSpread }}>
+                            <img loading='eager' className='currentColorImages' src={imageSrc} alt={imageAlt} style={{ aspectRatio: "1/1", objectFit: "cover", width: "100%", height: "100%", borderRadius: "0.25rem" }} />
                         </Paper>
-                </Stack>
-            ))}
+    })}
         </Stack>)
     }
     function ColorSelectDivider({ ...props }) {
@@ -103,20 +101,18 @@ export default function ProductView() {
             <Stack flexDirection={{xs: "column", md: "row"}} flexWrap="wrap" gap={4} {...props}>
             
                 {product.colors.map((color, index) => (
-                        <Paper key={index} variant="elevation" elevation={selectedColor===index ? 8 : 2} sx={{borderRadius: "0.75rem", width: "auto", height: "4rem", overflow: "hidden"}}>
-                                <button onClick={() => {
-                                    setSelectedColor(index)
-                                    const currentColorImageLength = color.images.length
-                                    if (currentColorImageLength <= selectedImage) {
-                                        setSelectedImage(0)
-                                    }
-                                }} style={{ ...transpanretFullSizeBorderlessStyles, cursor: "pointer" }}>
+                        <Paper component="button" onClick={() => {
+                            setSelectedColor(index)
+                            const currentColorImageLength = color.images.length
+                            if (currentColorImageLength <= selectedImage) {
+                                setSelectedImage(0)
+                            }
+                        }} key={index} variant="elevation" elevation={selectedColor===index ? 6 : 1} sx={{borderRadius: "0.75rem", width: "auto", py: "0.75rem", overflow: "hidden", cursor: "pointer", boxSizing: "content-box", borderStyle: "none" }}>
                                     <Stack alignItems="center" flexDirection="row" sx={{width: "100%", height: "auto", mx:"1rem"}}>
                                         <Typography component="p" variant='body2'>{color.name}</Typography>
                                         <Divider flexItem orientation="vertical" variant="fullWidth" light sx={{mx: 1}} />
                                         <Box sx={{width: "1rem", height: "1rem", borderRadius: "50%", bgcolor: color.color}}></Box>
                                     </Stack>
-                                </button>
                         </Paper>
                 ))}
             </Stack>
@@ -132,13 +128,13 @@ export default function ProductView() {
                 <Grid xs={12} md={6} lg={6} item>
                     <Stack gap={4}>
                         <Box sx={{overflow: "hidden", aspectRatio: "4/3", borderRadius: "1rem", width: "100%"}}>
-                            <img src={getSelectedImageSrc()} alt={imageAlt} style={{...transpanretFullSizeBorderlessStyles, objectFit: "cover"}} />
-                        </Box>
-                        <Box sx={{display: {xs: "block", md: "none"}}}>
-                            <ColorSelectDivider sx={{mb: "2rem"}} />
-                            <RenderColorSelect />
+                            <img src={getSelectedImageSrc()} alt={imageAlt} style={{ objectFit: "cover"}} />
                         </Box>
                         <RenderSelectImages />
+                        <Box sx={{display: {xs: "block", md: "none"}}}>
+                            <ColorSelectDivider sx={{mb: "1.5rem"}} />
+                            <RenderColorSelect />
+                        </Box>
                     </Stack>
                 </Grid>
                 <Grid xs={12} md={6} lg={6} item>
