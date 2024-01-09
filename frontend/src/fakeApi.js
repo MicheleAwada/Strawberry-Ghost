@@ -28,18 +28,21 @@ export async function getProduct(id) {
     return products.find((product) => product.id === id)
 }
 
+const baseUser = {
+    isAuthenticated: false,
+}
 
-export async function getUser() {
+export function getUser() {
     // if (localStorage.getItem("user") !== null) {
     //     return JSON.parse(localStorage.getItem("user"))
     // }
-    localStorage.setItem("user", JSON.stringify(user)) // with backend it wouldnt be here
+    // localStorage.setItem("user", JSON.stringify(user)) // with backend it wouldnt be here
     return user
 }
 
 export async function getCartProducts() {
     const products = await getProducts()
-    const user = await getUser()
+    const user = getUser()
     const productsInCart = products.filter((product) => {
         return user.cart.includes(product.id)
     })
