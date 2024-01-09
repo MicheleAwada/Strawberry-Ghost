@@ -30,9 +30,9 @@ export async function getProduct(id) {
 
 
 export async function getUser() {
-    if (localStorage.getItem("user") !== null) {
-        return JSON.parse(localStorage.getItem("user"))
-    }
+    // if (localStorage.getItem("user") !== null) {
+    //     return JSON.parse(localStorage.getItem("user"))
+    // }
     localStorage.setItem("user", JSON.stringify(user)) // with backend it wouldnt be here
     return user
 }
