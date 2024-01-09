@@ -26,7 +26,7 @@ import {
 
 import Root, {loader as rootLoader} from './root'
 import Index, { loader as indexLoader} from './routes/index';
-import ProductView, { loader as productViewLoader } from './components/productView';
+import ProductView, { loader as productViewLoader } from './routes/productView';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Root />} loader={rootLoader}>
