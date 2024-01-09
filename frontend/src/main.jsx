@@ -24,12 +24,12 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import Root from './root'
+import Root, {loader as rootLoader} from './root'
 import Index, { loader as indexLoader} from './routes/index';
 import ProductView, { loader as productViewLoader } from './components/productView';
 
 const router = createBrowserRouter(createRoutesFromElements(
-  <Route path='/' element={<Root />}>
+  <Route path='/' element={<Root />} loader={rootLoader}>
     <Route index element={<Index />} loader={indexLoader} />
     <Route path='products/:id' element={<ProductView />} loader={productViewLoader} />
   </Route>
