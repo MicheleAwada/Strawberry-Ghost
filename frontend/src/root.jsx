@@ -8,6 +8,7 @@ import Header from "./components/header"
 
 import Box from "@mui/material/Box";
 import { useContext, useEffect } from "react";
+import Footer from "./components/footer"
 
 
 
@@ -22,6 +23,7 @@ export default function Root() {
             <RenderMessages />
             <Header />
             <Outlet />
+            <Footer />
         </Box>
     )
 }
