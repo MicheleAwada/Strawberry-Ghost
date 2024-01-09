@@ -36,3 +36,12 @@ export async function getUser() {
     localStorage.setItem("user", JSON.stringify(user)) // with backend it wouldnt be here
     return user
 }
+
+export async function getCartProducts() {
+    const products = await getProducts()
+    const user = await getUser()
+    const productsInCart = products.filter((product) => {
+        return user.cart.includes(product.id)
+    })
+    return productsInCart
+}

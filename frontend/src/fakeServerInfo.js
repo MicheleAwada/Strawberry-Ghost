@@ -197,8 +197,8 @@ export const user = {
 		}
 	],
 	cart: [
-		{...products.find(p => p.id === 4)},
-		{...products.find(p => p.id === 5)},
-		{...products.find(p => p.id === 7)},
+		5,
+		4,
+		7,
 	]
 }
