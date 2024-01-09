@@ -57,7 +57,8 @@ export function ProductPrice({ price, sx, ...props }) {
 	);
 }
 
-export default function ProductItem({ product }) {
+const DefaultCardActions = () => <Button variant="contained" size="small" startIcon={<AddShoppingCartIcon />}>Add to Cart</Button>
+export default function ProductItem({ product, ProductCartActions=DefaultCardActions }) {
     const isMd = useMediaQuery(theme => theme.breakpoints.up('md'));
 	const productLink = `/products/${product.id}`
 	return (
@@ -83,9 +84,7 @@ export default function ProductItem({ product }) {
 					<ProductPrice price={product.price} sx={{display: "inline-block", pr: 4}} />
 				</CardContent>
 				<CardActions>
-					<Button variant="contained" size="small" startIcon={<AddShoppingCartIcon />}>
-						Add to Cart
-					</Button>
+					<ProductCartActions />
 				</CardActions>
 			</Card>
 		</Grid>

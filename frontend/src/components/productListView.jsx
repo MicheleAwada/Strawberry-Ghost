@@ -6,11 +6,11 @@ import Grid from "@mui/material/Grid"
 import Container from "@mui/material/Container"
 
 
-export default function ProductListView({products}) {
+export default function ProductListView({products, productItemProps}) {
     return (
         <Container maxWidth="lg" sx={{paddingY: 4}}>
             <Grid container spacing={2} sx={{ width: "100%" }}>
-                {products.map((product) => <ProductItem key={product.id} product={product} />)}
+                {products.map((product) => <ProductItem {...productItemProps} key={product.id} product={product} />)}
             </Grid>
         </Container>
     )
