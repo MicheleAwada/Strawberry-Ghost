@@ -12,16 +12,16 @@ import { useContext, useEffect } from "react";
 
 
 export async function loader() {
-    getProducts() // to load products from the beggining
-    const user = getUser()
+    getProducts() // to load products from the beggining if the user opened a non products page
+    const user = await getUser()
     return user
 }
 
 export default function Root() {
-    const user = useLoaderData();
+    const acutalUser = useLoaderData();
     const [_, setUser] = useContext(UserContext)
     useEffect(() => {
-        setUser(user)
+        setUser(acutalUser)
     }, [])
     
     return (
