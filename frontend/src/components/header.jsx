@@ -158,7 +158,7 @@ export default function Header() {
 								>	
 								{settings.map(([name, icon, isDivider], index) => (
 									isDivider ? <Divider key={index} /> : <MenuItem key={index}>
-										<ListItemIcon sx>
+										<ListItemIcon>
 											{icon}
 										</ListItemIcon>
 										{name}
