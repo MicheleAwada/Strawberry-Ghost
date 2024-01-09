@@ -1,10 +1,10 @@
 import { createContext, useState } from "react";
 
-export const UserContext = createContext();
 
 const baseUser = {
     isAuthenticated: false,
 }
+export const UserContext = createContext([baseUser, () => {}]);
 
 export default function UserProvider({ children }) {
     const [user, setUser] = useState(baseUser)
