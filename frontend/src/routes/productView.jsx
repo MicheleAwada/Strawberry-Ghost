@@ -121,14 +121,13 @@ export default function ProductView() {
     }
 
     const imageAlt = `${product.title}'s image`
-    const transpanretFullSizeBorderlessStyles = {width: "100%", height: "100%", border: "none", backgroundColor: "transparent", padding:0}
     return (
         <Container maxWidth="xl" sx={{py:"1rem"}}>
             <Grid container spacing={8}  flexWrap={{xs:"wrap-reverse", md:"wrap"}}>
                 <Grid xs={12} md={6} lg={6} item>
                     <Stack gap={4}>
-                        <Box sx={{overflow: "hidden", aspectRatio: "4/3", borderRadius: "1rem", width: "100%"}}>
-                            <img src={getSelectedImageSrc()} alt={imageAlt} style={{ objectFit: "cover"}} />
+                        <Box sx={{overflow: "hidden", aspectRatio: "4/3", borderRadius: "1rem", width: "100%" }}>
+                            <img src={getSelectedImageSrc()} alt={imageAlt} style={{ width: "100%", objectFit: "cover"}} />
                         </Box>
                         <RenderSelectImages />
                         <Box sx={{display: {xs: "block", md: "none"}}}>
