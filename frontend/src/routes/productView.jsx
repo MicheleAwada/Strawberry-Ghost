@@ -12,6 +12,8 @@ import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 
 import { getProduct } from "../fakeApi"
 
+import { flattenArray } from '../utils'
+
 import { useEffect, useRef, useState } from 'react'
 import {useLoaderData} from "react-router-dom"
 
@@ -23,16 +25,12 @@ export async function loader({params}) {
     return product
 }
 
-export default function ProductView() {
-    const product = useLoaderData();
-
-    const [selectedImage, setSelectedImage] = useState(0)
-    const [selectedColor, setSelectedColor] = useState(0)
-
+function ImageRendering( querySelectorAll, imageSrcsIterable ) {
     const [loadAllImages, setLoadAllImages] = useState(false)
     let visibleImagesArray = useRef([])
     function checkImagesLoaded() {
         const allLoaded = visibleImagesArray.current.every((image) => image.complete);
+        if (allLoaded) console.log("NOW")
         setLoadAllImages(allLoaded);
       };
     function addImagesEventListeners() {
@@ -47,27 +45,36 @@ export default function ProductView() {
             image.removeEventListener('error', checkImagesLoaded);
           });
     }
-    function setVisibleImages() {
-        const images = document.querySelectorAll('.currentColorImages'); // Replace '.your-image-class' with your specific class name
+    function setVisibleImages(querySelectorAll) {
+        const images = document.querySelectorAll(querySelectorAll);
         const imagesArray = Array.from(images);
         visibleImagesArray.current = imagesArray
     }
-    useEffect(() => {
-        setVisibleImages()
-
-        checkImagesLoaded();
     
-        addImagesEventListeners()
-    
-        return removeImagesEventListeners;
-      }, []);
-      useEffect(() => {
-        removeImagesEventListeners()
-        setVisibleImages()
-        addImagesEventListeners()
+    const RenderToLoadImages = () => {
+        return loadAllImages ? <div style={{ display: "none", flexDirection: "row", flexWrap: "wrap", gap: "1rem"}}>{imageSrcsIterable.map((imageSrc, index) => <img style={{width: "100px", height: "100px"}} key={index} className="currentColorImages" src={imageSrc} alt="hidden image for loading"/>)}</div> : null
+    }
+    const refreshClasses = (newQuerySelectorAll=querySelectorAll) => {
+          removeImagesEventListeners()
+          setVisibleImages(newQuerySelectorAll)
+          addImagesEventListeners()
+          return removeImagesEventListeners
+        }
+    useEffect(refreshClasses, []);
+    return [RenderToLoadImages, refreshClasses]
+}
 
-        return removeImagesEventListeners
-      }, [selectedColor])
+export default function ProductView() {
+    const product = useLoaderData();
+
+    const [selectedImage, setSelectedImage] = useState(0)
+    const [selectedColor, setSelectedColor] = useState(0)
+
+    
+    const imageSrcsIterable = flattenArray(product.colors.map((color) => color.images.map((imageSrc) => imageSrc)))
+    const [RenderImageRendering, refreshClasses] = ImageRendering(".currentColorImages", imageSrcsIterable)
+    useEffect(refreshClasses, [selectedColor])
+
 
     function getSelectedColor() {
         return product.colors[selectedColor]
@@ -107,8 +114,8 @@ export default function ProductView() {
                             if (currentColorImageLength <= selectedImage) {
                                 setSelectedImage(0)
                             }
-                        }} key={index} variant="elevation" elevation={selectedColor===index ? 6 : 1} sx={{borderRadius: "0.75rem", width: "auto", py: "0.75rem", overflow: "hidden", cursor: "pointer", boxSizing: "content-box", borderStyle: "none" }}>
-                                    <Stack alignItems="center" flexDirection="row" sx={{width: "100%", height: "auto", mx:"1rem"}}>
+                        }} key={index} variant="elevation" elevation={selectedColor===index ? 6 : 1} sx={{borderRadius: "0.75rem", width: "auto", px:"1rem", py: "0.75rem", overflow: "hidden", cursor: "pointer", boxSizing: "content-box", borderStyle: "none" }}>
+                                    <Stack alignItems="center" justifyContent="center" flexDirection="row" sx={{width: "100%", height: "auto", }}>
                                         <Typography component="p" variant='body2'>{color.name}</Typography>
                                         <Divider flexItem orientation="vertical" variant="fullWidth" light sx={{mx: 1}} />
                                         <Box sx={{width: "1rem", height: "1rem", borderRadius: "50%", bgcolor: color.color}}></Box>
@@ -126,7 +133,7 @@ export default function ProductView() {
             <Grid container spacing={8}  flexWrap={{xs:"wrap-reverse", md:"wrap"}}>
                 <Grid xs={12} md={6} lg={6} item>
                     <Stack gap={4}>
-                        <Box sx={{overflow: "hidden", aspectRatio: "4/3", borderRadius: "1rem", width: "100%" }}>
+                        <Box sx={{overflow: "hidden", aspectRatio: "4/3", borderRadius: "1rem", width: "100%", }}>
                             <img src={getSelectedImageSrc()} alt={imageAlt} style={{ width: "100%", objectFit: "cover"}} />
                         </Box>
                         <RenderSelectImages />
@@ -148,7 +155,7 @@ export default function ProductView() {
                         <Grid container spacing={2}>
                             <Grid item xs={12} lg={6}>
                                 <Button variant="contained" color="primary" sx={{width: "100%"}} startIcon={<ShoppingCartCheckoutIcon />}>
-                                    Buy Now!
+                                    Buy Now
                                 </Button>
                             </Grid>
                             <Grid item xs={12} lg={6}>
@@ -159,13 +166,8 @@ export default function ProductView() {
                         </Grid>
                     </Box>
                 </Grid>
-
             </Grid>
-            {loadAllImages && <Box sx={{display: "none"}}> {/* helps with loading other image colors */}
-                {product.colors.map((color,index) => 
-                    (<Box key={index}>{color.images.map((imageSrc, index) => <img key={index} style={{width:0,height:0, ...transpanretFullSizeBorderlessStyles}} src={imageSrc} alt={imageAlt} loading='lazy' />)}</Box>)
-                )}
-            </Box>}
+            <RenderImageRendering />
         </Container>
     )
 }
