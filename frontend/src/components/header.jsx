@@ -10,24 +10,40 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
 
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
+import SignUpIcon from '@mui/icons-material/PersonAdd';
 
-import {Link as ReactRouterLink} from "react-router-dom"
-
+import { Link as ReactRouterLink } from "react-router-dom"
+import { UserContext } from "./user";
 
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const authenticatedSettings = [["Account", <AccountCircleIcon />, false], ["Cart", <ShoppingCartIcon />, false], ["Orders", <ReceiptLongIcon />, false], [null,null, true], ["Logout", <LogoutIcon />, false]];
+const unAuthenticatedSettings = [["Login", <LoginIcon />, false], ["Register", <SignUpIcon />, false]	];
 
 export default function Header() {
+	const [user] = React.useContext(UserContext)
+
 	const [anchorElNav, setAnchorElNav] = React.useState(null);
 	const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+	const headerRef = React.useRef()
+	const fakeHeaderRef = React.useRef()
+
+	React.useEffect(() => {
+		const height =  headerRef.current.clientHeight
+		fakeHeaderRef.current.style.height = `${height}px`
+	}, [])
 
 	const handleOpenNavMenu = (event) => {
 		setAnchorElNav(event.currentTarget);
@@ -36,17 +52,18 @@ export default function Header() {
 		setAnchorElUser(event.currentTarget);
 	};
 
+
 	const handleCloseNavMenu = () => {
 		setAnchorElNav(null);
 	};
-
 	const handleCloseUserMenu = () => {
 		setAnchorElUser(null);
 	};
 
+	const settings = user.isAuthenticated ? authenticatedSettings : unAuthenticatedSettings
 	return (
 		<>
-			<AppBar position="fixed" sx={{borderRadius: "0 0 1rem 1rem"}}>
+			<AppBar ref={headerRef} position="fixed" sx={{borderRadius: "0 0 1rem 1rem"}}>
 				<Container maxWidth="xl">
 					<Toolbar disableGutters>
 						<Box
@@ -135,138 +152,26 @@ export default function Header() {
 									</IconButton>
 								</Tooltip>
 								<Menu
-									sx={{ mt: "45px" }}
-									id="menu-appbar"
 									anchorEl={anchorElUser}
-									anchorOrigin={{
-										vertical: "top",
-										horizontal: "right",
-									}}
-									keepMounted
-									transformOrigin={{
-										vertical: "top",
-										horizontal: "right",
-									}}
 									open={Boolean(anchorElUser)}
 									onClose={handleCloseUserMenu}
-								>
-									{settings.map((setting, index) => (
-										<MenuItem key={index} onClick={handleCloseUserMenu}>
-											<Typography textAlign="center">{setting}</Typography>
-										</MenuItem>
-									))}
+								>	
+								{settings.map(([name, icon, isDivider], index) => (
+									isDivider ? <Divider key={index} /> : <MenuItem key={index}>
+										<ListItemIcon sx>
+											{icon}
+										</ListItemIcon>
+										{name}
+									</MenuItem>
+								))}
 								</Menu>
 							</Box>
 						</Stack>
 					</Toolbar>
 				</Container>
 			</AppBar>
-			<AppBar position="static" sx={{borderRadius: "0 0 1rem 1rem", paddingBottom: 1, visibility: "hidden"}}>
-				<Container maxWidth="xl">
-					<Toolbar disableGutters>
-						<Box
-							sx={{
-								display: { xs: "none", md: "flex" },
-								height: "2.5rem",
-								width: "auto",
-								mr: 3,
-							}}
-						>
-							<ReactRouterLink to="/" style={{ height: "100%", width: "auto" }}>
-								<DarkLogo style={{ height: "100%", width: "auto" }} />
-							</ReactRouterLink>
-						</Box>
-						<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-							<IconButton
-								sie="large"
-								aria-label="account of current user"
-								aria-controls="menu-appbar"
-								aria-haspopup="true"
-								onClick={handleOpenNavMenu}
-								color="inherit"
-							>
-								<MenuIcon />
-							</IconButton>
-							<Menu
-								id="menu-appbar"
-								anchorEl={anchorElNav}
-								anchorOrigin={{
-									vertical: "bottom",
-									horizontal: "left",
-								}}
-								keepMounted
-								transformOrigin={{
-									vertical: "top",
-									horizontal: "left",
-								}}
-								open={Boolean(anchorElNav)}
-								onClose={handleCloseNavMenu}
-								sx={{
-									display: { xs: "block", md: "none" },
-								}}
-							>
-								{pages.map((page) => (
-									<MenuItem key={page} onClick={handleCloseNavMenu}>
-										<Typography textAlign="center">{page}</Typography>
-									</MenuItem>
-								))}
-							</Menu>
-						</Box>
-						<Box
-							sx={{
-								display: { xs: "flex", md: "none" },
-								height: "2.5rem",
-								width: "auto",
-								mr: 3,
-							}}
-						>
-							<ReactRouterLink to="/" style={{ height: "100%", width: "auto" }}>
-								<DarkLogo style={{ height: "100%", width: "auto" }} />
-							</ReactRouterLink>
-						</Box>
-						<Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-							{pages.map((page) => (
-								<Button
-									key={page}
-									onClick={handleCloseNavMenu}
-									sx={{ my: 2, color: "white", display: "block" }}
-								>
-									{page}
-								</Button>
-							))}
-						</Box>
-						<Box sx={{ flexGrow: 0 }}>
-							<Tooltip title="Open settings">
-								<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-									<Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-								</IconButton>
-							</Tooltip>
-							<Menu
-								sx={{ mt: "45px" }}
-								id="menu-appbar"
-								anchorEl={anchorElUser}
-								anchorOrigin={{
-									vertical: "top",
-									horizontal: "right",
-								}}
-								keepMounted
-								transformOrigin={{
-									vertical: "top",
-									horizontal: "right",
-								}}
-								open={Boolean(anchorElUser)}
-								onClose={handleCloseUserMenu}
-							>
-								{settings.map((setting) => (
-									<MenuItem key={setting} onClick={handleCloseUserMenu}>
-										<Typography textAlign="center">{setting}</Typography>
-									</MenuItem>
-								))}
-							</Menu>
-						</Box>
-					</Toolbar>
-				</Container>
-			</AppBar>
+			<Box ref={fakeHeaderRef} sx={{ bgcolor: "transparent", borderRadius: "0 0 1rem 1rem", visibility: "hidden" }}>
+			</Box>
 		</>
 		
 	);
