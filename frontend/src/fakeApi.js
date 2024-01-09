@@ -33,7 +33,6 @@ export async function getUser() {
     if (localStorage.getItem("user") !== null) {
         return JSON.parse(localStorage.getItem("user"))
     }
-    await lag()
-    localStorage.setItem("user", JSON.stringify(user))
+    localStorage.setItem("user", JSON.stringify(user)) // with backend it wouldnt be here
     return user
 }
