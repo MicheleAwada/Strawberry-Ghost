@@ -157,7 +157,7 @@ export default function Header() {
 									onClose={handleCloseUserMenu}
 								>	
 								{settings.map(([name, icon, isDivider], index) => (
-									isDivider ? <Divider key={index} /> : <MenuItem key={index}>
+									isDivider ? <Divider key={index} /> : <MenuItem key={index} onClick={handleCloseUserMenu}>
 										<ListItemIcon>
 											{icon}
 										</ListItemIcon>
