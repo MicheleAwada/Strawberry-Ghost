@@ -50,3 +50,21 @@ export async function getCart() {
     })
     return cart
 }
+
+export async function getOrders() {
+    const products = await getProducts()
+    const user = getUser()
+
+    console.log(user)
+    const orders = user.orders.map((order) => {
+        const newProductsBought = order.productsBought.map((productDetails) => {
+            const product = products.find(product => product.id === productDetails.product)
+            const variant = product.variants.find(variant => variant.id === productDetails.variant)
+            return {...productDetails, product, variant}
+        })
+        return {...order, productsBought: newProductsBought}
+    })
+    console.log(user)
+    console.log(orders)
+    return orders
+}
