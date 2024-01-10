@@ -201,18 +201,37 @@ export const user = {
 				{product: 4, quantity: 2, variant: 3},
 				
 			],
-			status: "shipping",
+			status: "making",
 			time: "Jan 4 2024"
 		},
 		{
-			id: 3,
+			id: 5,
 			productsBought: [
-				{product: 6, quantity: 1, variant: 1},
-				{product: 5, quantity: 3, variant: 2},
+				{product: 1, quantity: 1, variant: 3},
+				{product: 1, quantity: 3, variant: 1},
+			],
+			status: "shipping",
+			time: "Dec 16 2023"
+		},
+		{
+			id: 7,
+			productsBought: [
+				{product: 4, quantity: 2, variant: 3},
+				{product: 2, quantity: 13, variant: 2},
 			],
 			status: "shipped",
-			time: "Jan 1 2024"
-		}
+			time: "Dec 8 2023"
+		},
+		{
+			id: 10,
+			productsBought: [
+				{product: 6, quantity: 1, variant: 1},
+				{product: 7, quantity: 4, variant: 2},
+				{product: 5, quantity: 3, variant: 1},
+			],
+			status: "delivered",
+			time: "Dec 2 2023"
+		},
 	],
 	cart: [
 		{product: 5, quantity: 2, saveForLater: true, variant: 1},
