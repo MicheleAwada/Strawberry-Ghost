@@ -17,6 +17,8 @@ import { flattenArray } from '../utils'
 import { useEffect, useRef, useState } from 'react'
 import {useLoaderData} from "react-router-dom"
 
+import FrequentlyBoughtTogether from "../components/frequentlyBoughtTogether";
+
 
 
 export async function loader({params}) {
@@ -30,7 +32,6 @@ function ImageRendering( querySelectorAll, imageSrcsIterable ) {
     let visibleImagesArray = useRef([])
     function checkImagesLoaded() {
         const allLoaded = visibleImagesArray.current.every((image) => image.complete);
-        if (allLoaded) console.log("NOW")
         setLoadAllImages(allLoaded);
       };
     function addImagesEventListeners() {
@@ -129,45 +130,50 @@ export default function ProductView() {
 
     const imageAlt = `${product.title}'s image`
     return (
-        <Container maxWidth="xl" sx={{py:"1rem"}}>
-            <Grid container spacing={8}  flexWrap={{xs:"wrap-reverse", md:"wrap"}}>
-                <Grid xs={12} md={6} lg={6} item>
-                    <Stack gap={4}>
-                        <Box sx={{overflow: "hidden", aspectRatio: "4/3", borderRadius: "1rem", width: "100%", }}>
-                            <img src={getSelectedImageSrc()} alt={imageAlt} style={{ width: "100%", objectFit: "cover"}} />
-                        </Box>
-                        <RenderSelectImages />
-                        <Box sx={{display: {xs: "block", md: "none"}}}>
-                            <ColorSelectDivider sx={{mb: "1.5rem"}} />
-                            <RenderVariantSelect />
-                        </Box>
-                    </Stack>
-                </Grid>
-                <Grid xs={12} md={6} lg={6} item>
-                    <Box>
-                        <Typography variant="h2" component={"h1"} gutterBottom color="initial">{product.title}</Typography>
-                        <Typography variant="body1" component={"p"} color="initial">{product.description}</Typography>
-                        <Box sx={{display: {xs: "none", md: "block"}}}>
-                            <ColorSelectDivider sx={{ my: {md: "1.5rem",lg: "2rem"} }} />
-                            <RenderVariantSelect />
-                        </Box>
-                        <Divider sx={{my: {xs:"1.5rem", md: "2rem", lg: "2.5rem"}}} />
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} lg={6}>
-                                <Button variant="contained" color="primary" sx={{width: "100%"}} startIcon={<ShoppingCartCheckoutIcon />}>
-                                    Buy Now
-                                </Button>
-                            </Grid>
-                            <Grid item xs={12} lg={6}>
-                                <Button variant="outlined" color="primary" sx={{width: "100%"}} startIcon={<AddShoppingCartIcon />}>
-                                    Add to Cart
-                                </Button>
-                            </Grid>
+        <>
+            <Container maxWidth="xl" sx={{py:"1rem"}}>
+                <Stack>
+                    <Grid container spacing={8}  flexWrap={{xs:"wrap-reverse", md:"wrap"}}>
+                        <Grid xs={12} md={6} lg={6} item>
+                            <Stack gap={4}>
+                                <Box sx={{overflow: "hidden", aspectRatio: "4/3", borderRadius: "1rem", width: "100%", }}>
+                                    <img src={getSelectedImageSrc()} alt={imageAlt} style={{ width: "100%", objectFit: "cover"}} />
+                                </Box>
+                                <RenderSelectImages />
+                                <Box sx={{display: {xs: "block", md: "none"}}}>
+                                    <ColorSelectDivider sx={{mb: "1.5rem"}} />
+                                    <RenderVariantSelect />
+                                </Box>
+                            </Stack>
                         </Grid>
-                    </Box>
-                </Grid>
-            </Grid>
+                        <Grid xs={12} md={6} lg={6} item>
+                            <Box>
+                                <Typography variant="h2" component={"h1"} gutterBottom color="initial">{product.title}</Typography>
+                                <Typography variant="body1" component={"p"} color="initial">{product.description}</Typography>
+                                <Box sx={{display: {xs: "none", md: "block"}}}>
+                                    <ColorSelectDivider sx={{ my: {md: "1.5rem",lg: "2rem"} }} />
+                                    <RenderVariantSelect />
+                                </Box>
+                                <Divider sx={{my: {xs:"1.5rem", md: "2rem", lg: "2.5rem"}}} />
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} lg={6}>
+                                        <Button variant="contained" color="primary" sx={{width: "100%"}} startIcon={<ShoppingCartCheckoutIcon />}>
+                                            Buy Now
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={12} lg={6}>
+                                        <Button variant="outlined" color="primary" sx={{width: "100%"}} startIcon={<AddShoppingCartIcon />}>
+                                            Add to Cart
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Grid>
+                    </Grid>
+                    <FrequentlyBoughtTogether product={product} />
+                </Stack>
+            </Container>
             <RenderImageRendering />
-        </Container>
+        </>
     )
 }
