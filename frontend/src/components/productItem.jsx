@@ -58,8 +58,8 @@ export function ProductPrice({ price, sx, ...props }) {
 }
 
 const DefaultProductCardActions = () => <Button variant="contained" size="small" startIcon={<AddShoppingCartIcon />}>Add to Cart</Button>
-const DefaultProductContentExtra = ({ children }) => <Stack flexDirection="row" flexWrap="wrap" alignItems="center" mt="0.5rem">{children}</Stack>
-export default function ProductItem({ product, ProductCartActions=DefaultProductCardActions, ProductContentExtra = DefaultProductContentExtra }) {
+const DefaultProductCardExtras = ({ children }) => <Stack flexDirection="row" flexWrap="wrap" alignItems="center" mt="0.5rem">{children}</Stack>
+export default function ProductItem({ product, ProductCartActions=DefaultProductCardActions, ProductCardExtras = DefaultProductCardExtras }) {
     const isMd = useMediaQuery(theme => theme.breakpoints.up('md'));
 	const productLink = `/products/${product.id}`
 	return (
@@ -81,9 +81,9 @@ export default function ProductItem({ product, ProductCartActions=DefaultProduct
 							{product.title}
 						</Typography>
 					</Link>
-					<ProductContentExtra product={product}>
+					<ProductCardExtras product={product}>
 						<ProductPrice price={product.price} sx={{ pr: 4}} />
-					</ProductContentExtra>
+					</ProductCardExtras>
 				</CardContent>
 				<CardActions>
 					<ProductCartActions product={product} />

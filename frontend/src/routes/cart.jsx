@@ -27,6 +27,53 @@ import { Link as ReactRouterLink } from "react-router-dom"
 import { useState } from 'react'
 
 
+export function OrderProductCardActions({ _product }) {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const closeMenu = () => {
+        setAnchorEl(null);
+    }
+    const openMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    }
+    return <Box sx={{width: "100%"}}>
+            <Stack flexDirection="row" justifyContent="end" sx={{ width: "100%" }}>
+                <IconButton color="inherit" onClick={openMenu}>
+                    <MoreHorizIcon />
+                </IconButton>
+            </Stack>
+                <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={closeMenu}
+                >	
+                    <MenuItem onClick={closeMenu}>
+                        <ListItemIcon>
+                            <AccessTimeIcon />
+                        </ListItemIcon>
+                        Add to Save Later
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem onClick={closeMenu}>
+                        <ListItemIcon>
+                            <RemoveShoppingCartOutlinedIcon />
+                        </ListItemIcon>
+                        Remove from Cart
+                    </MenuItem>
+                </Menu>
+        </Box>
+}
+export function OrderProductCardExtras({ children, product }) {
+    const variant = product.variant
+    return <Stack gap={0.5} mt={2}>
+        <Stack flexDirection="row" flexWrap="wrap" alignItems="center">
+            {children}
+            <Chip label={variant.name} color="primary" variant='filled'  />
+        </Stack>
+        <Typography variant="body1" color="initial">Quantity: {product.quantity}</Typography>
+    </Stack>
+}
+
+
 export async function loader() {
     return await getCart()
 }
@@ -46,51 +93,7 @@ export default function Cart() {
     const isSm = useMediaQuery(theme => theme.breakpoints.up('sm'))
 
 
-    const ProductCardActions = ({ _product }) => {
-        const [anchorEl, setAnchorEl] = useState(null);
-        const closeMenu = () => {
-            setAnchorEl(null);
-        }
-        const openMenu = (event) => {
-            setAnchorEl(event.currentTarget);
-        }
-        return <Box sx={{width: "100%"}}>
-                <Stack flexDirection="row" justifyContent="end" sx={{ width: "100%" }}>
-                    <IconButton color="inherit" onClick={openMenu}>
-                        <MoreHorizIcon />
-                    </IconButton>
-                </Stack>
-                    <Menu
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={closeMenu}
-                    >	
-                        <MenuItem onClick={closeMenu}>
-                            <ListItemIcon>
-                                <AccessTimeIcon />
-                            </ListItemIcon>
-                            Add to Save Later
-                        </MenuItem>
-                        <Divider />
-                        <MenuItem onClick={closeMenu}>
-                            <ListItemIcon>
-                                <RemoveShoppingCartOutlinedIcon />
-                            </ListItemIcon>
-                            Remove from Cart
-                        </MenuItem>
-                    </Menu>
-            </Box>
-    }
-    function ProductContentExtra({ children, product }) {
-        const variant = product.variant
-        return <Stack gap={0.5} mt={2}>
-            <Stack flexDirection="row" flexWrap="wrap" alignItems="center">
-                {children}
-                <Chip label={variant.name} color="primary" variant='filled'  />
-            </Stack>
-            <Typography variant="body1" color="initial">Quantity: {product.quantity}</Typography>
-        </Stack>
-    }
+
 
     const totalPrice = cart.reduce((sum, cartItem) => sum + cartItem.product.price*cartItem.quantity, 0)
 
@@ -117,9 +120,9 @@ export default function Cart() {
                 orientation="horizontal"
                 light={false}
               />
-              <ProductListView products={productsInCart} productItemProps={{ ProductCartActions: ProductCardActions, ProductContentExtra: ProductContentExtra  }} />
+              <ProductListView products={productsInCart} productItemProps={{ ProductCartActions: OrderProductCardActions, ProductCardExtras: OrderProductCardExtras  }} />
               <Divider><Typography color="grey.600">In Your Save For Later</Typography></Divider>
-              <ProductListView products={productsInSaveForLater} productItemProps={{ ProductCartActions: ProductCardActions, ProductContentExtra: ProductContentExtra  }} />
+              <ProductListView products={productsInSaveForLater} productItemProps={{ ProductCartActions: OrderProductCardActions, ProductCardExtras: OrderProductCardExtras  }} />
           </Container>
     )
 }
