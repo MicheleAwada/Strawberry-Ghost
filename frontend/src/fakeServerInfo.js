@@ -21,16 +21,16 @@ export const products = [
 		price: 64.78,
 		inCart: false,
 		variants: [
-			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
+			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, default: false, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, isColor: false, name: "big ear", images: [
+			{ id: 4, default: true, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -45,16 +45,16 @@ export const products = [
 		price: 21.24,
 		inCart: false,
 		variants: [
-			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
+			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, default: false, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, isColor: false, name: "big ear", images: [
+			{ id: 4, default: true, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -69,16 +69,16 @@ export const products = [
 		price: 80.72,
 		inCart: false,
 		variants: [
-			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
+			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, default: false, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, isColor: false, name: "big ear", images: [
+			{ id: 4, default: true, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -93,16 +93,16 @@ export const products = [
 		price: 65.84,
 		inCart: false,
 		variants: [
-			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
+			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, default: false, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, isColor: false, name: "big ear", images: [
+			{ id: 4, default: true, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -117,16 +117,16 @@ export const products = [
 		price: 13.59,
 		inCart: false,
 		variants: [
-			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
+			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, default: false, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, isColor: false, name: "big ear", images: [
+			{ id: 4, default: true, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -141,16 +141,16 @@ export const products = [
 		price: 56.80,
 		inCart: false,
 		variants: [
-			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
+			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, default: false, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, isColor: false, name: "big ear", images: [
+			{ id: 4, default: true, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -165,16 +165,16 @@ export const products = [
 		price: 59.42,
 		inCart: false,
 		variants: [
-			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
+			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, default: false, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, isColor: false, name: "big ear", images: [
+			{ id: 4, default: true, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
