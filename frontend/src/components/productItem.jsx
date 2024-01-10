@@ -8,12 +8,15 @@ import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
+import Collapse from "@mui/material/Collapse";
 
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 import useMediaQuery from "@mui//material/useMediaQuery"
 
 import { Link as ReactRouterLink } from "react-router-dom"
+import IconButton from '@mui/material/IconButton'
+import { useState } from "react";
 
 
 export function ProductPrice({ price, sx, ...props }) {
@@ -57,7 +60,22 @@ export function ProductPrice({ price, sx, ...props }) {
 	);
 }
 
-const DefaultProductCardActions = () => <Button variant="contained" size="small" startIcon={<AddShoppingCartIcon />}>Add to Cart</Button>
+const DefaultProductCardActions = () => {
+	const [open, setOpen] = useState(false)
+	function handleClick() {
+		setOpen(!open)
+	}
+	return <Stack flexDirection="row" sx={{ bgcolor: "primary.main", borderRadius: "1000rem" }}>
+		<IconButton aria-label="Add to Cart" sx={{ color: "primary.contrastText" }} onClick={handleClick} >
+			<AddShoppingCartIcon />
+		</IconButton>
+		<Collapse in={open} orientation="horizontal" >
+			<Box sx={{pr:4}}>
+				<Typography>HII</Typography>
+			</Box>
+		</Collapse>
+	</Stack>
+}
 const DefaultProductCardExtras = ({ children }) => <Stack flexDirection="row" flexWrap="wrap" alignItems="center" mt="0.5rem">{children}</Stack>
 export default function ProductItem({ product, ProductCartActions=DefaultProductCardActions, ProductCardExtras = DefaultProductCardExtras }) {
     const isMd = useMediaQuery(theme => theme.breakpoints.up('md'));
