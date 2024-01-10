@@ -28,12 +28,14 @@ import Root, {loader as rootLoader} from './root'
 import Index, { loader as indexLoader} from './routes/index';
 import ProductView, { loader as productViewLoader } from './routes/productView';
 import Cart, { loader as CartLoader } from './routes/cart';
+import Orders, { loader as OrdersLoader } from './routes/orders';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Root />} loader={rootLoader}>
     <Route index element={<Index />} loader={indexLoader} />
     <Route path='products/:id' element={<ProductView />} loader={productViewLoader} />
     <Route path='cart' element={<Cart />} loader={CartLoader} />
+    <Route path='orders' element={<Orders />} loader={OrdersLoader} />
   </Route>
 ));
 
