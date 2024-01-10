@@ -26,7 +26,7 @@ export function ProductPrice({ price, sx, ...props }) {
 	const baseFontSize = 1.5;
 
 	return (
-		<Box sx={{ display: "inline", ...sx }} {...props} >
+		<Box sx={{ ...sx }} {...props} >
 			<Stack flexDirection="row">
 				<Typography
 					color={"initial"}
@@ -59,7 +59,6 @@ export function ProductPrice({ price, sx, ...props }) {
 }
 
 const DefaultProductCardActions = ({product}) => {
-
 	const defaultQuantity = 1
 	const defaultVariant = product.variants.find((variant) => variant.default) || product.variants[0]
 	return <IconButton color="primary" aria-label="add to cart" >
@@ -71,7 +70,6 @@ export default function ProductItem({ product, ProductCartActions=DefaultProduct
     const isMd = useMediaQuery(theme => theme.breakpoints.up('md'));
 	const productLink = `/products/${product.id}`
 	return (
-		<Grid item xs={12} sm={6} md={4} lg={3}>
 			<Card elevation={4} sx={{ height: "100%", width: "100%" }}>
                 <CardMedia
                     component={ReactRouterLink}
@@ -97,6 +95,5 @@ export default function ProductItem({ product, ProductCartActions=DefaultProduct
 					<ProductCartActions product={product} />
 				</CardActions>
 			</Card>
-		</Grid>
 	);
 }
