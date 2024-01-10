@@ -40,11 +40,13 @@ export function getUser() {
     return user
 }
 
-export async function getCartProducts() {
+export async function getCart() {
     const products = await getProducts()
     const user = getUser()
-    const productsInCart = products.filter((product) => {
-        return user.cart.includes(product.id)
+    const cart = user.cart.map(cartItem => {
+        cartItem.product = products.find(product => product.id === cartItem.product)
+        cartItem.variant = cartItem.product.variants.find(variant => variant.id === cartItem.variant)
+        return cartItem
     })
-    return productsInCart
+    return cart
 }

@@ -1,7 +1,8 @@
-import productListView from '../components/productListView'
 import ProductListView from '../components/productListView'
-import { getCartProducts } from '../fakeApi'
+import { getCart } from '../fakeApi'
 import { useLoaderData } from "react-router-dom"
+
+import QuantityInput from '../components/quantityInput'
 
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
@@ -14,6 +15,7 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
+import Chip from '@mui/material/Chip'
 
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
@@ -24,15 +26,23 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Link as ReactRouterLink } from "react-router-dom"
 import { useState } from 'react'
 
+
 export async function loader() {
-    return await getCartProducts()
+    return await getCart()
 }
 export default function Cart() {
-    const productsInCart = useLoaderData()
+    const cart = useLoaderData()
+    const productsInCart = cart.map(cartItem => {
+        cartItem.product.variant = cartItem.variant
+        cartItem.product.quantity = cartItem.quantity
+        return cartItem.product
+    })
+
+
     const isSm = useMediaQuery(theme => theme.breakpoints.up('sm'))
 
 
-    const ProductCardActions = () => {
+    const ProductCardActions = ({ _product }) => {
         const [anchorEl, setAnchorEl] = useState(null);
         const closeMenu = () => {
             setAnchorEl(null);
@@ -67,13 +77,23 @@ export default function Cart() {
                     </Menu>
             </Box>
     }
+    function ProductContentExtra({ children, product }) {
+        const variant = product.variant
+        return <Stack gap={1}>
+            <Stack flexDirection="row" flexWrap="wrap" alignItems="center">
+                {children}
+                <Chip label={variant.name} color="primary" variant='filled'  />
+            </Stack>
+            <Typography variant="body1" color="initial">Quantity: {product.quantity}</Typography>
+        </Stack>
+    }
 
-    const totalPrice = productsInCart.reduce((sum, product) => sum + product.price, 0)
+    const totalPrice = cart.reduce((sum, cartItem) => sum + cartItem.product.price*cartItem.quantity, 0)
 
     return (
           <Container maxWidth="lg">
                 <Typography variant={ isSm ? "h4" : "h5" } component="h5" color="initial" sx={{py: {xs: "2rem", sm: "2.5rem", md: "3rem"}, textAlign: "center"}}>
-                    You have {productsInCart.length} items in your cart
+                    You have {cart.length} items in your cart
                 </Typography>
               <Divider
                 variant="middle"
@@ -81,7 +101,7 @@ export default function Cart() {
                 light={false}
               />
               <Stack gap={4} flexDirection="row" justifyContent="center" alignItems="center" sx={{ my: 2 }}>
-                  <Button variant="contained" size='large' color="primary"  startIcon={<ShoppingCartCheckoutIcon />}>
+                  <Button variant="contained" size='large' color="primary"  startIcon={<ShoppingCartCheckoutIcon />} disabled={cart.length === 0} LinkComponent={ReactRouterLink} to="/checkout">
                     Checkout
                   </Button>
                   <Button variant="outlined" size='large' color="primary"  startIcon={<AddShoppingCartIcon />} LinkComponent={ReactRouterLink} to="/" >
@@ -93,7 +113,7 @@ export default function Cart() {
                 orientation="horizontal"
                 light={false}
               />
-              <ProductListView products={productsInCart} productItemProps={{ ProductCartActions: ProductCardActions  }} />
+              <ProductListView products={productsInCart} productItemProps={{ ProductCartActions: ProductCardActions, ProductContentExtra: ProductContentExtra  }} />
           </Container>
     )
 }
