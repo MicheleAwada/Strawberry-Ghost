@@ -22,9 +22,6 @@ export default function Orders() {
                     <Typography variant="h4" color="initial">
                         Order on {order.time}
                     </Typography>
-                    <Typography variant="h4" color="initial">
-                        Order on Horray
-                    </Typography>
                 </Box>
             })}
         </Stack>

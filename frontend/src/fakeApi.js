@@ -55,7 +55,6 @@ export async function getOrders() {
     const products = await getProducts()
     const user = getUser()
 
-    console.log(user)
     const orders = user.orders.map((order) => {
         const newProductsBought = order.productsBought.map((productDetails) => {
             const product = products.find(product => product.id === productDetails.product)
@@ -64,7 +63,5 @@ export async function getOrders() {
         })
         return {...order, productsBought: newProductsBought}
     })
-    console.log(user)
-    console.log(orders)
     return orders
 }
