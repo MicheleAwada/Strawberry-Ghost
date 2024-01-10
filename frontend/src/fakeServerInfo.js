@@ -20,6 +20,10 @@ export const products = [
 		title: "Lawrence Earings",
 		price: 64.78,
 		inCart: false,
+		frequentlyBoughtTogether: [
+			7,
+			5
+		],
 		variants: [
 			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
@@ -44,6 +48,10 @@ export const products = [
 		title: "Elijah Earings",
 		price: 21.24,
 		inCart: false,
+		frequentlyBoughtTogether: [
+			3,
+			1
+		],
 		variants: [
 			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
@@ -68,6 +76,10 @@ export const products = [
 		title: "Beulah Earings",
 		price: 80.72,
 		inCart: false,
+		frequentlyBoughtTogether: [
+			5,
+			4
+		],
 		variants: [
 			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
@@ -92,6 +104,10 @@ export const products = [
 		title: "Edna Earings",
 		price: 65.84,
 		inCart: false,
+		frequentlyBoughtTogether: [
+			3,
+			7
+		],
 		variants: [
 			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
@@ -116,6 +132,10 @@ export const products = [
 		title: "Jayden Earings",
 		price: 13.59,
 		inCart: false,
+		frequentlyBoughtTogether: [
+			1,
+			3
+		],
 		variants: [
 			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
@@ -140,6 +160,10 @@ export const products = [
 		title: "Sophia Earings",
 		price: 56.80,
 		inCart: false,
+		frequentlyBoughtTogether: [
+			2,
+			7
+		],
 		variants: [
 			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
@@ -164,6 +188,10 @@ export const products = [
 		title: "Lily Earings",
 		price: 59.42,
 		inCart: false,
+		frequentlyBoughtTogether: [
+			6,
+			5
+		],
 		variants: [
 			{ id: 1, default: true, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
