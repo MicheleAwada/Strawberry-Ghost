@@ -32,11 +32,15 @@ export async function loader() {
 }
 export default function Cart() {
     const cart = useLoaderData()
-    const productsInCart = cart.map(cartItem => {
-        cartItem.product.variant = cartItem.variant
-        cartItem.product.quantity = cartItem.quantity
-        return cartItem.product
+    const productsInCartAndSaveForLater = cart.map(cartItem => {
+        const variant = cartItem.variant
+        const quantity = cartItem.quantity
+        const saveForLater = cartItem.saveForLater
+        return {...cartItem.product, variant, quantity, saveForLater}
     })
+
+    const productsInCart = productsInCartAndSaveForLater.filter(product => !product.saveForLater)
+    const productsInSaveForLater = productsInCartAndSaveForLater.filter(product => product.saveForLater)
 
 
     const isSm = useMediaQuery(theme => theme.breakpoints.up('sm'))
@@ -79,7 +83,7 @@ export default function Cart() {
     }
     function ProductContentExtra({ children, product }) {
         const variant = product.variant
-        return <Stack gap={1}>
+        return <Stack gap={0.5} mt={2}>
             <Stack flexDirection="row" flexWrap="wrap" alignItems="center">
                 {children}
                 <Chip label={variant.name} color="primary" variant='filled'  />
@@ -114,6 +118,8 @@ export default function Cart() {
                 light={false}
               />
               <ProductListView products={productsInCart} productItemProps={{ ProductCartActions: ProductCardActions, ProductContentExtra: ProductContentExtra  }} />
+              <Divider><Typography color="grey.600">In Your Save For Later</Typography></Divider>
+              <ProductListView products={productsInSaveForLater} productItemProps={{ ProductCartActions: ProductCardActions, ProductContentExtra: ProductContentExtra  }} />
           </Container>
     )
 }
