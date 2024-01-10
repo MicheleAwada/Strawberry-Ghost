@@ -20,14 +20,17 @@ export const products = [
 		title: "Lawrence Earings",
 		price: 64.78,
 		inCart: false,
-		colors: [
-			{ color: "#f00", name: "Red version", images: [
+		variants: [
+			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+                ...randomImages()
+            ] },
+			{ id: 4, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -41,14 +44,17 @@ export const products = [
 		title: "Elijah Earings",
 		price: 21.24,
 		inCart: false,
-		colors: [
-			{ color: "#f00", name: "Red version", images: [
+		variants: [
+			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+                ...randomImages()
+            ] },
+			{ id: 4, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -62,14 +68,17 @@ export const products = [
 		title: "Beulah Earings",
 		price: 80.72,
 		inCart: false,
-		colors: [
-			{ color: "#f00", name: "Red version", images: [
+		variants: [
+			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+                ...randomImages()
+            ] },
+			{ id: 4, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -83,14 +92,17 @@ export const products = [
 		title: "Edna Earings",
 		price: 65.84,
 		inCart: false,
-		colors: [
-			{ color: "#f00", name: "Red version", images: [
+		variants: [
+			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+                ...randomImages()
+            ] },
+			{ id: 4, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -104,14 +116,17 @@ export const products = [
 		title: "Jayden Earings",
 		price: 13.59,
 		inCart: false,
-		colors: [
-			{ color: "#f00", name: "Red version", images: [
+		variants: [
+			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+                ...randomImages()
+            ] },
+			{ id: 4, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -125,14 +140,17 @@ export const products = [
 		title: "Sophia Earings",
 		price: 56.80,
 		inCart: false,
-		colors: [
-			{ color: "#f00", name: "Red version", images: [
+		variants: [
+			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+                ...randomImages()
+            ] },
+			{ id: 4, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -146,14 +164,17 @@ export const products = [
 		title: "Lily Earings",
 		price: 59.42,
 		inCart: false,
-		colors: [
-			{ color: "#f00", name: "Red version", images: [
+		variants: [
+			{ id: 1, isColor: true, color: "#f00", name: "Red version", images: [
                 ...randomImages()
             ] },
-			{ color: "#00f", name: "Tyranasorous version", images: [
+			{ id: 2, isColor: true, color: "#00f", name: "Tyranasorous version", images: [
                 ...randomImages()
             ] },
-			{ color: "#0f0", name: "Dark Vader", images: [
+			{ id: 3, isColor: true, color: "#0f0", name: "Dark Vader", images: [
+                ...randomImages()
+            ] },
+			{ id: 4, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -175,30 +196,25 @@ export const user = {
 	orders: [
 		{
 			id: 2,
-			products: [
-				{
-					id: 2,
-					title: "Beulah Earings",
-					price: 80.72
-				}
+			productsBought: [
+				{product: 2, quantity: 1, variant: 3},
+				{product: 4, quantity: 2, variant: 3},
+				
 			],
 			status: "shipping"
 		},
 		{
 			id: 3,
-			products: [
-				{
-					id: 3,
-					title: "Edna Earings",
-					price: 65.84
-				}
+			productsBought: [
+				{product: 6, quantity: 1, variant: 1},
+				{product: 5, quantity: 3, variant: 2},
 			],
 			status: "shipped"
 		}
 	],
 	cart: [
-		5,
-		4,
-		7,
+		{product: 5, quantity: 2, saveForLater: true, variant: 1},
+		{product: 4, quantity: 6, saveForLater: false, variant: 3},
+		{product: 7, quantity: 9, saveForLater: false, variant: 2},
 	]
 }

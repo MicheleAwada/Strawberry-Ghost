@@ -68,16 +68,16 @@ export default function ProductView() {
     const product = useLoaderData();
 
     const [selectedImage, setSelectedImage] = useState(0)
-    const [selectedColor, setSelectedColor] = useState(0)
+    const [selectedVariant, setSelectedVariant] = useState(0)
 
     
-    const imageSrcsIterable = flattenArray(product.colors.map((color) => color.images.map((imageSrc) => imageSrc)))
+    const imageSrcsIterable = flattenArray(product.variants.map((variant) => variant.images.map((imageSrc) => imageSrc)))
     const [RenderImageRendering, refreshClasses] = ImageRendering(".currentColorImages", imageSrcsIterable)
-    useEffect(refreshClasses, [selectedColor])
+    useEffect(refreshClasses, [selectedVariant])
 
 
     function getSelectedColor() {
-        return product.colors[selectedColor]
+        return product.variants[selectedVariant]
     }
     function getImages() {
         return getSelectedColor().images
@@ -90,35 +90,35 @@ export default function ProductView() {
             {getImages().map((imageSrc, index) => {
                 const borderColorSpread = {}
                 if (index === selectedImage) {borderColorSpread.borderColor = "primary.main"}
-                return <Paper component="button" onClick={() => setSelectedImage(index)} key={[selectedColor, index]} variant='outlined' sx={{ borderRadius: "0.5rem", overflow: "hidden", aspectRatio: "1/1", width:"3rem", height: "3rem",  p: "1rem", boxSizing: "content-box", cursor: "pointer", ...borderColorSpread }}>
+                return <Paper component="button" onClick={() => setSelectedImage(index)} key={[selectedVariant, index]} variant='outlined' sx={{ borderRadius: "0.5rem", overflow: "hidden", aspectRatio: "1/1", width:"3rem", height: "3rem",  p: "1rem", boxSizing: "content-box", cursor: "pointer", ...borderColorSpread }}>
                             <img loading='eager' className='currentColorImages' src={imageSrc} alt={imageAlt} style={{ aspectRatio: "1/1", objectFit: "cover", width: "100%", height: "100%", borderRadius: "0.25rem" }} />
                         </Paper>
     })}
         </Stack>)
     }
     function ColorSelectDivider({ ...props }) {
-        const colorsLength = product.colors.length
+        const colorsLength = product.variants.length
         return (<Divider flexItem variant='fullWidth' {...props}>
             <Typography variant="body1" color="grey.700" sx={{textAlign: "center"}}>{`${colorsLength} color${colorsLength === 1 ? "" : "s"}`}</Typography>
         </Divider>)
     }
-    function RenderColorSelect({...props}) {
+    function RenderVariantSelect({...props}) {
         return (
         <>
             <Stack flexDirection={{xs: "column", md: "row"}} flexWrap="wrap" gap={4} {...props}>
             
-                {product.colors.map((color, index) => (
+                {product.variants.map((variant, index) => (
                         <Paper component="button" onClick={() => {
-                            setSelectedColor(index)
-                            const currentColorImageLength = color.images.length
-                            if (currentColorImageLength <= selectedImage) {
+                            setSelectedVariant(index)
+                            const currentVariantImageLength = variant.images.length
+                            if (currentVariantImageLength <= selectedImage) {
                                 setSelectedImage(0)
                             }
-                        }} key={index} variant="elevation" elevation={selectedColor===index ? 6 : 1} sx={{borderRadius: "0.75rem", width: "auto", px:"1rem", py: "0.75rem", overflow: "hidden", cursor: "pointer", boxSizing: "content-box", borderStyle: "none" }}>
+                        }} key={index} variant="elevation" elevation={selectedVariant===index ? 6 : 1} sx={{borderRadius: "0.75rem", width: "auto", px:"1rem", py: "0.75rem", overflow: "hidden", cursor: "pointer", boxSizing: "content-box", borderStyle: "none" }}>
                                     <Stack alignItems="center" justifyContent="center" flexDirection="row" sx={{width: "100%", height: "auto", }}>
-                                        <Typography component="p" variant='body2'>{color.name}</Typography>
-                                        <Divider flexItem orientation="vertical" variant="fullWidth" light sx={{mx: 1}} />
-                                        <Box sx={{width: "1rem", height: "1rem", borderRadius: "50%", bgcolor: color.color}}></Box>
+                                        <Typography component="p" variant='body2'>{variant.name}</Typography>
+                                        {variant.isColor && <><Divider flexItem orientation="vertical" variant="fullWidth" light sx={{mx: 1}} />
+                                        <Box sx={{width: "1rem", height: "1rem", borderRadius: "50%", bgcolor: variant.color}}></Box></>}
                                     </Stack>
                         </Paper>
                 ))}
@@ -139,7 +139,7 @@ export default function ProductView() {
                         <RenderSelectImages />
                         <Box sx={{display: {xs: "block", md: "none"}}}>
                             <ColorSelectDivider sx={{mb: "1.5rem"}} />
-                            <RenderColorSelect />
+                            <RenderVariantSelect />
                         </Box>
                     </Stack>
                 </Grid>
@@ -149,7 +149,7 @@ export default function ProductView() {
                         <Typography variant="body1" component={"p"} color="initial">{product.description}</Typography>
                         <Box sx={{display: {xs: "none", md: "block"}}}>
                             <ColorSelectDivider sx={{ my: {md: "1.5rem",lg: "2rem"} }} />
-                            <RenderColorSelect />
+                            <RenderVariantSelect />
                         </Box>
                         <Divider sx={{my: {xs:"1.5rem", md: "2rem", lg: "2.5rem"}}} />
                         <Grid container spacing={2}>
