@@ -44,9 +44,9 @@ export async function getCart() {
     const products = await getProducts()
     const user = getUser()
     const cart = user.cart.map(cartItem => {
-        cartItem.product = products.find(product => product.id === cartItem.product)
-        cartItem.variant = cartItem.product.variants.find(variant => variant.id === cartItem.variant)
-        return cartItem
+        const product = products.find(product => product.id === cartItem.product)
+        const variant = product.variants.find(variant => variant.id === cartItem.variant)
+        return {...cartItem, product, variant}
     })
     return cart
 }
