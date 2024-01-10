@@ -201,7 +201,8 @@ export const user = {
 				{product: 4, quantity: 2, variant: 3},
 				
 			],
-			status: "shipping"
+			status: "shipping",
+			time: "Jan 4 2024"
 		},
 		{
 			id: 3,
@@ -209,7 +210,8 @@ export const user = {
 				{product: 6, quantity: 1, variant: 1},
 				{product: 5, quantity: 3, variant: 2},
 			],
-			status: "shipped"
+			status: "shipped",
+			time: "Jan 1 2024"
 		}
 	],
 	cart: [
