@@ -17,7 +17,12 @@ let productsCache = [];
 export async function getProducts() {
     if (productsCache.length === 0) {
         await lag()
-        productsCache = products
+        productsCache = products.map((product) => {
+            const frequentlyBoughtTogether = product.frequentlyBoughtTogether.map((productThatsBoughtTogetherFrequently) => {
+                return products.find((productThatsBoughtTogetherFrequentlyToFind) => productThatsBoughtTogetherFrequentlyToFind.id === productThatsBoughtTogetherFrequently)
+            })
+            return {...product, frequentlyBoughtTogether}
+        })
     }
     return productsCache
 }
