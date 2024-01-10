@@ -11,12 +11,14 @@ import Link from "@mui/material/Link";
 import Collapse from "@mui/material/Collapse";
 
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import RemoveShoppingCartOutlinedIcon from '@mui/icons-material/RemoveShoppingCartOutlined';
+
 
 import useMediaQuery from "@mui//material/useMediaQuery"
 
 import { Link as ReactRouterLink } from "react-router-dom"
 import IconButton from '@mui/material/IconButton'
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 
 export function ProductPrice({ price, sx, ...props }) {
@@ -65,14 +67,31 @@ const DefaultProductCardActions = () => {
 	function handleClick() {
 		setOpen(!open)
 	}
-	return <Stack flexDirection="row" sx={{ bgcolor: "primary.main", borderRadius: "1000rem" }}>
-		<IconButton aria-label="Add to Cart" sx={{ color: "primary.contrastText" }} onClick={handleClick} >
-			<AddShoppingCartIcon />
+	const rootRef = useRef()
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (rootRef.current && !rootRef.current.contains(event.target)) {
+				setOpen(false);
+			}
+		  };
+	  
+		  document.addEventListener('mouseup', handleClickOutside);
+	  
+		  return () => {
+			document.removeEventListener('mouseup', handleClickOutside);
+		  };
+	}, [])
+	return <Stack ref={rootRef} flexDirection="row" sx={{ bgcolor: "primary.main", borderRadius: "1000rem" }}>
+		<IconButton aria-label={open ? "add to cart" : "cancel"} sx={{ color: "primary.contrastText" }} onClick={handleClick} >
+			{open ? <RemoveShoppingCartOutlinedIcon /> : <AddShoppingCartIcon />}
 		</IconButton>
 		<Collapse in={open} orientation="horizontal" >
-			<Box sx={{pr:4}}>
-				<Typography>HII</Typography>
-			</Box>
+			<Stack flexDirection="row" alignItems="center" >
+				<Typography color="primary.contrastText">HII</Typography>
+				<IconButton aria-label="" sx={{ color: "primary.contrastText" }} onClick={handleClick} >
+					<AddShoppingCartIcon />
+				</IconButton>
+			</Stack>
 		</Collapse>
 	</Stack>
 }
