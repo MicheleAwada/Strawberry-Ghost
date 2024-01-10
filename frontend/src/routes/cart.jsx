@@ -2,7 +2,6 @@ import ProductListView from '../components/productListView'
 import { getCart } from '../fakeApi'
 import { useLoaderData } from "react-router-dom"
 
-import QuantityInput from '../components/quantityInput'
 
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
