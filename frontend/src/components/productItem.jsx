@@ -66,6 +66,7 @@ const DefaultProductCardActions = ({product}) => {
 		</IconButton>
 }
 const DefaultProductCardExtras = ({ children }) => <Stack flexDirection="row" flexWrap="wrap" alignItems="center" mt="0.5rem">{children}</Stack>
+
 export default function ProductItem({ product, ProductCartActions=DefaultProductCardActions, ProductCardExtras = DefaultProductCardExtras }) {
     const isMd = useMediaQuery(theme => theme.breakpoints.up('md'));
 	const productLink = `/products/${product.id}`
@@ -82,8 +83,8 @@ export default function ProductItem({ product, ProductCartActions=DefaultProduct
                     image={product.thumbnail}
                 />
 				<CardContent sx={{ flexGrow: 1 }}>
-					<Link to={productLink} component={ReactRouterLink} variant={isMd ? "h5" : "h6"} sx={{ display: "inline-block" }}>
-						<Typography variant={isMd ? "h5" : "h6"} component="h2">
+					<Link to={productLink} component={ReactRouterLink} variant={isMd ? "h5" : "h6"} >
+						<Typography variant={isMd ? "h5" : "h6"} component="h2" sx={{ display: "block", wordWrap: "break-word", lineClamp: 2, WebkitLineClamp: 2, display: "-webkit-box", WebkitBoxOrient: "vertical" }} lineHeight="1.8rem" height="3.6rem" textOverflow="ellipsis" overflow="hidden" >
 							{product.title}
 						</Typography>
 					</Link>

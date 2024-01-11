@@ -17,7 +17,7 @@ function randomImages() {
 
 export const products = [
 	{
-		title: "Lawrence Earings",
+		title: "Lawrence Chambers Earings",
 		price: 64.78,
 		inCart: false,
 		frequentlyBoughtTogether: [
@@ -45,7 +45,7 @@ export const products = [
 			"direction better sun corner having glass feathers distant fierce construction orbit just hollow quiet floating darkness cow loud would difference bicycle strike bear dawn",
 	},
 	{
-		title: "Elijah Earings",
+		title: "Elijah Meyer Earings",
 		price: 21.24,
 		inCart: false,
 		frequentlyBoughtTogether: [
@@ -73,7 +73,7 @@ export const products = [
 			"cool choose require knowledge hit represent fair whom ride dozen farmer dirt gain metal new bow relationship four break goose men saw nation across",
 	},
 	{
-		title: "Beulah Earings",
+		title: "Beulah Horton Earings",
 		price: 80.72,
 		inCart: false,
 		frequentlyBoughtTogether: [
@@ -101,7 +101,7 @@ export const products = [
 			"winter board period refused nervous route bigger member clothes dropped verb essential piano chapter secret had coach trade have date paragraph farm ear charge",
 	},
 	{
-		title: "Edna Earings",
+		title: "Edna Richards Edna Loves Earings No Cap My Sister YARRR Strawberry ghost Earings",
 		price: 65.84,
 		inCart: false,
 		frequentlyBoughtTogether: [
@@ -129,7 +129,7 @@ export const products = [
 			"audience outside for old missing wool fairly duty location total tool different weigh community object guard year climate repeat peace lying piano distance moment",
 	},
 	{
-		title: "Jayden Earings",
+		title: "Jayden Bishop Ortiz Earings",
 		price: 13.59,
 		inCart: false,
 		frequentlyBoughtTogether: [
@@ -157,7 +157,7 @@ export const products = [
 			"had shadow habit satisfied upward though refer function best art paragraph invented brush golden exist begun taste nest rose round clothing sold prove white",
 	},
 	{
-		title: "Sophia Earings",
+		title: "Sophia Gross Earings",
 		price: 56.80,
 		inCart: false,
 		frequentlyBoughtTogether: [
@@ -185,7 +185,7 @@ export const products = [
 			"partly constantly machine rope mental fear jar column hard glad jump create prove pipe breathe fireplace solid model clock her deer wagon bent measure",
 	},
 	{
-		title: "Lily Earings",
+		title: "Lily Crawford Earings",
 		price: 59.42,
 		inCart: false,
 		frequentlyBoughtTogether: [
