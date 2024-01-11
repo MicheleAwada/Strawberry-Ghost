@@ -54,6 +54,8 @@ export default function IndexCarousel(props)
             <Carousel
                 animation="slide"
                 duration={666}
+                fullHeightHover={false}
+                stopAutoPlayOnHover={true}
             >
                 {
                     items.map( (item, i) => <Item key={i} item={item} /> )
