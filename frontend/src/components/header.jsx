@@ -28,8 +28,17 @@ import { Link as ReactRouterLink } from "react-router-dom"
 import { UserContext } from "./user";
 
 const pages = [{name: "Home", link: "/"}, {name: "Products", link: "/products"}, {name: "Contact us", link: "/contact"}];
-const authenticatedSettings = [["Account", <AccountCircleIcon />, "/account", false], ["Cart", <ShoppingCartIcon />, "/cart", false], ["Orders", <ReceiptLongIcon />,  "/orders", false], [null,null, null, true], ["Logout", <LogoutIcon />, "/logout", false]];
-const unAuthenticatedSettings = [["Login", <LoginIcon />, "/login", false], ["Register", <SignUpIcon />, "/logout", false]	];
+const authenticatedSettings = [
+	{ name: "Account", icon: <AccountCircleIcon />, link: "/account", isDivider: false },
+	{ name: "Cart", icon: <ShoppingCartIcon />, link: "/cart", isDivider: false },
+	{ name: "Orders", icon: <ReceiptLongIcon />, link: "/orders", isDivider: false },
+	{ name: null, icon: null, link: null, isDivider: true },
+	{ name: "Logout", icon: <LogoutIcon />, link: "/logout", isDivider: false }
+  ];
+const unAuthenticatedSettings = [
+	{ name: "Login", icon: <LoginIcon />, link: "/login", isDivider: false },
+	{ name: "Register", icon: <SignUpIcon />, link: "/logout", isDivider: false }
+  ];
 
 export default function Header() {
 	const [user] = React.useContext(UserContext)
@@ -158,7 +167,7 @@ export default function Header() {
 									open={Boolean(anchorElUser)}
 									onClose={handleCloseUserMenu}
 								>	
-								{settings.map(([name, icon, link, isDivider], index) => (
+								{settings.map(({name, icon, link, isDivider}, index) => (
 									isDivider ? <Divider key={index} /> : <MenuItem key={index} onClick={handleCloseUserMenu} component={ReactRouterLink} href={link} to={link} >
 										<ListItemIcon>
 											{icon}
