@@ -7,36 +7,45 @@ import Paper from '@mui/material/Paper'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+
+import { ProductPrice } from "./productItem"
+
 function Plus({isEquals=false, ...props}) {
-    return <Typography {...props} variant="h5">{isEquals ? "=" : "+"}</Typography>
+    return <Stack justifyContent="center" alignItems="center" sx={{ width: "100%", height: "100%" }}>
+        <Typography {...props} variant="h5">{isEquals ? "=" : "+"}</Typography>
+    </Stack>
 }
 
 export default function FrequentlyBoughtTogether({ product, ...props }) {
+    const totalCost = product.price + product.frequentlyBoughtTogether.reduce((acc, product) => acc+product.price,0)
+    const frequentlyBoughtTogetherWithCurrentProduct = [product, ...product.frequentlyBoughtTogether]
+
+    const productGridProps = { xs: 12, sm: 4, md: 5, lg:2.25, }
+    const plusGridProps = { xs: 12, sm: 1, md: 1, lg:1, sx: { height: {xs: "2rem", sm: "initial"} } }
     return (
         <Stack {...props}>
-            <Typography mb={8} variant="h4" component="h4" color="initial">Frequently Bought Together</Typography>
+            <Typography mb={8} variant="h4" component="h4" color="initial" textAlign="center">Frequently Bought Together</Typography>
             <Grid container sx={{width: "100%"}} spacing={8}>
-                <Grid item xs={12} sm={6} md={4} lg={3}>
-                    <Stack flexDirection="row" alignItems="center">
-                        <ProductItem product={product} />
-                        <Plus sx={{ ml: 8 }} />
-                    </Stack>
-                </Grid>
-                {/* making sure to include current product item ^ */}
-                {product.frequentlyBoughtTogether.map((currentProduct, index) => 
-            		<Grid key={currentProduct.id} item xs={12} sm={6} md={4} lg={3}>
-                        <Stack flexDirection="row" alignItems="center">
+                {frequentlyBoughtTogetherWithCurrentProduct.map((currentProduct, index) => 
+                    <>
+                        <Grid key={currentProduct.id} item {...productGridProps}>
                             <ProductItem product={currentProduct} />
-                            <Plus sx={{ ml: 8 }} isEquals={product.frequentlyBoughtTogether.length-1===index} />
-                        </Stack>
-                    </Grid>
+                        </Grid>
+                        <Grid key={currentProduct.id} item {...plusGridProps}>
+                            <Plus isEquals={frequentlyBoughtTogetherWithCurrentProduct.length-1===index} />
+                        </Grid>
+                    </>
                     )}
-                <Grid item xs={12} sm={6} md={4} lg={3}>
-                    <Paper variant="outlined" sx={{ height: "100%" }}>
-                        <Stack alignItems="center" justifyContent="center" sx={{ height: "100%" }}>
-                            <Button variant="contained">Add All to Cart</Button>
-                        </Stack>
-                    </Paper>
+                <Grid item {...productGridProps}>
+                    <Stack justifyContent="center" sx={{ height: "100%" }}>
+                        <Paper variant="outlined" sx={{ py: "4rem" }}>
+                            <Stack alignItems="center" justifyContent="center" gap="1rem">
+                                <ProductPrice price={totalCost} textColor="primary" />
+                                <Button variant="contained" startIcon={<AddShoppingCartIcon />}>Add All to Cart</Button>
+                            </Stack>
+                        </Paper>
+                    </Stack>
                 </Grid>
             </Grid>
         </Stack>

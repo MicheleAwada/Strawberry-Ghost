@@ -17,7 +17,7 @@ import { Link as ReactRouterLink } from "react-router-dom"
 import IconButton from '@mui/material/IconButton'
 
 
-export function ProductPrice({ price, sx, ...props }) {
+export function ProductPrice({ price, sx, textColor="initial", ...props }) {
 	const wholeNumber = Math.floor(price);
 	const decimalNumber = Math.floor((price - wholeNumber)*100);
 	const wholeNumberString = wholeNumber.toString();
@@ -29,7 +29,7 @@ export function ProductPrice({ price, sx, ...props }) {
 		<Box sx={{ ...sx }} {...props} >
 			<Stack flexDirection="row">
 				<Typography
-					color={"initial"}
+					color={textColor}
 					fontSize={`${baseFontSize / 2}rem`}
 					sx={{
 						position: "relative",
@@ -39,11 +39,11 @@ export function ProductPrice({ price, sx, ...props }) {
 				>
 					{"$"}
 				</Typography>
-				<Typography color={"initial"} fontSize={`${baseFontSize}rem`}>
+				<Typography color={textColor} fontSize={`${baseFontSize}rem`}>
 					{wholeNumberString}
 				</Typography>
 				<Typography
-					color={"initial"}
+					color={textColor}
 					fontSize={`${baseFontSize / 2}rem`}
 					sx={{
 						position: "relative",
@@ -84,7 +84,7 @@ export default function ProductItem({ product, ProductCartActions=DefaultProduct
                 />
 				<CardContent sx={{ flexGrow: 1 }}>
 					<Link to={productLink} component={ReactRouterLink} variant={isMd ? "h5" : "h6"} >
-						<Typography variant={isMd ? "h5" : "h6"} component="h2" sx={{ display: "block", wordWrap: "break-word", lineClamp: 2, WebkitLineClamp: 2, display: "-webkit-box", WebkitBoxOrient: "vertical" }} lineHeight="1.8rem" height="3.6rem" textOverflow="ellipsis" overflow="hidden" >
+						<Typography variant={isMd ? "h5" : "h6"} component="h2" sx={{ wordWrap: "break-word", lineClamp: 2, WebkitLineClamp: 2, display: "-webkit-box", WebkitBoxOrient: "vertical" }} lineHeight="1.8rem" height="3.6rem" textOverflow="ellipsis" overflow="hidden" >
 							{product.title}
 						</Typography>
 					</Link>

@@ -170,7 +170,7 @@ export default function ProductView() {
                             </Box>
                         </Grid>
                     </Grid>
-                    <FrequentlyBoughtTogether product={product} />
+                    <FrequentlyBoughtTogether sx={{ mt: "5rem" }} product={product} />
                 </Stack>
             </Container>
             <RenderImageRendering />
