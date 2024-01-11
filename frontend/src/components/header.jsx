@@ -27,7 +27,7 @@ import SignUpIcon from '@mui/icons-material/PersonAdd';
 import { Link as ReactRouterLink } from "react-router-dom"
 import { UserContext } from "./user";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = [{name: "Home", link: "/"}, {name: "Products", link: "/products"}, {name: "Contact us", link: "/contact"}];
 const authenticatedSettings = [["Account", <AccountCircleIcon />, "/account", false], ["Cart", <ShoppingCartIcon />, "/cart", false], ["Orders", <ReceiptLongIcon />,  "/orders", false], [null,null, null, true], ["Logout", <LogoutIcon />, "/logout", false]];
 const unAuthenticatedSettings = [["Login", <LoginIcon />, "/login", false], ["Register", <SignUpIcon />, "/logout", false]	];
 
@@ -108,8 +108,8 @@ export default function Header() {
 								}}
 							>
 								{pages.map((page) => (
-									<MenuItem key={page} onClick={handleCloseNavMenu}>
-										<Typography textAlign="center">{page}</Typography>
+									<MenuItem key={page} onClick={handleCloseNavMenu} component={ReactRouterLink} to={page.link}>
+										<Typography textAlign="center">{page.name}</Typography>
 									</MenuItem>
 								))}
 							</Menu>
@@ -132,14 +132,16 @@ export default function Header() {
 									key={page}
 									onClick={handleCloseNavMenu}
 									sx={{ my: 2, color: "white", display: "block" }}
+									LinkComponent={ReactRouterLink}
+									to={page.link}
 								>
-									{page}
+									{page.name}
 								</Button>
 							))}
 						</Box>
 						<Stack flexDirection="row" gap={2} sx={{ flexGrow: 0, mr: {md: "1rem", lg: "2rem"} }}>
 							<Box>
-								<Tooltip title="Open cart">
+								<Tooltip title="Go To cart">
 									<IconButton LinkComponent={ReactRouterLink} to="/cart" size="large" color="inherit" sx={{ p: 0 }} aria-label="go to cart">
 										<ShoppingCartIcon sx={{ width: { md: "2rem", lg: "2.5rem" }, height: { md: "2rem", lg: "2.5rem" } }} />
 									</IconButton>
