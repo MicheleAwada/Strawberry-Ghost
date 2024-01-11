@@ -23,8 +23,8 @@ export default function FrequentlyBoughtTogether({ product, ...props }) {
                     </Stack>
                 </Grid>
                 {/* making sure to include current product item ^ */}
-                {product.frequentlyBoughtTogether.map((currentProduct, index) => 
-            		<Grid item xs={12} sm={6} md={4} lg={3}>
+                {product.frequentlyBoughtTogether.map((currentProduct) => 
+            		<Grid key={currentProduct.id} item xs={12} sm={6} md={4} lg={3}>
                         <Stack flexDirection="row" alignItems="center">
                             <ProductItem product={currentProduct} />
                             <Plus sx={{ ml: 8 }} isEquals={product.frequentlyBoughtTogether.length-1===index} />

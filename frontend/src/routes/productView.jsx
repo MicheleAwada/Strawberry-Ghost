@@ -53,7 +53,7 @@ function ImageRendering( querySelectorAll, imageSrcsIterable ) {
     }
     
     const RenderToLoadImages = () => {
-        return loadAllImages ? <div style={{ display: "none", flexDirection: "row", flexWrap: "wrap", gap: "1rem"}}>{imageSrcsIterable.map((imageSrc, index) => <img style={{width: "100px", height: "100px"}} key={index} className="currentColorImages" src={imageSrc} alt="hidden image for loading"/>)}</div> : null
+        return loadAllImages ? <div style={{ display: "none", flexDirection: "row", flexWrap: "wrap", gap: "1rem"}}>{imageSrcsIterable.map((imageSrc, index) => <img style={{width: "100px", height: "100px"}} key={imageSrc} className="currentColorImages" src={imageSrc} alt="hidden image for loading"/>)}</div> : null
     }
     const refreshClasses = (newQuerySelectorAll=querySelectorAll) => {
           removeImagesEventListeners()
@@ -115,7 +115,7 @@ export default function ProductView() {
                             if (currentVariantImageLength <= selectedImage) {
                                 setSelectedImage(0)
                             }
-                        }} key={index} variant="elevation" elevation={selectedVariant===index ? 6 : 1} sx={{borderRadius: "0.75rem", width: "auto", px:"1rem", py: "0.75rem", overflow: "hidden", cursor: "pointer", boxSizing: "content-box", borderStyle: "none" }}>
+                        }} key={variant.id} variant="elevation" elevation={selectedVariant===index ? 6 : 1} sx={{borderRadius: "0.75rem", width: "auto", px:"1rem", py: "0.75rem", overflow: "hidden", cursor: "pointer", boxSizing: "content-box", borderStyle: "none" }}>
                                     <Stack alignItems="center" justifyContent="center" flexDirection="row" sx={{width: "100%", height: "auto", }}>
                                         <Typography component="p" variant='body2'>{variant.name}</Typography>
                                         {variant.isColor && <><Divider flexItem orientation="vertical" variant="fullWidth" light sx={{mx: 1}} />
