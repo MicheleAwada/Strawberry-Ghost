@@ -28,23 +28,27 @@ export default function FrequentlyBoughtTogether({ product, ...props }) {
         ]
     }, [product])
 
-    const productGridProps = { xs: 12, sm: 4.5, md: 5, lg:2, }
+    const sumGridProps = { xs: 12, sm: 6, md: 12, lg:3, }
+    const productGridProps = { xs: 12, sm: 4.5, md: 3.25, lg:2, }
     const plusGridProps = { xs: 12, sm: 1, md: 1, lg:1, sx: { height: {xs: "2rem", sm: "initial"} } }
+    const equalsGridProps = { xs: 12, sm: 1, md: 12, lg:1, sx: { height: {xs: "2rem", sm: "initial"} } }
     return (
         <Stack {...props}  justifyContent="center" alignItems="center">
             <Typography mb={8} variant="h4" component="h4" color="initial" textAlign="center">Frequently Bought Together</Typography>
             <Grid container sx={{width: "100%"}} spacing={8}>
-                {allFrequentlyBoughtTogether.map((currentProduct, index) => 
-                    <Fragment key={currentProduct.id}>
+                {allFrequentlyBoughtTogether.map((currentProduct, index) => {
+                    const isEquals = allFrequentlyBoughtTogether.length-1===index
+                    return <Fragment key={currentProduct.id}>
                         <Grid item {...productGridProps}>
                             <ProductItem product={currentProduct} />
                         </Grid>
-                        <Grid item {...plusGridProps}>
-                            <Plus isEquals={allFrequentlyBoughtTogether.length-1===index} />
+                        <Grid item {...(isEquals ? equalsGridProps : plusGridProps)}>
+                            <Plus isEquals={isEquals} />
                         </Grid>
                     </Fragment>
+                    }
                     )}
-                <Grid item {...productGridProps}>
+                <Grid item {...sumGridProps}>
                     <Stack justifyContent="center" sx={{ height: "100%" }}>
                         <Paper variant="outlined" sx={{ py: "4rem" }}>
                             <Stack alignItems="center" justifyContent="center" gap="1rem">
