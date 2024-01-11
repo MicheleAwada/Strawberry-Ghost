@@ -53,8 +53,7 @@ export default function IndexCarousel(props)
         <Container sx={{py: "1rem" }} maxWidth="md">
             <Carousel
                 animation="slide"
-                duration={750}
-                autoPlay={false}
+                duration={666}
             >
                 {
                     items.map( (item, i) => <Item key={i} item={item} /> )
