@@ -67,9 +67,12 @@ const DefaultProductCardActions = ({product}) => {
 }
 const DefaultProductCardExtras = ({ children }) => <Stack flexDirection="row" flexWrap="wrap" alignItems="center" mt="0.5rem">{children}</Stack>
 
-export default function ProductItem({ product, ProductCartActions=DefaultProductCardActions, ProductCardExtras = DefaultProductCardExtras }) {
+export default function ProductItem({ product, titleVariant=null, ProductCartActions=DefaultProductCardActions, ProductCardExtras = DefaultProductCardExtras }) {
     const isMd = useMediaQuery(theme => theme.breakpoints.up('md'));
 	const productLink = `/products/${product.id}`
+
+	if (!titleVariant) titleVariant = isMd ? "h5" : "h6"
+
 	return (
 			<Card elevation={4} sx={{ height: "100%", width: "100%" }}>
                 <CardMedia
@@ -83,8 +86,8 @@ export default function ProductItem({ product, ProductCartActions=DefaultProduct
                     image={product.thumbnail}
                 />
 				<CardContent sx={{ flexGrow: 1 }}>
-					<Link to={productLink} component={ReactRouterLink} variant={isMd ? "h5" : "h6"} >
-						<Typography variant={isMd ? "h5" : "h6"} component="h2" sx={{ wordWrap: "break-word", lineClamp: 2, WebkitLineClamp: 2, display: "-webkit-box", WebkitBoxOrient: "vertical" }} lineHeight="1.8rem" height="3.6rem" textOverflow="ellipsis" overflow="hidden" >
+					<Link to={productLink} component={ReactRouterLink} variant={titleVariant} >
+						<Typography variant={titleVariant} component="h2" sx={{ wordWrap: "break-word", lineClamp: 2, WebkitLineClamp: 2, display: "-webkit-box", WebkitBoxOrient: "vertical" }} lineHeight="1.8rem" height="3.6rem" textOverflow="ellipsis" overflow="hidden" >
 							{product.title}
 						</Typography>
 					</Link>
