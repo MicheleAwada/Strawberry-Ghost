@@ -10,6 +10,8 @@ import Box from "@mui/material/Box";
 import { useContext, useEffect } from "react";
 import Footer from "./components/footer"
 
+import ScrollToTop from "./components/scrollToTop"
+
 
 
 export async function loader() {
@@ -18,6 +20,7 @@ export async function loader() {
 }
 
 export default function Root() {
+    ScrollToTop()
     return (
         <Box>
             <RenderMessages />
