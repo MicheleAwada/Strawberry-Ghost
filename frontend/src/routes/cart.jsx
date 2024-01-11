@@ -98,7 +98,7 @@ export default function Cart() {
 
     return (
           <Container maxWidth="lg">
-                <Typography variant={ isSm ? "h4" : "h5" } component="h5" color="initial" sx={{py: {xs: "2rem", sm: "2.5rem", md: "3rem"}, textAlign: "center"}}>
+                <Typography variant={ isSm ? "h4" : "h5" } component="h5" color="initial" gutterBottom sx={{pt: {xs: "1rem", sm: "2rem"}, textAlign: "center"}}>
                     You have {cart.length} items in your cart
                 </Typography>
               <Divider
@@ -106,7 +106,7 @@ export default function Cart() {
                 orientation="horizontal"
                 light={false}
               />
-              <Stack gap={4} flexDirection="row" justifyContent="center" alignItems="center" sx={{ my: 2 }}>
+              <Stack rowGap={2} columnGap={4} flexDirection="row" flexWrap={"wrap"} justifyContent="center" alignItems="center" sx={{ my: 2 }}>
                   <Button variant="contained" size='large' color="primary"  startIcon={<ShoppingCartCheckoutIcon />} disabled={cart.length === 0} LinkComponent={ReactRouterLink} to="/checkout">
                     Checkout
                   </Button>
