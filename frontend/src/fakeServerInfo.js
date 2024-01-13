@@ -9,7 +9,7 @@ function randomImages() {
     const imagesLength = Math.floor(Math.random() * 5) + 1;
     const images = []
     for (let i = 0; i < imagesLength; i++) {
-        images.push(randomImage())
+        images.push({image: randomImage(), alt: "randomalt"})
     }
     return images
 }
@@ -34,7 +34,7 @@ export const products = [
 			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, default: true, isColor: false, name: "big ear", images: [
+			{ id: 4, default: false, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -62,7 +62,7 @@ export const products = [
 			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, default: true, isColor: false, name: "big ear", images: [
+			{ id: 4, default: false, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -90,7 +90,7 @@ export const products = [
 			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, default: true, isColor: false, name: "big ear", images: [
+			{ id: 4, default: false, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -118,7 +118,7 @@ export const products = [
 			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, default: true, isColor: false, name: "big ear", images: [
+			{ id: 4, default: false, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -146,7 +146,7 @@ export const products = [
 			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, default: true, isColor: false, name: "big ear", images: [
+			{ id: 4, default: false, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
@@ -174,7 +174,7 @@ export const products = [
 			{ id: 3, default: false, isColor: true, color: "#0f0", name: "Dark Vader", images: [
                 ...randomImages()
             ] },
-			{ id: 4, default: true, isColor: false, name: "big ear", images: [
+			{ id: 4, default: false, isColor: false, name: "big ear", images: [
                 ...randomImages()
             ] },
 		],
