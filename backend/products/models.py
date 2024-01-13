@@ -37,3 +37,11 @@ class CartItem(AbstractOrderItem):
     saveForLater = models.BooleanField(default=False, blank=True)
 
 
+class OrderProductItem(AbstractOrderItem):
+    order = models.ForeignKey("products.OrderItem", on_delete=models.CASCADE)
+
+class OrderItem(models.Model):
+    time_created = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(default="designing", blank=True, max_length=100)
+
+
