@@ -54,6 +54,13 @@ export default function Admin() {
     }, [actionData])
 
 
+    const highestId = products.reduce((max, product) => {
+        const id = product.id
+        if (id>max) {
+            return id
+        }
+        return max
+    }, 0)
 
     const defaultImage = {
         image: "https://creativelittlewomen.com/wp-content/uploads/2021/11/IMG_2439.jpg",
@@ -69,7 +76,7 @@ export default function Admin() {
             name: ""
     }
     const [product, setProduct] = useState({
-        id: 1000000,
+        id: (highestId+1),
         title: "",
         description: "",
         price: "",
