@@ -19,3 +19,8 @@ class Variant(models.Model):
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE, related_name="variants")
 
 
+class VariantImage(models.Model):
+    image = models.ImageField()
+    alt = models.CharField(max_length=100, default="Image for Variant", blank=True)
+    variant = models.ForeignKey("products.Variant", on_delete=models.CASCADE, related_name="images")
+
