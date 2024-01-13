@@ -19,9 +19,7 @@ function Plus({isEquals=false, ...props}) {
 }
 
 export default function FrequentlyBoughtTogether({ product, ...props }) {
-    console.log(product)
     const [allFrequentlyBoughtTogether, totalCost] = useMemo(() => {
-        console.log(product)
         return  [
             [product, ...product.frequentlyBoughtTogether],
             product.price + product.frequentlyBoughtTogether.reduce((acc, product) => acc+product.price,0)
@@ -38,7 +36,7 @@ export default function FrequentlyBoughtTogether({ product, ...props }) {
             <Grid container sx={{width: "100%"}} spacing={8}>
                 {allFrequentlyBoughtTogether.map((currentProduct, index) => {
                     const isEquals = allFrequentlyBoughtTogether.length-1===index
-                    return <Fragment key={currentProduct.id}>
+                    return <Fragment key={currentProduct.id || index}>
                         <Grid item {...productGridProps}>
                             <ProductItem product={currentProduct} />
                         </Grid>
