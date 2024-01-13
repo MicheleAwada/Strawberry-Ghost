@@ -249,6 +249,18 @@ export default function Admin() {
                 </Box> */}
                 <Button type="sumbit" fullWidth variant="contained">SUBMIT</Button>
             </ReactRouterForm>
+            <Divider
+                      variant="inset"
+                      orientation="horizontal"
+                      sx={{ my: "4rem" }}
+                    ><Typography>How this Product will look like</Typography></Divider>
+            <ProductView product={product} />
+            <Divider
+                      variant="inset"
+                      orientation="horizontal"
+                      sx={{ my: "4rem" }}
+                    >How this Product will look like In the HomePage with The other products (current product is the first)</Divider>
+            <ProductListView products={[product, ...products]} />
         </Container>
     )
 }
