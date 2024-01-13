@@ -24,3 +24,16 @@ class VariantImage(models.Model):
     alt = models.CharField(max_length=100, default="Image for Variant", blank=True)
     variant = models.ForeignKey("products.Variant", on_delete=models.CASCADE, related_name="images")
 
+class AbstractOrderItem(models.Model):
+    quantity = models.IntegerField()
+    product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
+    variant = models.ForeignKey("products.Variant", on_delete=models.CASCADE)
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+class CartItem(AbstractOrderItem):
+    saveForLater = models.BooleanField(default=False, blank=True)
+
+
