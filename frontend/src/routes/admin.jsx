@@ -66,6 +66,131 @@ export default function Admin() {
         thumbnail: "https://creativelittlewomen.com/wp-content/uploads/2021/11/IMG_2439.jpg"
     })
 
+    function handleChangeBase(newChange) {
+        setProduct((oldProduct => ({...oldProduct, ...newChange})))
+    }
+    function handleChangeTitle(event) {
+        handleChangeBase({title: event.target.value})
+    }
+    function handleChangeDescription(event) {
+        handleChangeBase({description: event.target.value})
+    }
+
+    function handleChangePrice(event) {
+        let value = `${event.target.value}`
+        const oldValue = `${product.price}`
+        function getLastAddedLetter(str1, str2) {
+            if (str1.length === str2.length - 1 && str2.slice(0, -1) === str1) {
+              return str2.slice(-1);
+            } else {
+              return null;
+            }
+          }
+        if (getLastAddedLetter(oldValue, value)===".") {
+            value += "00"
+        }
+        handleChangeBase({price: value})
+    }
+    function handleChangeThumbnail(event) {
+        const [file] = event.target.files
+        if (file) {
+            const url = URL.createObjectURL(file)
+            handleChangeBase({thumbnail: url})
+        }
+    }
+    function handleAddVariant() {
+        setProduct((product) => ({...product, variants: [
+            ...product.variants,
+            defaultVariant
+        ]}))
+    }
+    function changeVariant(variantIndex, newVariant) {
+            setProduct(oldProduct => {
+                return {
+                    ...oldProduct,
+                    variants: [
+                      ...oldProduct.variants.slice(0, variantIndex),
+                      {
+                        ...oldProduct.variants[variantIndex],
+                        ...newVariant
+                      },
+                      ...oldProduct.variants.slice(variantIndex + 1)
+                    ]
+                  }
+            }) 
+        }
+    function handleVariantAddImage(event, variantIndex) {
+        setProduct((oldProduct) => {
+            return {
+                ...oldProduct,
+                variants: [
+                ...oldProduct.variants.slice(0, variantIndex),
+                {
+                    ...oldProduct.variants[variantIndex],
+                    images: [
+                        ...oldProduct.variants[variantIndex].images,
+                        defaultImage
+                      ]
+                },
+                ...oldProduct.variants.slice(variantIndex + 1)
+                ]
+          }
+        })
+    }
+    function handleVariantChangeImage(event, variantIndex, imageIndex) {
+        const [file] = event.target.files
+        let url = product.variants[variantIndex].images[imageIndex].image
+        if (file) {
+            url = URL.createObjectURL(file)
+        }
+        setProduct((oldProduct) => {
+            return {
+                ...oldProduct,
+                variants: [
+                ...oldProduct.variants.slice(0, variantIndex),
+                {
+                    ...oldProduct.variants[variantIndex],
+                    images: [
+                        ...oldProduct.variants[variantIndex].images.slice(0,imageIndex),
+                        {...oldProduct.variants[variantIndex].images[imageIndex], image: url},
+                        ...oldProduct.variants[variantIndex].images.slice(imageIndex+1),
+                      ]
+                },
+                ...oldProduct.variants.slice(variantIndex + 1)
+                ]
+          }
+        })
+    }
+    function handleVariantImageAlt(event, variantIndex, imageIndex) {
+        setProduct((oldProduct) => {
+            return {
+                ...oldProduct,
+                variants: [
+                ...oldProduct.variants.slice(0, variantIndex),
+                {
+                    ...oldProduct.variants[variantIndex],
+                    images: [
+                        ...oldProduct.variants[variantIndex].images.slice(0,imageIndex),
+                        {...oldProduct.variants[variantIndex].images[imageIndex], alt: event.target.value},
+                        ...oldProduct.variants[variantIndex].images.slice(imageIndex+1),
+                      ]
+                },
+                ...oldProduct.variants.slice(variantIndex + 1)
+                ]
+          }
+        })
+    }
+
+    function handleVariantName(event, variantIndex) {
+        changeVariant(variantIndex, {name: event.target.value})
+    }
+    function handleVariantColor(event, variantIndex) {
+        changeVariant(variantIndex, {color: event.target.value})
+    }
+    function handleVariantIsColor(event, variantIndex) {
+        changeVariant(variantIndex, {isColor: !product.variants[variantIndex].isColor})
+    }
+
 
 
     return (
