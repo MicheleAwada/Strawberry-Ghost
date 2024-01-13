@@ -7,17 +7,19 @@ import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import FormControlLabel from "@mui/material/FormControlLabel"
 
-import { Form as ReactRouterForm, useLoaderData, useNavigation } from "react-router-dom"
+import { Form as ReactRouterForm, useActionData, useLoaderData, useNavigation } from "react-router-dom"
 
 import ProductView from "./productView"
 import ProductListView from "../components/productListView"
 
 import FileInput from "../components/fileInput"
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Divider from '@mui/material/Divider'
 import { getProducts } from "../fakeApi"
 
-
+import Spinner from "../components/spinner"
+import { createProduct } from "../api"
+import { MessagesContext } from "../root"
 
 export async function loader() {
     const products = await getProducts()
@@ -37,7 +39,19 @@ export default function Admin() {
     const products = useLoaderData();
 
 
-
+    const actionData = useActionData();
+    const navigation = useNavigation();
+    const isLoading = navigation.state === "submitting"
+    const { simpleAddMessage } = useContext(MessagesContext)
+    useEffect(() => {
+        if (actionData!== undefined) {
+            if (actionData.succeeded) {
+                simpleAddMessage("WOHOO", {severity: "success"})
+            } else {
+                simpleAddMessage("NOOO", {severity: "error"})
+            }
+        }
+    }, [actionData])
 
 
 
@@ -247,7 +261,7 @@ export default function Admin() {
                 {/* <Box sx={{bgcolor: "#000000"}}>
                     <Spinner />
                 </Box> */}
-                <Button type="sumbit" fullWidth variant="contained">SUBMIT</Button>
+                <Button type="sumbit" fullWidth variant="contained" startIcon={isLoading ? <Spinner /> : undefined}>SUBMIT</Button>
             </ReactRouterForm>
             <Divider
                       variant="inset"
