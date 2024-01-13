@@ -117,7 +117,7 @@ export default function Header() {
 								}}
 							>
 								{pages.map((page) => (
-									<MenuItem key={page} onClick={handleCloseNavMenu} component={ReactRouterLink} to={page.link}>
+									<MenuItem key={page.name} onClick={handleCloseNavMenu} component={ReactRouterLink} to={page.link}>
 										<Typography textAlign="center">{page.name}</Typography>
 									</MenuItem>
 								))}
@@ -138,7 +138,7 @@ export default function Header() {
 						<Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
 							{pages.map((page) => (
 								<Button
-									key={page}
+									key={page.name}
 									onClick={handleCloseNavMenu}
 									sx={{ my: 2, color: "white", display: "block" }}
 									LinkComponent={ReactRouterLink}
