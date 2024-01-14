@@ -48,3 +48,16 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.ListM
 
 
 
+
+
+class login(ObtainAuthToken):
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        userdata = serializers.MyUserSerializer(user)
+        # userdata.is_valid(raise_exception=True)
+        return Response(userdata.data)
+
