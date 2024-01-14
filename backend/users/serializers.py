@@ -18,3 +18,11 @@ class MyUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ("id", "email", "first_name", "last_name", "cartitem_set", "auth_token")
+class CreateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = ["email", "first_name", "last_name", "password"]
+    def create(self, validated_data):
+        user = UserModel.objects.create_user(**validated_data)
+        Token.objects.get_or_create(user=user)
+        return user
