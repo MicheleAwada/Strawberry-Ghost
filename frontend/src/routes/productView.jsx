@@ -46,8 +46,8 @@ export function ProductDetail({ product }) {
     function getImages() {
         return getSelectedColor().images
     }
-    function getSelectedImageSrc() {
-        return getImages()[selectedImage].image
+    function getSelectedImage() {
+        return getImages()[selectedImage]
     }
     function getImageAlt(image) {
         if (image.alt!==undefined) {
@@ -101,7 +101,7 @@ export function ProductDetail({ product }) {
             <Grid xs={12} md={6} lg={6} item>
                 <Stack gap={4}>
                     <Box sx={{overflow: "hidden", aspectRatio: "4/3", borderRadius: "1rem", width: "100%", }}>
-                        <img src={getSelectedImageSrc()} alt={allImageAlt} style={{ width: "100%", objectFit: "cover"}} />
+                        <img src={getSelectedImage().image} alt={getImageAlt(getSelectedImage())} style={{ width: "100%", objectFit: "cover"}} />
                     </Box>
                     <RenderSelectImages />
                     <Box sx={{display: {xs: "block", md: "none"}}}>
