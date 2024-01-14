@@ -8,9 +8,14 @@ function handleChangeDescription(event, setProduct) {
     baseProductChange({description: event.target.value}, setProduct)
 }
 
-function handleChangePrice(event, setProduct) {
-    let value = `${event.target.value}`
-    baseProductChange({price: value}, setProduct)
+
+const priceRegex = new RegExp(/^\d*(\.\d{0,2})?$/)
+function handleChangePrice(event, product, setProduct) {
+    let value = event.target.value
+    const valid = priceRegex.test(value)
+    console.log(value)
+    console.log(valid)
+    if (valid) baseProductChange({price: value}, setProduct)
 }
 function handleChangeThumbnail(event, setProduct) {
     const [file] = event.target.files
