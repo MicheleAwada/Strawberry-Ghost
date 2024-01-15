@@ -94,6 +94,7 @@ export default function Admin() {
                     <TextField {...addFromName("title")} helperText id="form-admin-product-title" value={product.title} onChange={e => handleChangeTitle(e, setProduct)} label="Title" variant={inputVariant} required />
                     <TextField {...addFromName("description")} id="form-admin-product-description" multiline minRows={4} maxRows={14} value={product.description} onChange={e => handleChangeDescription(e, setProduct)} label="Description" variant={inputVariant} required />
                     <TextField {...addFromName("price")} id="form-admin-product-price" value={product.price} onChange={e => handleChangePrice(e, product, setProduct)} label="Price" variant={inputVariant} required />
+                    <TextField {...addFromName("slug")} id="form-admin-product-slug" value={product.slug} onChange={e => handleChangeSlug(e, setProduct)} label="Slug" variant={inputVariant} required />
                     <Stack alignItems="start">
                         <FileInput {...addFromName("thumbnail")} text="Upload Main Thumbnail *" id="form-admin-product-thumbnail" inputProps={{onChange: e => handleChangeThumbnail(e, setProduct), required: true, accept: "image/*"}} />
                     </Stack>
