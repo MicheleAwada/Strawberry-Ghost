@@ -8,7 +8,7 @@ function handleChangeDescription(event, setProduct) {
     baseProductChange({description: event.target.value}, setProduct)
 }
 
-const slugRegex = new RegExp(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+const slugRegex = new RegExp(/^[a-z0-9]+(?:-[a-zA-Z0-9]+)*$/)
 function handleVerifySlug(slug) {
     return slugRegex.test(slug)
 }
