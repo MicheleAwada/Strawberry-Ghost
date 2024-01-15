@@ -6,6 +6,23 @@ from .serializers import ProductSerializer
 from .models import Product
 from drf_nested_forms.utils import NestedForm
 
+from rest_framework import mixins
+from rest_framework.viewsets import GenericViewSet
+from . import serializers, permissions
+from rest_framework import permissions as drf_permissions
+from django.apps import apps
+
+CartItemModel = apps.get_model('products', 'CartItem')
+
+class CartViewSet(viewsets.ModelViewSet):
+    queryset = CartItemModel.objects.all()
+    serializer_class = serializers.CartSerializer
+    permission_classes = [drf_permissions.IsAuthenticated, permissions.IsAuthorOrNone]
+    def filter_queryset(self, queryset):
+        if self.action == "list":
+            return queryset.filter(user=self.request.user)
+        return super().filter_queryset(queryset)
+
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()

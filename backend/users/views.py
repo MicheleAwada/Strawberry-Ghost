@@ -18,8 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
 
-class CartViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, GenericViewSet):
-    serializer_class = serializers.CartSerializer
+
 
 class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.ListModelMixin, GenericViewSet):
     serializer_class = serializers.MyUserSerializer
