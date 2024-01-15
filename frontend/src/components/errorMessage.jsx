@@ -1,3 +1,17 @@
+function formatError(errorArray) {
+    if (!Array.isArray(errorArray) || errorArray.length === 0) {
+      return null;
+    }
+    const clonedErrorArray = [...errorArray];
+    const lastElement = clonedErrorArray.pop();
+  
+    if (clonedErrorArray.length > 0) {
+      return clonedErrorArray.join(", ") + ", and " + lastElement;
+    } else {
+      return lastElement;
+    }
+  }
+
 function getFullError(error, itemLocation) {
     const returnError = {error: "", isError: false}
     const keys = itemLocation.split(/\]\[|\[|\]/).filter(Boolean);
@@ -14,13 +28,13 @@ function getFullError(error, itemLocation) {
     }
     isError = true;
     
-    let stringError = currentError.join(", ");
+    let stringError = formatError(currentError);
     return {error: stringError, isError: isError};
   }
 function getErrorMessage(error, itemLocation) {
-    return getFullError(error, itemLocation).error;
+    return getFullError(error, itemLocation)[0];
 }
 function getIsError(error, itemLocation) {
-    return getFullError(error, itemLocation).isError;
+    return getFullError(error, itemLocation)[0];
 }
-export {getFullError, getErrorMessage, getIsError}
+export {getFullError, getErrorMessage, getIsError, formatError}
