@@ -8,7 +8,10 @@ function handleChangeDescription(event, setProduct) {
     baseProductChange({description: event.target.value}, setProduct)
 }
 
-
+const slugRegex = new RegExp(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+function handleVerifySlug(slug) {
+    return slugRegex.test(slug)
+}
 function handleChangeSlug(event, setProduct) {
     baseProductChange({slug: event.target.value}, setProduct)
 }
@@ -173,6 +176,7 @@ function defaultProduct(products) {
 
 
 export { defaultProduct,
+    handleVerifySlug,
     handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeSlug, handleChangeThumbnail,
     handleVariantAdd, handleVariantRemove, handleVariantName, handleVariantColor, handleVariantIsColor,
     handleVariantImageAdd, handleVariantImageRemove, handleVariantChangeImage, handleVariantImageAlt, }
