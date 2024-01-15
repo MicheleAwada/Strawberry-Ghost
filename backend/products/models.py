@@ -33,6 +33,7 @@ class AbstractOrderItem(models.Model):
 
     class Meta:
         abstract = True
+        unique_together = [["user", "variant"]]
 
 class CartItem(AbstractOrderItem):
     saveForLater = models.BooleanField(default=False, blank=True)
