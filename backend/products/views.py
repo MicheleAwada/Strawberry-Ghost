@@ -4,12 +4,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import ProductSerializer
 from .models import Product
-
 from drf_nested_forms.utils import NestedForm
+
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
-
+    permission_classes = [permissions.IsStaffOrReadOnly]
+    lookup_field = "slug"
     def create(self, request, *args, **kwargs):
 
         form = NestedForm(request.data)
