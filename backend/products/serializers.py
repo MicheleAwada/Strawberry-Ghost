@@ -1,7 +1,22 @@
 from rest_framework import serializers
 from . import models
+from django.apps import apps
+
+CartItemModel = apps.get_model('products', 'CartItem')
+class CartSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    def validate(self, attrs):
+        variant = attrs.get("variant")
+        product = attrs.get("product")
+
+        if variant not in product.variants.all():
+            raise serializers.ValidationError("Variant does not belong to product.")
+        return attrs
 
 
+    class Meta:
+        model = CartItemModel
+        fields = ("id", "quantity", "user", "variant", "product")
 class VariantImageSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ["id", "image", "alt"]
@@ -16,7 +31,7 @@ class VariantSerializer(serializers.ModelSerializer):
 
     def validate_images(self, value):
         if not (len(value) > 0):
-            raise serializers.ValidationError("Number of variants must be more than 0.")
+            raise serializers.ValidationError("Number of images must be more than 0.")
         return value
 
     def create(self, validated_data):
@@ -30,7 +45,7 @@ class VariantSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     variants = VariantSerializer(many=True, read_only=False)
     class Meta:
-        fields = ["id", "title", "description", "price", "thumbnail", "variants"]
+        fields = ["id", "slug", "title", "description", "price", "thumbnail", "variants"]
         model = models.Product
     def validate_variants(self, value):
         if not (len(value) > 0):
