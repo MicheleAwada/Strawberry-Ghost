@@ -30,7 +30,9 @@ class AbstractOrderItem(models.Model):
     variant = models.ForeignKey("products.Variant", on_delete=models.CASCADE)
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
 
-
+    @property
+    def author(self):
+        return self.user
     class Meta:
         abstract = True
         unique_together = [["user", "variant"]]
