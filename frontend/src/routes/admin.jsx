@@ -45,6 +45,11 @@ export async function action({ request }) {
 
 
 
+    const slug = formData.get("slug")
+    if (!handleVerifySlug(slug)) {
+        console.log("oh no")
+        return {succeeded: false, error: {slug: ["Slug Must Be only Alphanumeric and -"]},errorMessage: "Slug Must Be only Alphanumeric and -", response: null}
+    }
 
 
 
@@ -69,7 +74,6 @@ export default function Admin() {
                 simpleAddMessage("WOHOO", {severity: "success"})
             } else {
                 setError({...actionData.error})
-                console.log(actionData)
                 simpleAddMessage(actionData.errorMessage, {severity: "error"})
             }
         }
@@ -84,6 +88,7 @@ export default function Admin() {
 
     function addFromName(name) {
         const fullError = getFullError(error, name)
+        console.log(fullError)
         return {name: name, helperText: fullError.error, error: fullError.isError}
     }
     const inputVariant = "filled"
@@ -96,7 +101,7 @@ export default function Admin() {
                     <TextField {...addFromName("price")} id="form-admin-product-price" value={product.price} onChange={e => handleChangePrice(e, product, setProduct)} label="Price" variant={inputVariant} required />
                     <TextField {...addFromName("slug")} id="form-admin-product-slug" value={product.slug} onChange={e => handleChangeSlug(e, setProduct)} label="Slug" variant={inputVariant} required />
                     <Stack alignItems="start">
-                        <FileInput {...addFromName("thumbnail")} text="Upload Main Thumbnail *" id="form-admin-product-thumbnail" inputProps={{onChange: e => handleChangeThumbnail(e, setProduct), required: true, accept: "image/*"}} />
+                        <FileInput name="thumbnail" text="Upload Main Thumbnail *" id="form-admin-product-thumbnail" inputProps={{onChange: e => handleChangeThumbnail(e, setProduct), required: true, accept: "image/*"}} />
                     </Stack>
                     <Divider
                     variant="fullWidth"
@@ -129,7 +134,7 @@ export default function Admin() {
                             {variant.images.map((image, imageIndex) => (
                                 <Stack gap="2rem" key={imageIndex} sx={{ pl: {xs: "2rem", sm: "3rem", md: "4rem", lg: "6rem"} }} flexWrap="wrap" flexDirection="row" alignItems="center">
                                     <TextField {...addFromName(`variants[${variantIndex}][images][${imageIndex}][alt]`)} onChange={e => handleVariantImageAlt(e, variantIndex, imageIndex, setProduct)} value={image.alt} label="Name for Image" id="form-admin-product-variants-images-image-alt" variant={inputVariant} />
-                                    <FileInput text="Upload Image for Variant *" {...addFromName(`variants[${variantIndex}][images][${imageIndex}][image]`)} inputProps={{onChange: e => handleVariantChangeImage(e, variantIndex, imageIndex, setProduct), required: true, accept: "image/*" }} id={`variant image ${variantIndex} ${imageIndex}`} />
+                                    <FileInput text="Upload Image for Variant *" name={`variants[${variantIndex}][images][${imageIndex}][image]`} inputProps={{onChange: e => handleVariantChangeImage(e, variantIndex, imageIndex, setProduct), required: true, accept: "image/*" }} id={`variant image ${variantIndex} ${imageIndex}`} />
                                     <Stack flexDirection="row">
                                         <IconButton sx={{aspectRatio: "1/1"}} aria-label="add image to variant" onClick={e => handleVariantImageAdd(e, variantIndex, imageIndex, setProduct)}>
                                           <PlusIcon />
