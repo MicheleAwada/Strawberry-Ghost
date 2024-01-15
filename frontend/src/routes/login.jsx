@@ -16,7 +16,11 @@ import Typography from '@mui/material/Typography'
 import { getFullError } from "../components/errorMessage"
 
 
-
+export async function action({request}) {
+    const formData = await request.formData();
+    const response = await login(formData)
+    return response
+}
 
 
 export default function Login() {
