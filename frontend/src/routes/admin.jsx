@@ -26,7 +26,8 @@ import { createProduct } from "../api"
 import { MessagesContext } from "../root"
 
 import { defaultProduct,
-    handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeThumbnail,
+    handleVerifySlug,
+    handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeSlug, handleChangeThumbnail,
     handleVariantAdd, handleVariantRemove, handleVariantName, handleVariantColor, handleVariantIsColor,
     handleVariantImageAdd, handleVariantImageRemove, handleVariantChangeImage, handleVariantImageAlt } from "../components/adminHandlers"
 
@@ -43,13 +44,10 @@ export async function action({ request }) {
     const formData = await request.formData()
 
 
-    try {
-        const stringPrice = formData.get("price")
-        const price = parseFloat(stringPrice)
-        formData.set("price", price)
-    } catch (e) {
-        return {succeeded: false, error: "Price Must Be a Decimal", response: null}
-    }
+
+
+
+
     console.log(formData)
 
     const response = await createProduct(formData)
@@ -88,15 +86,15 @@ export default function Admin() {
         const fullError = getFullError(error, name)
         return {name: name, helperText: fullError.error, error: fullError.isError}
     }
-
+    const inputVariant = "filled"
     return (
         <Container maxWidth="lg" sx={{ pt: "4rem" }}>
             <ReactRouterForm encType="multipart/form-data" method="POST">
-                <Stack gap="2rem" mb="4rem">
-                    <TextField {...addFromName("title")} helperText id="form-admin-product-title" value={product.title} onChange={e => handleChangeTitle(e, setProduct)} label="Title" variant="outlined" required />
-                    <TextField {...addFromName("description")} id="form-admin-product-description" multiline minRows={4} maxRows={14} value={product.description} onChange={e => handleChangeDescription(e, setProduct)} label="Description" variant="outlined" required />
-                    <TextField {...addFromName("price")} id="form-admin-product-price" value={product.price} onChange={e => handleChangePrice(e, product, setProduct)} label="Price" variant="outlined" required />
-                    <Stack justifyContent="center" alignItems="center">
+                <Stack gap="2rem" mb="6rem">
+                    <TextField {...addFromName("title")} helperText id="form-admin-product-title" value={product.title} onChange={e => handleChangeTitle(e, setProduct)} label="Title" variant={inputVariant} required />
+                    <TextField {...addFromName("description")} id="form-admin-product-description" multiline minRows={4} maxRows={14} value={product.description} onChange={e => handleChangeDescription(e, setProduct)} label="Description" variant={inputVariant} required />
+                    <TextField {...addFromName("price")} id="form-admin-product-price" value={product.price} onChange={e => handleChangePrice(e, product, setProduct)} label="Price" variant={inputVariant} required />
+                    <Stack alignItems="start">
                         <FileInput {...addFromName("thumbnail")} text="Upload Main Thumbnail *" id="form-admin-product-thumbnail" inputProps={{onChange: e => handleChangeThumbnail(e, setProduct), required: true, accept: "image/*"}} />
                     </Stack>
                     <Divider
@@ -114,22 +112,22 @@ export default function Admin() {
                                     <RemoveIcon />
                                 </IconButton>}
                             </Stack>
-                            <TextField {...addFromName(`variants[${variantIndex}][name]`)} value={variant.name} label="Variant's Name" onChange={e => handleVariantName(e, variantIndex, setProduct)} required />
+                            <TextField {...addFromName(`variants[${variantIndex}][name]`)} value={variant.name} label="Variant's Name" onChange={e => handleVariantName(e, variantIndex, setProduct)} variant={inputVariant} required />
                             <Stack>
                                 <FormControlLabel
                                     control={
-                                        <Switch name="isColor" checked={variant.isColor} onChange={e => handleVariantIsColor(e, variantIndex, product, setProduct)} />
+                                        <Switch checked={variant.isColor} onChange={e => handleVariantIsColor(e, variantIndex, product, setProduct)} />
                                     }
                                     label="Is a color variant?"
                                 />
+                                {
+                                    variant.isColor &&
+                                    <TextField {...addFromName(`variants[${variantIndex}][color]`)} label="choose variant color" type="color" onChange={e => handleVariantColor(e, variantIndex, setProduct)} value={variant.color} variant={inputVariant} />
+                                }
                             </Stack>
-                            {
-                                variant.isColor &&
-                                    <TextField {...addFromName(`variants[${variantIndex}][color]`)} label="choose variant color" type="color" onChange={e => handleVariantColor(e, variantIndex, setProduct)} value={variant.color} />
-                            }
                             {variant.images.map((image, imageIndex) => (
                                 <Stack gap="2rem" key={imageIndex} sx={{ pl: {xs: "2rem", sm: "3rem", md: "4rem", lg: "6rem"} }} flexWrap="wrap" flexDirection="row" alignItems="center">
-                                    <TextField {...addFromName(`variants[${variantIndex}][images][${imageIndex}][alt]`)} onChange={e => handleVariantImageAlt(e, variantIndex, imageIndex, setProduct)} value={image.alt} label="Name for Image" id="form-admin-product-variants-images-image-alt" />
+                                    <TextField {...addFromName(`variants[${variantIndex}][images][${imageIndex}][alt]`)} onChange={e => handleVariantImageAlt(e, variantIndex, imageIndex, setProduct)} value={image.alt} label="Name for Image" id="form-admin-product-variants-images-image-alt" variant={inputVariant} />
                                     <FileInput text="Upload Image for Variant *" {...addFromName(`variants[${variantIndex}][images][${imageIndex}][image]`)} inputProps={{onChange: e => handleVariantChangeImage(e, variantIndex, imageIndex, setProduct), required: true, accept: "image/*" }} id={`variant image ${variantIndex} ${imageIndex}`} />
                                     <Stack flexDirection="row">
                                         <IconButton sx={{aspectRatio: "1/1"}} aria-label="add image to variant" onClick={e => handleVariantImageAdd(e, variantIndex, imageIndex, setProduct)}>
@@ -147,7 +145,7 @@ export default function Admin() {
                 </Stack>
                 <Button type="sumbit" fullWidth variant="contained" startIcon={isLoading ? <Spinner /> : undefined}>SUBMIT</Button>
             </ReactRouterForm>
-            <Button type="button" sx={{ mt: "4rem" }} onClick={e => setDemo(true)} fullWidth variant="contained">VIEW DEMO!!</Button>
+            <Button type="button" sx={{ mt: "2rem" }} onClick={e => setDemo(true)} fullWidth variant="contained">VIEW DEMO!!</Button>
             {demo && <><Divider
                       variant="inset"
                       orientation="horizontal"
