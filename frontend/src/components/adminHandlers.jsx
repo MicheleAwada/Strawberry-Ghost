@@ -13,8 +13,6 @@ const priceRegex = new RegExp(/^\d*(\.\d{0,2})?$/)
 function handleChangePrice(event, product, setProduct) {
     let value = event.target.value
     const valid = priceRegex.test(value)
-    console.log(value)
-    console.log(valid)
     if (valid) baseProductChange({price: value}, setProduct)
 }
 function handleChangeThumbnail(event, setProduct) {
@@ -24,12 +22,7 @@ function handleChangeThumbnail(event, setProduct) {
         baseProductChange({thumbnail: url}, setProduct)
     }
 }
-function handleAddVariant(event, setProduct) {
-    setProduct((product) => ({...product, variants: [
-        ...product.variants,
-        defaultVariant
-    ]}))
-}
+
 function baseChangeVariant(variantIndex, newVariant, setProduct) {
         setProduct(oldProduct => {
             return {
@@ -46,6 +39,8 @@ function baseChangeVariant(variantIndex, newVariant, setProduct) {
         }) 
     }
 
+
+
 function handleVariantName(event, variantIndex, setProduct) {
     baseChangeVariant(variantIndex, {name: event.target.value}, setProduct)
 }
@@ -56,9 +51,27 @@ function handleVariantIsColor(event, variantIndex, product, setProduct) {
     baseChangeVariant(variantIndex, {isColor: !product.variants[variantIndex].isColor}, setProduct)
 }
 
+function insertItemAt(array, item, index) {
+    array.splice(index, 0, item);
+    }
+function removeItemAt(array, index) {
+    array.splice(index, 1);
+    }
 
+function handleVariantAdd(event, variantIndex, setProduct) {
+    setProduct((product) => {
+        insertItemAt(product.variants, defaultVariant, variantIndex+1)
+        return {...product}
+    })
+}
+function handleVariantRemove(event, variantIndex, setProduct) {
+    setProduct((product) => {
+        removeItemAt(product.variants, variantIndex+1)
+        return {...product}
+    })
+}
 
-function variantImageBaseChange(newChange, variantIndex, imageIndex, setProduct) {
+function baseVariantImageAffect(variantIndex, changeFunction, setProduct) {
     setProduct((oldProduct) => {
         return {
             ...oldProduct,
@@ -66,11 +79,7 @@ function variantImageBaseChange(newChange, variantIndex, imageIndex, setProduct)
             ...oldProduct.variants.slice(0, variantIndex),
             {
                 ...oldProduct.variants[variantIndex],
-                images: [
-                    ...oldProduct.variants[variantIndex].images.slice(0,imageIndex),
-                    {...oldProduct.variants[variantIndex].images[imageIndex], ...newChange},
-                    ...oldProduct.variants[variantIndex].images.slice(imageIndex+1),
-                  ]
+                images: changeFunction(oldProduct),
             },
             ...oldProduct.variants.slice(variantIndex + 1)
             ]
@@ -78,10 +87,31 @@ function variantImageBaseChange(newChange, variantIndex, imageIndex, setProduct)
     })
 }
 
-function handleVariantAddImage(event, variantIndex, imageIndex, setProduct) {
-    // image index shall be the length of the variant images list before we add the images
-    variantImageBaseChange(defaultVariant, variantIndex, imageIndex, setProduct)
+function handleVariantImageAdd(event, variantIndex, imageIndex, setProduct) {
+    const changeFunction = (oldProduct) => {
+        insertItemAt(oldProduct.variants[variantIndex].images, defaultImage, imageIndex+1)
+        return oldProduct.variants[variantIndex].images
+    }
+    baseVariantImageAffect(variantIndex, changeFunction, setProduct)
 }
+function handleVariantImageRemove(event, variantIndex, imageIndex, setProduct) {
+    const changeFunction = (oldProduct) => {
+        removeItemAt(oldProduct.variants[variantIndex].images, imageIndex)
+        return oldProduct.variants[variantIndex].images
+    }
+    baseVariantImageAffect(variantIndex, changeFunction, setProduct)
+}
+
+function variantImageBaseChange(newChange, variantIndex, imageIndex, setProduct) {
+    const changeFunction = (oldProduct) => ([
+        ...oldProduct.variants[variantIndex].images.slice(0,imageIndex),
+        {...oldProduct.variants[variantIndex].images[imageIndex], ...newChange},
+        ...oldProduct.variants[variantIndex].images.slice(imageIndex+1),
+      ])
+    baseVariantImageAffect(variantIndex, changeFunction, setProduct)
+}
+
+
 
 
 function handleVariantChangeImage(event, variantIndex, imageIndex, setProduct) {
@@ -138,5 +168,5 @@ function defaultProduct(products) {
 
 export { defaultProduct,
     handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeThumbnail,
-    handleAddVariant, handleVariantName, handleVariantColor, handleVariantIsColor,
-    handleVariantAddImage, handleVariantChangeImage, handleVariantImageAlt }
+    handleVariantAdd, handleVariantRemove, handleVariantName, handleVariantColor, handleVariantIsColor,
+    handleVariantImageAdd, handleVariantImageRemove, handleVariantChangeImage, handleVariantImageAlt }
