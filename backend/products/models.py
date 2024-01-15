@@ -48,5 +48,5 @@ class OrderItem(models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(default="designing", blank=True, max_length=100)
     def get_user(self):
-        return self.order_set.first().user
+        return self.orderproductitem_set.first().user
 
