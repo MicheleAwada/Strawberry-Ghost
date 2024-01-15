@@ -30,6 +30,9 @@ import ProductView, { loader as productViewLoader } from './routes/productView';
 import Cart, { loader as cartLoader } from './routes/cart';
 import Orders, { loader as ordersLoader } from './routes/orders';
 import Admin, { loader as adminLoader, action as adminAction } from './routes/admin';
+import { addToCartAction, deleteCartAction,putCartAction} from "./routes/cartActions"
+import Login, {action as loginAction} from './routes/login';
+
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Root />} loader={rootLoader}>
@@ -38,6 +41,10 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='cart' element={<Cart />} loader={cartLoader} />
     <Route path='orders' element={<Orders />} loader={ordersLoader} />
     <Route path='admin' element={<Admin />} action={adminAction} loader={adminLoader} />
+    <Route path='login' element={<Login />} action={loginAction} />
+    <Route path='addToCart' action={addToCartAction} />
+    <Route path='deleteCart' action={deleteCartAction} />
+    <Route path='putCart' action={putCartAction} />
   </Route>
 ));
 
