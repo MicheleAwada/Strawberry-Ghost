@@ -13,8 +13,9 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 import useMediaQuery from "@mui//material/useMediaQuery"
 
-import { Link as ReactRouterLink } from "react-router-dom"
+import { Link as ReactRouterLink, useFetcher } from "react-router-dom"
 import IconButton from '@mui/material/IconButton'
+import Spinner from "./spinner";
 
 
 export function ProductPrice({ price, sx, textColor="initial", ...props }) {
@@ -61,9 +62,17 @@ export function ProductPrice({ price, sx, textColor="initial", ...props }) {
 const DefaultProductCardActions = ({product}) => {
 	const defaultQuantity = 1
 	const defaultVariant = product.variants.find((variant) => variant.default) || product.variants[0]
-	return <IconButton color="primary" aria-label="add to cart" >
-			<AddShoppingCartIcon />
-		</IconButton>
+
+	const fetcher = useFetcher();
+	const sumbitting = fetcher.state === "submitting";
+	return <fetcher.Form action="/addToCart" method="POST">
+		<input type="hidden" name="quantity" value={1} />
+		<input type="hidden" name="variant" value={product.variants[0].id} />
+		<input type="hidden" name="product" value={product.id} />
+		<IconButton color="primary" aria-label="add to cart" type="submit" >
+			{sumbitting ? <Spinner /> : <AddShoppingCartIcon />}
+			</IconButton>
+	</fetcher.Form>
 }
 const DefaultProductCardExtras = ({ children }) => <Stack flexDirection="row" flexWrap="wrap" alignItems="center" mt="0.5rem">{children}</Stack>
 
