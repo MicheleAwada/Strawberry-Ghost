@@ -15,17 +15,22 @@ api.interceptors.request.use((config) => {
 	return config;
 });
 
-function findErrorMessage(e) {
-    console.log("finding error")
-    let errorMessage;
-    try {
-        errorMessage = e.response.data
-    } catch {
-        errorMessage = e.message
+function findError(error) {
+    let errorValue = null;
+    let errorMessage = "Oops, a unknown error occured";
+    if (error.message) {
+        errorMessage = error.message
     }
-    console.log(errorMessage)
-    return errorMessage
+    if (error.response.message) {
+        errorMessage = error.response.message
+    }
+    if (error.response.data) {
+        errorMessage = "Oops, check to see a field has a error to fix it"
+        errorValue = error.response.data
+    }
+    return {errorMessage: errorMessage, error: errorValue}
 }
+
 
 
 async function defaultApi({link, data, type="post"}) {
@@ -33,17 +38,16 @@ async function defaultApi({link, data, type="post"}) {
         const response = await api[type](link, data)
         console.log("api good")
         console.log(response)
-        return {succeeded: true, error: null, response: response.data}
-    } catch (e) {
-        console.log("api bad")
-        console.log(e)
-        return {succeeded: false, error: findErrorMessage(e), response: null}
+        return {succeeded: true, response: response.data}
+    } catch (error) {
+        return {succeeded: false, ...findError(error), response: null}
     }
 }
 
 function getDefaultApiFunction({...props}) {
     return async function(data) {
-        return await defaultApi({...props, data})
+        const response = await defaultApi({...props, data})
+        return response
     }
 }
 function getDefaultApiFunctionWithoutData({...props}) {
