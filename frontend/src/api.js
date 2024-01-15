@@ -34,10 +34,11 @@ function findError(error) {
 
 
 async function defaultApi({link, data, type="post"}) {
+    if (typeof link === "function") {
+        link = link(data)
+    }
     try {
         const response = await api[type](link, data)
-        console.log("api good")
-        console.log(response)
         return {succeeded: true, response: response.data}
     } catch (error) {
         return {succeeded: false, ...findError(error), response: null}
@@ -59,4 +60,12 @@ function getDefaultApiFunctionWithoutData({...props}) {
 
 const createProduct = getDefaultApiFunction({ link: "/api/product/" })
 
-export { api, createProduct };
+const login = getDefaultApiFunction({ link: "/api/login/" })
+
+const addCartItem = getDefaultApiFunction({ link: "/api/cart/" })
+const changeCartItem = getDefaultApiFunction({ link: data => `/api/cart/${data.id}`, type: "put" })
+const deleteCartItem = getDefaultApiFunction({ link: data => `/api/cart/${data.id}`, type: "delete" })
+
+export { createProduct, addCartItem, changeCartItem, deleteCartItem }
+export { login }
+export { api };
