@@ -9,6 +9,11 @@ function handleChangeDescription(event, setProduct) {
 }
 
 
+function handleChangeSlug(event, setProduct) {
+    baseProductChange({slug: event.target.value}, setProduct)
+}
+
+
 const priceRegex = new RegExp(/^\d*(\.\d{0,2})?$/)
 function handleChangePrice(event, product, setProduct) {
     let value = event.target.value
@@ -135,8 +140,8 @@ const defaultVariant = {
         images: [
             defaultImage,
         ],
-        default: false,
         isColor: false,
+        default: false,
         color: "",
         name: ""
 }
@@ -156,6 +161,7 @@ function defaultProduct(products) {
         title: "",
         description: "",
         price: "",
+        slug: "",
         frequentlyBoughtTogether: [],
         variants: [
             defaultVariant,
@@ -167,6 +173,6 @@ function defaultProduct(products) {
 
 
 export { defaultProduct,
-    handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeThumbnail,
+    handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeSlug, handleChangeThumbnail,
     handleVariantAdd, handleVariantRemove, handleVariantName, handleVariantColor, handleVariantIsColor,
-    handleVariantImageAdd, handleVariantImageRemove, handleVariantChangeImage, handleVariantImageAlt }
+    handleVariantImageAdd, handleVariantImageRemove, handleVariantChangeImage, handleVariantImageAlt, }
