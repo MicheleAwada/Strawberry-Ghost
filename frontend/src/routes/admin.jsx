@@ -85,7 +85,8 @@ export default function Admin() {
     }, [product])
 
     function addFromName(name) {
-        return {name: name}
+        const fullError = getFullError(error, name)
+        return {name: name, helperText: fullError.error, error: fullError.isError}
     }
 
     return (
