@@ -7,7 +7,7 @@ class Product(models.Model):
     thumbnail = models.ImageField()
     frequentlyBoughtTogether = models.ManyToManyField("self", blank=True)
     price = models.DecimalField(decimal_places=2, max_digits=20)
-
+    slug = models.SlugField(max_length=100, unique=True, blank=False)
 
     def is_in_cart(self, user):
         return user.cart.filter(product=self).exists()
@@ -29,6 +29,7 @@ class AbstractOrderItem(models.Model):
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
     variant = models.ForeignKey("products.Variant", on_delete=models.CASCADE)
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+
 
     class Meta:
         abstract = True
