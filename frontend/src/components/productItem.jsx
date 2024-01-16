@@ -16,6 +16,9 @@ import useMediaQuery from "@mui//material/useMediaQuery"
 import { Link as ReactRouterLink, useFetcher } from "react-router-dom"
 import IconButton from '@mui/material/IconButton'
 import Spinner from "./spinner";
+import { useContext, useEffect } from "react";
+import { UserContext } from "./user";
+import { MessagesContext } from "./messages";
 
 
 export function ProductPrice({ price, sx, textColor="initial", ...props }) {
@@ -60,16 +63,31 @@ export function ProductPrice({ price, sx, textColor="initial", ...props }) {
 }
 
 const DefaultProductCardActions = ({product}) => {
+	const [user] = useContext(UserContext)
+	const is_authenticated = user.is_authenticated
+
+	const { simpleAddMessage } = useContext(MessagesContext)
+
 	const defaultQuantity = 1
 	const defaultVariant = product.variants.find((variant) => variant.default) || product.variants[0]
 
 	const fetcher = useFetcher();
 	const sumbitting = fetcher.state === "submitting";
+
+	useEffect(() => {
+		console.info(fetcher.data)
+		console.info(fetcher.formData)
+	}, [fetcher])
+
 	return <fetcher.Form action="/addToCart" method="POST">
 		<input type="hidden" name="quantity" value={1} />
 		<input type="hidden" name="variant" value={product.variants[0].id} />
 		<input type="hidden" name="product" value={product.id} />
-		<IconButton color="primary" aria-label="add to cart" type="submit" >
+		<IconButton color="primary" aria-label="add to cart" type={is_authenticated ? "submit" : "button"} onClick={() => {
+			if (!is_authenticated) {
+				simpleAddMessage("You cannot add to cart before you login", {severity: "error"})
+			}
+		}} >
 			{sumbitting ? <Spinner /> : <AddShoppingCartIcon />}
 			</IconButton>
 	</fetcher.Form>
