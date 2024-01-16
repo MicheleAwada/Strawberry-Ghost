@@ -1,6 +1,6 @@
 
 import { Form, useActionData, useNavigation } from "react-router-dom"
-import { login } from "../api"
+import { login, set_token } from "../api"
 
 import TextField from '@mui/material/TextField'
 import Stack from '@mui/material/Stack'
@@ -19,6 +19,9 @@ import { getFullError } from "../components/errorMessage"
 export async function action({request}) {
     const formData = await request.formData();
     const response = await login(formData)
+    if (response.response) {
+        set_token(response.response.auth_token)
+    }
     return response
 }
 
