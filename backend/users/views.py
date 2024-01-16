@@ -7,8 +7,10 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from . import serializers
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
-UserModel = get_user_model()
-ProductModel = apps.get_model('products', 'Product')
+from . import models
+
+from django.core.mail import send_mail
+
 from django.conf import settings
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.views import APIView
@@ -18,7 +20,8 @@ from rest_framework.permissions import IsAuthenticated
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
 
-
+UserModel = get_user_model()
+ProductModel = apps.get_model('products', 'Product')
 
 class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.ListModelMixin, GenericViewSet):
     serializer_class = serializers.MyUserSerializer
@@ -43,10 +46,9 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.ListM
             return []
         return super().get_permissions()
 
-
-
-
-
+class EmailVerificationViewSet(mixins.CreateModelMixin, GenericViewSet):
+    serializer_class = serializers.EmailVerificationSerializer
+    queryset = models.EmailVerification.objects.all()
 
 
 class login(ObtainAuthToken):
@@ -57,7 +59,6 @@ class login(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         userdata = serializers.MyUserSerializer(user)
-        # userdata.is_valid(raise_exception=True)
         return Response(userdata.data)
 
 
