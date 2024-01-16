@@ -5,10 +5,11 @@ from rest_framework import routers
 
 router = routers.SimpleRouter()
 router.register(r'user', views.UserViewSet)
+router.register(r'verification', views.EmailVerificationViewSet)
 
 
 urlpatterns = [
-    path("login/", views.ObtainAuthToken.as_view()),
+    path("login/", views.login.as_view()),
 ]
 
 urlpatterns += router.urls
