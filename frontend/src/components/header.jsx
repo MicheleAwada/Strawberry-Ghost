@@ -69,7 +69,7 @@ export default function Header() {
 		setAnchorElUser(null);
 	};
 
-	const settings = user.isAuthenticated ? authenticatedSettings : unAuthenticatedSettings
+	const settings = user.is_authenticated ? authenticatedSettings : unAuthenticatedSettings
 	return (
 		<>
 			<AppBar ref={headerRef} position="fixed" sx={{borderRadius: "0 0 1rem 1rem"}}>
