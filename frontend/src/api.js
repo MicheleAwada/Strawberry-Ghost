@@ -91,8 +91,11 @@ const addCartItem = getDefaultApiFunction({ link: "/api/cart/" })
 const changeCartItem = getDefaultApiFunction({ link: data => `/api/cart/${data.id}`, method: "put" })
 const deleteCartItem = getDefaultApiFunction({ link: data => `/api/cart/${data.id}`, method: "delete" })
 
+const getProducts = getDefaultApiFunction({ link: "/api/product/", method: "get" })
+const getProduct = getDefaultApiFunction({ link: data => `/api/product/${data.slug}/`, method: "get " })
 
 
 export { createProduct, addCartItem, changeCartItem, deleteCartItem }
+export { getProducts, getProduct }
 export { login, getUser, is_authenticated, set_token, logout }
 export { api };
