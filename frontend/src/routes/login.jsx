@@ -3,6 +3,10 @@ import { Form, useActionData, useNavigate, useNavigation } from "react-router-do
 import { login, set_token } from "../api"
 
 import TextField from '@mui/material/TextField'
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
@@ -15,6 +19,7 @@ import Typography from '@mui/material/Typography'
 
 import { getFullError } from "../components/errorMessage"
 
+import PassInput from "../components/passInput";
 
 export async function action({request}) {
     const formData = await request.formData();
@@ -55,7 +60,6 @@ export default function Login() {
         const fullErrors = getFullError(error, name)
         return {name: name, helperText: fullErrors.error, error: fullErrors.isError}
     }
-    
 
     return (
         <Stack alignItems="center" justifyContent="center" sx={{width: "100%", height: "100%", p: {xs: "1rem", sm: "2rem", md: "3rem", lg: "4rem"}, boxSizing: "border-box"}}>
@@ -66,14 +70,12 @@ export default function Login() {
                         <TextField
                           id="email"
                           {...getFromName("username")}
-                          label="email"
+                          label="Email"
                           required
                         />
-                        <TextField
+                        <PassInput
                           id="passowrd"
-                          type="password"
                           {...getFromName("password")}
-                          label="password"
                           required
                         />
                         {
