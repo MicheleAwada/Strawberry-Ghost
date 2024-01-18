@@ -103,3 +103,10 @@ class GoogleAuth(APIView):
 
 
 
+@api_view(['PUT'])
+def reset_password(request):
+    user = get_object_or_404(UserModel, email=request.data.get('email'))
+    serializer = serializers.ResetPasswordSerializer(instance=user, data=request.data, partial=False)
+    serializer.is_valid(raise_exception=True)
+    user = serializer.save()
+    return return_user_data(user)
