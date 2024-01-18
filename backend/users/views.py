@@ -8,6 +8,7 @@ from . import serializers
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from . import models
+from rest_framework.authtoken.models import Token
 
 from django.core.mail import send_mail
 
@@ -28,7 +29,9 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.ListM
     queryset = UserModel.objects.all()
     permission_classes = [IsAuthenticated]
 
-
+    def list(self, request, *args, **kwargs):
+        userdata = serializers.MyUserSerializer(request.user)
+        return Response(userdata.data)
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -58,6 +61,7 @@ class login(ObtainAuthToken):
                                            context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
+        Token.objects.get_or_create(user=user)
         userdata = serializers.MyUserSerializer(user)
         return Response(userdata.data)
 
