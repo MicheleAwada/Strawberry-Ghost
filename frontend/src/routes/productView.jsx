@@ -8,28 +8,44 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 
-import { getProduct } from "../fakeApi"
+import { getProduct } from "../api"
 
 import { flattenArray } from '../utils'
 
-import { useEffect, useRef, useState } from 'react'
-import {useLoaderData} from "react-router-dom"
+import { useContext, useEffect, useRef, useState } from 'react'
+import {useLoaderData, redirect, useFetcher} from "react-router-dom"
 
 import useImageRendering from '../components/useImageRendering'
 
 import FrequentlyBoughtTogether from "../components/frequentlyBoughtTogether";
+import { UserContext } from '../components/user'
+import { MessagesContext } from '../components/messages'
+import IconButton from '@mui/material/IconButton'
+import Spinner from '../components/spinner'
 
 
 
 export async function loader({params}) {
-    const id = params.id
-    const product = await getProduct(id)
+    const slug = params.slug
+    const product = await getProduct({slug})
+    if (product===undefined) {
+        return redirect("/")
+    }
     return product
 }
 
 export function ProductDetail({ product }) {
+    function AddToCart() {
+
+        // return (
+
+        // )
+        return 
+    }
+
     const [selectedImage, setSelectedImage] = useState(0)
     const [selectedVariant, setSelectedVariant] = useState(0)
 
@@ -76,7 +92,6 @@ export function ProductDetail({ product }) {
         return (
         <>
             <Stack flexDirection={{xs: "column", md: "row"}} flexWrap="wrap" gap={4} {...props}>
-            
                 {product.variants.map((variant, index) => (
                         <Paper component="button" onClick={() => {
                             setSelectedVariant(index)
@@ -96,6 +111,38 @@ export function ProductDetail({ product }) {
         </>
         )
     }
+
+
+    const [user, setUser] = useContext(UserContext)
+    const is_authenticated = user.is_authenticated
+
+    const { simpleAddMessage } = useContext(MessagesContext)
+
+    const defaultQuantity = 1
+    const initalVariantsId = product.variants[0].id
+    function getCartItem() {
+        if (!user.is_authenticated) return false
+        const cartItem = user.cartitem_set.find((cartItem) => initalVariantsId === cartItem.variant) || false
+        return cartItem
+    }
+    const [cartItem, setCartItem] = useState(getCartItem())
+
+
+    const fetcher = useFetcher();
+    const sumbitting = fetcher.state === "submitting";
+    useEffect(() => {
+        if (fetcher.data && fetcher.data.succeeded) {
+            cartItem ? simpleAddMessage("Removed from cart", {severity: "success"}) : simpleAddMessage("Woohoo, added to cart", {severity: "success"})
+            setUser(oldUser => ({...oldUser, ...fetcher.data.response}))
+        }
+    }, [fetcher.data])
+
+    useEffect(() => {
+        setCartItem(getCartItem())
+    }, [user])
+
+
+
     return <>
         <Grid container spacing={8}  flexWrap={{xs:"wrap-reverse", md:"wrap"}}>
             <Grid xs={12} md={6} lg={6} item>
@@ -126,9 +173,19 @@ export function ProductDetail({ product }) {
                             </Button>
                         </Grid>
                         <Grid item xs={12} lg={6}>
-                            <Button variant="outlined" color="primary" sx={{width: "100%"}} startIcon={<AddShoppingCartIcon />}>
-                                Add to Cart
-                            </Button>
+                        <fetcher.Form action={cartItem ? "/deleteCart" : "/addToCart"} method={cartItem ? "DELETE" : "POST"}>
+                            <input type="hidden" name="id" value={cartItem ? cartItem.id : 0} />
+                            <input type="hidden" name="product" value={product.id} />
+                            <input type="hidden" name="quantity" value={defaultQuantity} />
+                            <input type="hidden" name="variant" value={initalVariantsId} />
+                                <Button type={is_authenticated ? "sumbit" : "button"} onClick={() => {
+                                    if (!is_authenticated) {
+                                        simpleAddMessage("You cannot add to cart before you login", {severity: "error"})
+                                    }
+                                }} variant="outlined" color="primary" sx={{width: "100%"}} startIcon={sumbitting ? <Spinner /> : cartItem ? <RemoveShoppingCartIcon /> : <AddShoppingCartIcon />}>
+                                    {sumbitting ? "" : cartItem ? "Remove From Cart" : "Add to Cart"}
+                                </Button>
+                        </fetcher.Form>
                         </Grid>
                     </Grid>
                 </Box>
