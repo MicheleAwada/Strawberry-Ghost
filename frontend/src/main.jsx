@@ -32,16 +32,19 @@ import Orders, { loader as ordersLoader } from './routes/orders';
 import Admin, { loader as adminLoader, action as adminAction } from './routes/admin';
 import { addToCartAction, deleteCartAction,putCartAction} from "./routes/cartActions"
 import Login, {action as loginAction} from './routes/login';
-
+import Signup, {action as signupAction} from './routes/signup';
+import Logout from './routes/logout';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Root />} loader={rootLoader}>
     <Route index element={<Index />} loader={indexLoader} />
-    <Route path='products/:id' element={<ProductView />} loader={productViewLoader} />
+    <Route path='products/:slug' element={<ProductView />} loader={productViewLoader} />
     <Route path='cart' element={<Cart />} loader={cartLoader} />
     <Route path='orders' element={<Orders />} loader={ordersLoader} />
     <Route path='admin' element={<Admin />} action={adminAction} loader={adminLoader} />
     <Route path='login' element={<Login />} action={loginAction} />
+    <Route path='signup' element={<Signup />} action={signupAction} />
+    <Route path='logout' element={<Logout />} />
     <Route path='addToCart' action={addToCartAction} />
     <Route path='deleteCart' action={deleteCartAction} />
     <Route path='putCart' action={putCartAction} />
