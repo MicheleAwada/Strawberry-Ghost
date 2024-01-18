@@ -86,8 +86,7 @@ function logout() {
 
 const createProduct = getDefaultApiFunction({ link: "/api/product/" });
 
-const getUser = getDefaultApiFunction({ link: "/api/user/", method: "get" });
-const login = getDefaultApiFunction({ link: "/api/login/" });
+
 
 const addCartItem = getDefaultApiFunction({ link: "/api/cart/" });
 const changeCartItem = getDefaultApiFunction({
@@ -125,7 +124,17 @@ async function getProduct({ slug }) {
 	return product
 }
 
+const getUser = getDefaultApiFunction({ link: "/api/user/", method: "get" });
+const login = getDefaultApiFunction({ link: "/api/login/" });
+const verification = getDefaultApiFunction({ link: "/api/verification/" });
+const signup = getDefaultApiFunction({ link: "/api/user/" })
+const reset_password = getDefaultApiFunction({ link: "/api/reset_password/", method: "put" })
+const google_login = getDefaultApiFunction({ link: "/api/google_login/" })
+
+
+
 export { createProduct, addCartItem, changeCartItem, deleteCartItem };
 export { getProducts, getProduct };
-export { login, getUser, is_authenticated, set_token, logout };
+export { login, getUser, signup, is_authenticated, set_token, logout, reset_password, google_login };
+export { verification }
 export { api };
