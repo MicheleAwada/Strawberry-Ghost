@@ -12,15 +12,19 @@ import Footer from "./components/footer"
 import ScrollToTop from "./components/scrollToTop"
 
 import { getUser, is_authenticated, logout, getProducts } from "./api"
+import { useGoogleOneTapLogin } from "./routes/googleLogin";
 
 
 export async function loader() {
     getProducts() // to load products from the beggining if the user opened a non products page but no asyncly
-    let user = {};
+    let user = null;
     if (is_authenticated()) {
-        user = await getUser()
-        if (!user.succeeded && user.errorType=="external") {
+        const userGot = await getUser()
+        if (!userGot.succeeded && userGot.errorType=="external") {
             logout()
+        }
+        if (userGot.succeeded) {
+            user = userGot.response
         }
     }
     return user
@@ -30,10 +34,14 @@ export default function Root() {
     const gotUser = useLoaderData()
     const [user, setUser] = useContext(UserContext)
     useEffect(() => {
-        if (gotUser.response) {
-            setUser({...gotUser.response, is_authenticated: true})
+        if (gotUser) {
+            setUser({...gotUser, is_authenticated: true})
         }
     }, [])
+
+    useGoogleOneTapLogin()
+
+
     ScrollToTop()
     return (
         <Box>
