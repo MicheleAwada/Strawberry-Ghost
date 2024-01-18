@@ -65,6 +65,15 @@ function insertItemAt(array, item, index) {
 function removeItemAt(array, index) {
     array.splice(index, 1);
     }
+function moveToFront(array, index) {
+    if (index >= 0 && index < array.length) {
+        const element = array.splice(index, 1)[0];
+        array.unshift(element);
+    } else {
+        console.error("Invalid index provided.");
+    }
+    }
+      
 
 function handleVariantAdd(event, variantIndex, setProduct) {
     setProduct((product) => {
@@ -74,7 +83,13 @@ function handleVariantAdd(event, variantIndex, setProduct) {
 }
 function handleVariantRemove(event, variantIndex, setProduct) {
     setProduct((product) => {
-        removeItemAt(product.variants, variantIndex+1)
+        removeItemAt(product.variants, variantIndex)
+        return {...product}
+    })
+}
+function handleVariantToFront(event, variantIndex, setProduct) {
+    setProduct((product) => {
+        moveToFront(product.variants, variantIndex)
         return {...product}
     })
 }
@@ -105,6 +120,13 @@ function handleVariantImageAdd(event, variantIndex, imageIndex, setProduct) {
 function handleVariantImageRemove(event, variantIndex, imageIndex, setProduct) {
     const changeFunction = (oldProduct) => {
         removeItemAt(oldProduct.variants[variantIndex].images, imageIndex)
+        return oldProduct.variants[variantIndex].images
+    }
+    baseVariantImageAffect(variantIndex, changeFunction, setProduct)
+}
+function handleVariantImageToFront(event, variantIndex, imageIndex, setProduct) {
+    const changeFunction = (oldProduct) => {
+        moveToFront(oldProduct.variants[variantIndex].images, imageIndex)
         return oldProduct.variants[variantIndex].images
     }
     baseVariantImageAffect(variantIndex, changeFunction, setProduct)
@@ -178,5 +200,5 @@ function defaultProduct(products) {
 export { defaultProduct,
     handleVerifySlug,
     handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeSlug, handleChangeThumbnail,
-    handleVariantAdd, handleVariantRemove, handleVariantName, handleVariantColor, handleVariantIsColor,
-    handleVariantImageAdd, handleVariantImageRemove, handleVariantChangeImage, handleVariantImageAlt, }
+    handleVariantAdd, handleVariantRemove, handleVariantToFront, handleVariantName, handleVariantColor, handleVariantIsColor,
+    handleVariantImageAdd, handleVariantImageRemove, handleVariantImageToFront, handleVariantChangeImage, handleVariantImageAlt, }
