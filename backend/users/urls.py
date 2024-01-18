@@ -10,6 +10,8 @@ router.register(r'verification', views.EmailVerificationViewSet)
 
 urlpatterns = [
     path("login/", views.login.as_view()),
+    path("reset_password/", views.reset_password),
+    path("google_login/", views.GoogleAuth.as_view())
 ]
 
 urlpatterns += router.urls
