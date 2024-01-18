@@ -51,7 +51,6 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         form = NestedForm(request.data)
         form.is_nested(raise_exception=True)
-        form.data["variants"][0]["images"][0]["image"] = request.data.get("variants[0][images][0][image]")
 
         serializer = self.get_serializer(data=form.data)
         serializer.is_valid(raise_exception=True)
