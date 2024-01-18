@@ -1,5 +1,5 @@
 
-import { Form, useActionData, useNavigation } from "react-router-dom"
+import { Form, useActionData, useNavigate, useNavigation } from "react-router-dom"
 import { login, set_token } from "../api"
 
 import TextField from '@mui/material/TextField'
@@ -19,7 +19,7 @@ import { getFullError } from "../components/errorMessage"
 export async function action({request}) {
     const formData = await request.formData();
     const response = await login(formData)
-    if (response.response) {
+    if (response.succeeded) {
         set_token(response.response.auth_token)
     }
     return response
@@ -35,7 +35,7 @@ export default function Login() {
     const navigation = useNavigation()
     const loading = navigation.state === "submitting"
     const actionData = useActionData()
-    
+    const navigate = useNavigate()
 
     let [error, setError] = useState({});
     useEffect(() => {
@@ -43,6 +43,7 @@ export default function Login() {
             if (actionData.succeeded) {
                 simpleAddMessage("Successfully Logged In", {severity: "success"})
                 setUser({...actionData.response, is_authenticated: true})
+                navigate("/")
             }
             else {
                 setError(actionData.error)
