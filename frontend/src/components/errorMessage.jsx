@@ -16,6 +16,9 @@ function getFullError(error, itemLocation) {
     const keys = itemLocation.split(/\]\[|\[|\]/).filter(Boolean);
     let isError = false;
     let currentError = error;
+    if (!currentError) {
+        return {error: null, isError: isError};
+    }
     for (const key of keys) {
       if (currentError[key] === undefined) {
         return {error: null, isError: isError}; // Item doesnt exist
