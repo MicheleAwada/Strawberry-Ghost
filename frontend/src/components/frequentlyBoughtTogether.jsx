@@ -19,12 +19,8 @@ function Plus({isEquals=false, ...props}) {
 }
 
 export default function FrequentlyBoughtTogether({ product, ...props }) {
-    const [allFrequentlyBoughtTogether, totalCost] = useMemo(() => {
-        return  [
-            [product, ...product.frequentlyBoughtTogether],
-            product.price + product.frequentlyBoughtTogether.reduce((acc, product) => acc+product.price,0)
-        ]
-    }, [product])
+    const allFrequentlyBoughtTogether = [product, ...product.frequentlyBoughtTogether]
+    const totalCost = product.price + product.frequentlyBoughtTogether.reduce((acc, product) => acc+product.price,0)
 
     const sumGridProps = { xs: 12, sm: 6, md: 12, lg:3, }
     const productGridProps = { xs: 12, sm: 4.5, md: 3.25, lg:2, }
