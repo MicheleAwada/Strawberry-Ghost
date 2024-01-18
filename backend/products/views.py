@@ -12,6 +12,9 @@ from . import serializers, permissions
 from rest_framework import permissions as drf_permissions
 from django.apps import apps
 
+from users.serializers import MyUserSerializer
+
+
 CartItemModel = apps.get_model('products', 'CartItem')
 
 class CartViewSet(viewsets.ModelViewSet):
@@ -22,6 +25,22 @@ class CartViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return queryset.filter(user=self.request.user)
         return super().filter_queryset(queryset)
+    def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)
+        userdata = MyUserSerializer(request.user)
+        return Response(userdata.data, status=status.HTTP_201_CREATED)
+    def update(self, request, *args, **kwargs):
+        super().update(request, *args, **kwargs)
+        userdata = MyUserSerializer(request.user)
+        return Response(userdata.data, status=status.HTTP_200_OK)
+    def partial_update(self, request, *args, **kwargs):
+        super().partial_update(request, *args, **kwargs)
+        userdata = MyUserSerializer(request.user)
+        return Response(userdata.data, status=status.HTTP_200_OK)
+    def destroy(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        userdata = MyUserSerializer(request.user)
+        return Response(userdata.data, status=status.HTTP_200_OK)
 
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
