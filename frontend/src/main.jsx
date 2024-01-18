@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 
 import './index.scss'
 
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 import MessagesProvider from "./components/messages";
 import UserProvider from "./components/user";
 
@@ -32,8 +34,9 @@ import Orders, { loader as ordersLoader } from './routes/orders';
 import Admin, { loader as adminLoader, action as adminAction } from './routes/admin';
 import { addToCartAction, deleteCartAction,putCartAction} from "./routes/cartActions"
 import Login, {action as loginAction} from './routes/login';
-import Signup, {action as signupAction} from './routes/signup';
+import Signup, {action as signupAction, verificationAction} from './routes/signup';
 import Logout from './routes/logout';
+import ResetPassword, { action as resetPassword } from './routes/resetPassword';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Root />} loader={rootLoader}>
@@ -44,6 +47,8 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='admin' element={<Admin />} action={adminAction} loader={adminLoader} />
     <Route path='login' element={<Login />} action={loginAction} />
     <Route path='signup' element={<Signup />} action={signupAction} />
+    <Route path='reset_password' element={<ResetPassword />} action={resetPassword} />
+    <Route path='email_verification' action={verificationAction} />
     <Route path='logout' element={<Logout />} />
     <Route path='addToCart' action={addToCartAction} />
     <Route path='deleteCart' action={deleteCartAction} />
@@ -55,12 +60,14 @@ const router = createBrowserRouter(createRoutesFromElements(
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ThemeProvider theme={THEME}>
-      <UserProvider>
-        <MessagesProvider>
-          <RouterProvider router={router} />
-        </MessagesProvider>
-      </UserProvider>
-    </ThemeProvider>
+    <GoogleOAuthProvider clientId="477408785210-546nej1b7m5qc5te6dcb1vdpe2eghbt6.apps.googleusercontent.com">
+      <ThemeProvider theme={THEME}>
+        <UserProvider>
+          <MessagesProvider>
+            <RouterProvider router={router} />
+          </MessagesProvider>
+        </UserProvider>
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   </React.StrictMode>,
 )
