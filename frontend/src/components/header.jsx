@@ -37,7 +37,7 @@ const authenticatedSettings = [
   ];
 const unAuthenticatedSettings = [
 	{ name: "Login", icon: <LoginIcon />, link: "/login", isDivider: false },
-	{ name: "Register", icon: <SignUpIcon />, link: "/logout", isDivider: false }
+	{ name: "Register", icon: <SignUpIcon />, link: "/signup", isDivider: false }
   ];
 
 export default function Header() {
