@@ -1,7 +1,6 @@
 import { createContext, useState } from "react";
-import { getUser } from "../fakeApi";
 
-const baseUser = {
+export const baseUser = {
     is_authenticated: false
 }
 export const UserContext = createContext([baseUser, () => {}]);
