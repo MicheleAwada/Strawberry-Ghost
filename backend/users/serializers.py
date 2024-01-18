@@ -57,7 +57,6 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
         if get_old_emails_attempts(email)>30:
             raise ValidationError("Too many attempts, please contact us")
         return attrs
-        10
     def create(self, validated_data):
         email = validated_data["email"]
         prev_attempts = get_old_emails_attempts(email)
@@ -74,3 +73,20 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
             fail_silently=False,
         )
         return object
+
+class ResetPasswordSerializer(serializers.ModelSerializer):
+    email_verification_code = serializers.CharField(max_length=100, required=True)
+    class Meta:
+        model = models.User
+        fields = ["email", "password", "email_verification_code"]
+    def validate(self, attrs):
+        email = attrs["email"]
+        email_verification_code = attrs.pop("email_verification_code")
+        email_validation = models.EmailVerification.objects.get(email=email)
+        if not email_validation.is_valid(token=email_verification_code):
+            raise ValidationError("Invalid verification code")
+        return attrs
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data["password"])
+        instance.save()
+        return instance
