@@ -24,20 +24,21 @@ from google.oauth2 import id_token
 UserModel = get_user_model()
 ProductModel = apps.get_model('products', 'Product')
 
+def return_user_data(user):
+    userdata = serializers.MyUserSerializer(user)
+    return Response(userdata.data)
 class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.ListModelMixin, GenericViewSet):
     serializer_class = serializers.MyUserSerializer
     queryset = UserModel.objects.all()
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        userdata = serializers.MyUserSerializer(request.user)
-        return Response(userdata.data)
+        return return_user_data(request.user)
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        userdata = serializers.MyUserSerializer(user)
-        return Response(userdata.data)
+        return return_user_data(user)
 
 
     def get_serializer_class(self, *args, **kwargs):
@@ -66,18 +67,18 @@ class login(ObtainAuthToken):
         return Response(userdata.data)
 
 
-# google_client_id = settings.GOOGLE_CLIENT_ID
-# google_secret = settings.GOOGLE_CLIENT_SECRET
-google_client_id = "batata"
-google_secret = "batata"
+GOOGLE_CLIENT_ID = settings.GOOGLE_CLIENT_ID
+
 class GoogleAuth(APIView):
     def post(self, request):
         data = request.data
         token = data.get('credential')
+        print("new request")
+        print(token)
         try:
-            idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), google_client_id)
+            idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), GOOGLE_CLIENT_ID)
 
-            if not (idinfo["aud"] == google_client_id == data.get("clientId")):
+            if not (idinfo["aud"] == GOOGLE_CLIENT_ID == data.get("clientId")):
                 raise ValidationError("Invalid client ID.")
         except:
             # Invalid token
@@ -85,7 +86,9 @@ class GoogleAuth(APIView):
         else:
             userid = str(idinfo['sub'])
             email = idinfo.get('email')
-            name = idinfo.get("name")
+            name = idinfo.get('name').split(" ")
+            first_name = name[0] or ""
+            last_name = name[1] or ""
             google_users_group, created = Group.objects.get_or_create(name="google_users")
 
 
@@ -94,5 +97,9 @@ class GoogleAuth(APIView):
             if user_exists:# login account
                 user = user.first()
             else: # create account
-                user = UserModel.objects.create_user(email=email, name=name, password="",)
+                user = UserModel.objects.create_user(email=email, password="", first_name=first_name, last_name=last_name, google_id=userid) # empty "" password is never equal to a password
+                user.groups.add(google_users_group)
             return return_user_data(user)
+
+
+
