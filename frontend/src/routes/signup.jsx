@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
+import Divider from '@mui/material/Divider'
 import Typography from '@mui/material/Typography'
 
 import { Form, useActionData, useFetcher, useNavigate, useNavigation, useSubmit } from 'react-router-dom'
@@ -21,6 +22,7 @@ import { set_token, signup, verification } from '../api'
 import Spinner from '../components/spinner'
 import { MessagesContext } from '../root';
 import { UserContext } from "../components/user";
+import { GoogleButton } from "./googleLogin";
 import PassInput from "../components/passInput";
 
 
@@ -67,6 +69,10 @@ function SignupForm({ setStep, getFromName, setError }) {
     return <fetcher.Form action='/email_verification' method="POST">
         <Stack flexDirection={"column"} gap={2}>
             <Typography variant="h5" color="primary" gutterBottom sx={{textAlign: "center"}}>Sign Up</Typography>
+                        <Stack alignItems="center">
+                            <GoogleButton />
+                        </Stack>
+                        <Divider variant="middle" flexItem sx={{my: "1rem"}} />
             <Grid container spacing={2}>
                 <Grid xs={12} md={6}
                     item
