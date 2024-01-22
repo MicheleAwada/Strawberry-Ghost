@@ -11,7 +11,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 
-import { getProduct } from "../api"
+import { getProduct, getProducts } from "../api"
 
 import { flattenArray } from '../utils'
 
@@ -29,23 +29,17 @@ import Spinner from '../components/spinner'
 
 
 export async function loader({params}) {
+    const products = await getProducts()
+
     const slug = params.slug
     const product = await getProduct({slug})
     if (product===undefined) {
         return redirect("/")
     }
-    return product
+    return {product, products}
 }
 
 export function ProductDetail({ product }) {
-    function AddToCart() {
-
-        // return (
-
-        // )
-        return 
-    }
-
     const [selectedImage, setSelectedImage] = useState(0)
     const [selectedVariant, setSelectedVariant] = useState(0)
 
@@ -198,15 +192,17 @@ export function ProductDetail({ product }) {
 
 
 
-export default function ProductView({ product=null }) {
-    if (product===null) product = useLoaderData();
+export default function ProductView({ product=null, products=null }) {
+    if (product===null && products===null) {
+        ({product, products} = useLoaderData())
+    }
 
     return (
         <>
             <Container maxWidth="xl" sx={{py:"1rem"}}>
                 <Stack>
                     <ProductDetail product={product} />
-                    <FrequentlyBoughtTogether sx={{ mt: "5rem" }} product={product} />
+                    <FrequentlyBoughtTogether sx={{ mt: "5rem" }} product={product} products={products} />
                 </Stack>
             </Container>
         </>
