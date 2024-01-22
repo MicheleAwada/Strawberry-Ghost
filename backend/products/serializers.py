@@ -42,6 +42,35 @@ class VariantSerializer(serializers.ModelSerializer):
         image_serializer.save(variant=variant)
         return variant
 
+    def update(self, instance, validated_data):
+        images_data = validated_data.pop('images')
+        instance = super().update(instance, validated_data)
+
+        existing_images_ids = [image.id for image in instance.images.all()]
+
+        new_added_images_id = []
+
+
+        for image_data in images_data:
+            image_id = image_data.get('for_update_id', None)
+            if image_id in existing_images_ids:
+                image = instance.images.get(id=image_id)
+
+                image_serializer = VariantImageSerializer(image, data=image_data, partial=True)
+            else:
+                image_serializer = VariantImageSerializer(data=image_data)
+
+            image_serializer.is_valid(raise_exception=True)
+            new_instance = image_serializer.save(variant=instance)
+            new_added_images_id.append(new_instance.id)
+
+
+        for image in instance.images.all():
+            if image.id not in new_added_images_id:
+                image.delete()
+
+
+        return instance
 class ProductSerializer(serializers.ModelSerializer):
     variants = VariantSerializer(many=True, read_only=False)
     class Meta:
