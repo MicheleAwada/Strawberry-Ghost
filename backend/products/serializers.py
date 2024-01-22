@@ -44,6 +44,25 @@ class VariantImageSerializer(serializers.ModelSerializer):
 
         validated_data["image"].file = buffer
         return super().create(validated_data)
+    def update(self, instance, validated_data):
+        #img crop
+        uncroppedImage = validated_data.get("image", None)
+        if uncroppedImage is not None:
+            x = validated_data.pop("image_crop_x")
+            y = validated_data.pop("image_crop_y")
+            width = validated_data.pop("image_crop_width")
+            height = validated_data.pop("image_crop_height")
+
+            img = Image.open(uncroppedImage)
+            newImage = img.crop((x, y, x + width, y + height))
+            newImageFormat = img.format.lower()
+
+            buffer = io.BytesIO()
+            newImage.save(buffer, format=newImageFormat)
+            buffer.seek(0)
+
+            validated_data["image"].file = buffer
+        return super().update(instance, validated_data)
 
 class VariantSerializer(serializers.ModelSerializer):
     images = VariantImageSerializer(many=True, read_only=False)
