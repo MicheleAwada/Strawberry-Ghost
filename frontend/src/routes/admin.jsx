@@ -33,6 +33,8 @@ import { defaultProduct,
     handleVariantImageAdd, handleVariantImageRemove, handleVariantImageToFront, handleVariantChangeImage, handleVariantImageAlt, } from "../components/adminHandlers"
 
 import { getFullError } from "../components/errorMessage"
+import ImageCropUploader from "../components/cropFileInput"
+
 
 
 
@@ -129,8 +131,8 @@ export default function Admin() {
                     <TextField {...addFromName("price")} id="form-admin-product-price" value={product.price} onChange={e => handleChangePrice(e, product, setProduct)} label="Price" variant={inputVariant} required />
                     <TextField {...addFromName("slug")} id="form-admin-product-slug" value={product.slug} onChange={e => handleChangeSlug(e, setProduct)} label="Slug" variant={inputVariant} required />
                     <Stack alignItems="start">
-                        <FileInput name="thumbnail" text="Upload Main Thumbnail *" id="form-admin-product-thumbnail" inputProps={{onChange: e => handleChangeThumbnail(e, setProduct), required: true, accept: "image/*"}} url={product.thumbnail} />
-                    </Stack>
+                    {product.frequentlyBoughtTogether.map((productId, index) => <input type="hidden" key={productId} value={productId} name={`frequentlyBoughtTogether[${index}]`} />)}
+                    <ImageCropUploader cropInfoInputsName={{ x: "thumbnail_crop_x", y: "thumbnail_crop_y", width: "thumbnail_crop_width", height: "thumbnail_crop_height" }} croppedData={product} setCroppedData={setProduct} imageDisplayName="thumbnail" fileInputProps={{ buttonText: "Upload Main Thumbnail *", inputProps: { name: "thumbnail", required: true }}} />
                     <Divider
                     variant="fullWidth"
                     orientation="horizontal"
