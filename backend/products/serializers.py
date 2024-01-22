@@ -18,15 +18,17 @@ class CartSerializer(serializers.ModelSerializer):
         model = CartItemModel
         fields = ("id", "quantity", "user", "variant", "product")
 class VariantImageSerializer(serializers.ModelSerializer):
+    for_update_id = serializers.IntegerField(write_only=True, required=False)
     class Meta:
-        fields = ["id", "image", "alt"]
+        fields = ["id", "for_update_id", "image", "alt", "image_crop_x", "image_crop_y", "image_crop_width", "image_crop_height"]
         model = models.VariantImage
 
 class VariantSerializer(serializers.ModelSerializer):
     images = VariantImageSerializer(many=True, read_only=False)
 
+    for_update_id = serializers.IntegerField(write_only=True, required=False)
     class Meta:
-        fields = ["id", "color", "name", "default", "images"]
+        fields = ["id", "for_update_id", "color", "name", "images"]
         model = models.Variant
 
     def validate_images(self, value):
