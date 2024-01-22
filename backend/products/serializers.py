@@ -80,6 +80,28 @@ class ProductSerializer(serializers.ModelSerializer):
         if not (len(value) > 0):
             raise serializers.ValidationError("Number of variants must be more than 0.")
         return value
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        #img crop
+        oldThumbnail = attrs.get("thumbnail", None)
+        if oldThumbnail is None:
+            return attrs
+        x = attrs.pop("thumbnail_crop_x")
+        y = attrs.pop("thumbnail_crop_y")
+        width = attrs.pop("thumbnail_crop_width")
+        height = attrs.pop("thumbnail_crop_height")
+
+        img = Image.open(oldThumbnail)
+        newThumbnail = img.crop((x, y, x + width, y + height))
+        newThumbnailFormat = img.format.lower()
+
+        buffer = io.BytesIO()
+        newThumbnail.save(buffer, format=newThumbnailFormat)
+        buffer.seek(0)
+
+        attrs["thumbnail"].file = buffer
+
+        return attrs
 
     def create(self, validated_data):
         variants_data = validated_data.pop('variants')
