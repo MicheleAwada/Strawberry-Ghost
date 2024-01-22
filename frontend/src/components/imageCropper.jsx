@@ -42,6 +42,24 @@ function ImageCropper({ image, onCropDone, onCropCancel, buttonCancelProps={}, b
                     }}
                 />
             </Box>
+          <Stack direction="row" justifyContent="end" gap={4} sx={{ width: "100%", py: "2rem", px: "3rem", boxSizing: "border-box" }}>
+            <Button color="primary" variant="outlined"
+                onClick={onCropCancel}
+                {...buttonCancelProps}
+            >
+                Cancel
+            </Button>
+            <Button
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                    onCropDone(croppedArea);
+                }}
+                {...buttonDoneProps}
+            >
+              Done
+            </Button>
+          </Stack>
         </Stack>
     </Paper>
   );
