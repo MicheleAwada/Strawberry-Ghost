@@ -140,6 +140,14 @@ function variantImageBaseChange(newChange, variantIndex, imageIndex, setProduct)
       ])
     baseVariantImageAffect(variantIndex, changeFunction, setProduct)
 }
+function variantImageBaseFunctionChange(newChange, variantIndex, imageIndex, setProduct) {
+    const changeFunction = (oldProduct) => ([
+        ...oldProduct.variants[variantIndex].images.slice(0,imageIndex),
+        {...oldProduct.variants[variantIndex].images[imageIndex], ...newChange(oldProduct.variants[variantIndex].images[imageIndex])},
+        ...oldProduct.variants[variantIndex].images.slice(imageIndex+1),
+      ])
+    baseVariantImageAffect(variantIndex, changeFunction, setProduct)
+}
 
 
 
