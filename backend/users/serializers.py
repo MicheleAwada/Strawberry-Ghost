@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from rest_framework.exceptions import ValidationError
 
 from django.core.validators import validate_email
+from django.contrib.auth.password_validation import validate_password
 
 CartItemModel = apps.get_model('products', 'CartItem')
 UserModel = get_user_model()
@@ -25,6 +26,8 @@ class MyUserSerializer(serializers.ModelSerializer):
         fields = ("id", "email", "first_name", "last_name", "cartitem_set", "auth_token")
 class CreateUserSerializer(serializers.ModelSerializer):
     email_verification_code = serializers.CharField(max_length=100, required=True)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+
     class Meta:
         model = UserModel
         fields = ["email", "first_name", "last_name", "password", "email_verification_code"]
