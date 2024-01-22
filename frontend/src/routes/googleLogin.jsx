@@ -40,8 +40,11 @@ export function useGoogleOneTapLogin() {
 
 export function GoogleButton() {
     const { simpleAddMessage } = useContext(MessagesContext)
+    const [_, setUser] = useContext(UserContext)
 
     return (
-        <GoogleLogin />
+        <GoogleLogin onSuccess={(cred) => handleOnSuccess(cred, setUser, simpleAddMessage)}
+            onError={() => handleOnError(simpleAddMessage)}
+        />
     )
 }
