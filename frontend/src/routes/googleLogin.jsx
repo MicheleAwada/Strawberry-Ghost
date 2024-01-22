@@ -15,7 +15,7 @@ async function handleOnSuccess(credentialResponse, setUser, simpleAddMessage) {
         set_token(response.response.auth_token)
         setUser({...response.response, is_authenticated: true, is_google_user: true})
     } else {
-        simpleAddMessage("Whops, Google Login Failed", {severity: "error"})
+        simpleAddMessage(response.errorMessage, {severity: "error"})
     }
     console.log("response of google login")
     console.log(response)
