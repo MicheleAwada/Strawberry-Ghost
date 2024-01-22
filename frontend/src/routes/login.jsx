@@ -16,10 +16,12 @@ import { MessagesContext } from "../root"
 import { useContext, useEffect, useState } from "react"
 import Spinner from "../components/spinner"
 import Typography from '@mui/material/Typography'
+import Divider from '@mui/material/Divider'
 
 import { getFullError } from "../components/errorMessage"
 
 import PassInput from "../components/passInput";
+import { GoogleButton } from "./googleLogin";
 
 export async function action({request}) {
     const formData = await request.formData();
@@ -64,31 +66,35 @@ export default function Login() {
     return (
         <Stack alignItems="center" justifyContent="center" sx={{width: "100%", height: "100%", p: {xs: "1rem", sm: "2rem", md: "3rem", lg: "4rem"}, boxSizing: "border-box"}}>
             <Paper sx={{p: {xs: "1rem", sm: "2rem", md: "3rem", lg: "4rem"}}}>
-                <Form method="POST">
-                    <Stack flexDirection={"column"} gap={2}>
-                        <Typography variant="h5" color="primary" sx={{textAlign: "center"}}>Log In</Typography>
-                        <TextField
-                          id="email"
-                          {...getFromName("username")}
-                          label="Email"
-                          required
-                        />
-                        <PassInput
-                          id="passowrd"
-                          {...getFromName("password")}
-                          required
-                        />
-                        {
-                            getFullError(error, "non_field_errors").isError && 
-                            <Typography id="user-login-form-non-field-errors" color="error">
-                            {getFullError(error, "non_field_errors").error}
-                        </Typography>
-                        }
-                        <Button variant="contained" color="primary" type="submit" startIcon={loading && <Spinner />}>
-                            Submit
-                        </Button>
-                    </Stack>
-                </Form>
+                <Stack alignItems="center" gap={2}>
+                    <Form method="POST">
+                        <Stack flexDirection={"column"} gap={2}>
+                            <Typography variant="h5" color="primary" sx={{textAlign: "center"}}>Log In</Typography>
+                            <TextField
+                              id="email"
+                              {...getFromName("username")}
+                              label="Email"
+                              required
+                            />
+                            <PassInput
+                              id="passowrd"
+                              {...getFromName("password")}
+                              required
+                            />
+                            {
+                                getFullError(error, "non_field_errors").isError &&
+                                <Typography id="user-login-form-non-field-errors" color="error">
+                                {getFullError(error, "non_field_errors").error}
+                            </Typography>
+                            }
+                            <Button variant="contained" color="primary" type="submit" startIcon={loading && <Spinner />}>
+                                Submit
+                            </Button>
+                        </Stack>
+                    </Form>
+                    <Divider variant="middle" flexItem sx={{}} />
+                    <GoogleButton />
+                </Stack>
             </Paper>
         </Stack>
     )
