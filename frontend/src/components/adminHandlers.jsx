@@ -1,3 +1,6 @@
+import { flattenArray } from "../utils"
+import { baseState as baseCropImageState } from "./cropFileInput"
+
 function baseProductChange(newChange, setProduct) {
     setProduct((oldProduct => ({...oldProduct, ...newChange})))
 }
@@ -72,7 +75,7 @@ function moveToFront(array, index) {
     } else {
         console.error("Invalid index provided.");
     }
-    }
+}
       
 
 function handleVariantAdd(event, variantIndex, setProduct) {
@@ -177,7 +180,7 @@ function setVariantImageForCropComp(value, variantIndex, imageIndex, setProduct)
 
 
 const defaultImage = {
-    image: "https://creativelittlewomen.com/wp-content/uploads/2021/11/IMG_2439.jpg",
+    ...baseCropImageState,
     alt: "",
 }
 const defaultVariant = {
@@ -190,34 +193,46 @@ const defaultVariant = {
         name: ""
 }
 
-function defaultProduct(products) {
-    const highestId = products.reduce((max, product) => {
-        const id = product.id
-        if (id>max) {
-            return id
-        }
-        return max
-    }, 0)
+const defaultProduct = {
+    title: "",
+    description: "",
+    price: "",
+    slug: "",
+    frequentlyBoughtTogether: [],
+    variants: [
+        defaultVariant,
+    ],
+    ...baseCropImageState,
+    thumbnail: "https://creativelittlewomen.com/wp-content/uploads/2021/11/IMG_2439.jpg"
+}
+
+function defaultImageWithIds(products) {
+    const highestId = Math.max(...flattenArray(products.map(product => product.variants.map(variant => variant.images.map(image => image.id)))))
+
+    return { ...defaultImage, id: (highestId+1), }
+
+}
+
+function defaultVariantWithIds(products) {
+    const highestId = Math.max(...flattenArray(products.map(product => product.variants.map(variant => variant.id))))
+
+    console.log({ ...defaultVariant, id: (highestId+1), images: [defaultImageWithIds(products)] } )
+    return { ...defaultVariant, id: (highestId+1), images: [defaultImageWithIds(products)] }
+}
 
 
-   return {
-        id: (highestId+1),
-        title: "",
-        description: "",
-        price: "",
-        slug: "",
-        frequentlyBoughtTogether: [],
-        variants: [
-            defaultVariant,
-        ],
-        thumbnail: "https://creativelittlewomen.com/wp-content/uploads/2021/11/IMG_2439.jpg"
-    }
+function defaultProductWithIds(products) {
+    const highestId = Math.max(...products.map(product => product.id))
+
+
+    console.log({ ...defaultProduct, id: (highestId+1), variants: [defaultVariantWithIds(products)] } )
+    return { ...defaultProduct, id: (highestId+1), variants: [defaultVariantWithIds(products)] } 
 
 }
 
 
-export { defaultProduct,
+export { defaultProductWithIds,
     handleVerifySlug,
-    handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeSlug, handleChangeThumbnail,
+    handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeSlug,
     handleVariantAdd, handleVariantRemove, handleVariantToFront, handleVariantName, handleVariantColor, handleVariantIsColor,
-    handleVariantImageAdd, handleVariantImageRemove, handleVariantImageToFront, handleVariantChangeImage, handleVariantImageAlt, }
+    handleVariantImageAdd, handleVariantImageRemove, handleVariantImageToFront, handleVariantImageAlt, getCropInfoInputsNameForVariantImage, setVariantImageForCropComp }
