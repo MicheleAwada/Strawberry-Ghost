@@ -7,10 +7,15 @@ import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import IconButton from '@mui/material/IconButton'
+import Modal from '@mui/material/Modal'
+import Paper from '@mui/material/Paper'
 
 import PlusIcon from "@mui/icons-material/AddCircle"
 import RemoveIcon from "@mui/icons-material/RemoveCircle"
 import UpIcon from '@mui/icons-material/ArrowCircleUp';
+
+import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
+
 
 import { Form as ReactRouterForm, useActionData, useLoaderData, useNavigation } from "react-router-dom"
 
@@ -20,21 +25,22 @@ import ProductListView from "../components/productListView"
 import FileInput from "../components/fileInput"
 import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import Divider from '@mui/material/Divider'
-import { getProducts } from "../fakeApi"
+import { getProducts } from "../api"
 
 import Spinner from "../components/spinner"
 import { createProduct } from "../api"
 import { MessagesContext } from "../root"
 
-import { defaultProduct,
+import { defaultProductWithIds,
     handleVerifySlug,
-    handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeSlug, handleChangeThumbnail,
+    handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeSlug,
     handleVariantAdd, handleVariantRemove, handleVariantToFront, handleVariantName, handleVariantColor, handleVariantIsColor,
-    handleVariantImageAdd, handleVariantImageRemove, handleVariantImageToFront, handleVariantChangeImage, handleVariantImageAlt, } from "../components/adminHandlers"
+    handleVariantImageAdd, handleVariantImageRemove, handleVariantImageToFront, handleVariantImageAlt, getCropInfoInputsNameForVariantImage, setVariantImageForCropComp } from "../components/adminHandlers"
 
 import { getFullError } from "../components/errorMessage"
 import ImageCropUploader from "../components/cropFileInput"
 
+import SelectProducts from "../components/selectProducts"
 
 
 
@@ -81,7 +87,7 @@ export default function Admin() {
     }, [actionData])
 
 
-    const [product, setProduct] = useState(defaultProduct(products))
+    const [product, setProduct] = useState(defaultProductWithIds(products))
 
 
     const [lookingAtDemo, setLookingAtDemo] = useState(false)
@@ -121,7 +127,29 @@ export default function Admin() {
         const fullError = getFullError(error, name)
         return {name: name, helperText: fullError.error, error: fullError.isError}
     }
-    const inputVariant = "filled"
+    const inputVariant = "outlined"
+
+
+
+    
+
+    const [showFrequentlyBoughtTogetherModal, setShowFrequentlyBoughtTogetherModal] = useState(false)
+    function handleToggleFBTModal() {
+        setShowFrequentlyBoughtTogetherModal(old => !old)
+    }
+    function handleCloseFBTModal() {
+        setShowFrequentlyBoughtTogetherModal(false)
+    }
+    function handleOpenFBTModal() {
+        setShowFrequentlyBoughtTogetherModal(true)
+    }
+    function setFrequentlyBoughtTogether(val) {
+        if (typeof val === "function") {
+            val = val(product.frequentlyBoughtTogether)
+        }
+        setProduct(product => {console.log({...product, frequentlyBoughtTogether: val});return {...product, frequentlyBoughtTogether: val}})
+    }
+
     return (
         <Container maxWidth="lg" sx={{ pt: "4rem" }}>
             <ReactRouterForm encType="multipart/form-data" method="POST">
@@ -130,7 +158,7 @@ export default function Admin() {
                     <TextField {...addFromName("description")} id="form-admin-product-description" multiline minRows={4} maxRows={14} value={product.description} onChange={e => handleChangeDescription(e, setProduct)} label="Description" variant={inputVariant} required />
                     <TextField {...addFromName("price")} id="form-admin-product-price" value={product.price} onChange={e => handleChangePrice(e, product, setProduct)} label="Price" variant={inputVariant} required />
                     <TextField {...addFromName("slug")} id="form-admin-product-slug" value={product.slug} onChange={e => handleChangeSlug(e, setProduct)} label="Slug" variant={inputVariant} required />
-                    <Stack alignItems="start">
+                    <Button fullWidth color="primary" variant="outlined" onClick={handleOpenFBTModal} >Add Frequently handle Together</Button>
                     {product.frequentlyBoughtTogether.map((productId, index) => <input type="hidden" key={productId} value={productId} name={`frequentlyBoughtTogether[${index}]`} />)}
                     <ImageCropUploader cropInfoInputsName={{ x: "thumbnail_crop_x", y: "thumbnail_crop_y", width: "thumbnail_crop_width", height: "thumbnail_crop_height" }} croppedData={product} setCroppedData={setProduct} imageDisplayName="thumbnail" fileInputProps={{ buttonText: "Upload Main Thumbnail *", inputProps: { name: "thumbnail", required: true }}} />
                     <Divider
@@ -196,9 +224,9 @@ export default function Admin() {
                       sx={{ my: "4rem" }}
                     ><Typography>How this Product will look like</Typography></Divider>
             <ProductView product={productDemo} />
-            <Divider
+                <Divider
                       variant="inset"
-                      orientation="horizontal"
+                        orientation="horizontal"
                       sx={{ my: "4rem" }}
                     ><Typography>How this Product will look like In the HomePage with The other products (current product is the first)</Typography></Divider>
             <ProductListView products={[productDemo, ...products]} /></Box>
