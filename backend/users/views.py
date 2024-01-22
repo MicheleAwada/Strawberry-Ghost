@@ -20,6 +20,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
+from rest_framework import generics
 
 UserModel = get_user_model()
 ProductModel = apps.get_model('products', 'Product')
@@ -115,3 +116,20 @@ def reset_password(request):
     serializer.is_valid(raise_exception=True)
     user = serializer.save()
     return return_user_data(user)
+
+
+
+
+class ChangePasswordView(APIView):
+    def post(self, request):
+        user = request.user
+        serializer = serializers.ChangePasswordSerializer(data=request.data)
+
+        if serializer.is_valid():
+            if not user.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Wrong password."]}, status=HTTP_400_BAD_REQUEST)
+            user.set_password(serializer.data.get("password"))
+            user.save()
+            return Response({"status": "success"}, status=HTTP_200_OK)
+
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
