@@ -46,14 +46,22 @@ export async function verificationAction({ request }) {
 function SignupForm({ setStep, getFromName, setError }) {
     
     const fetcher = useFetcher()
+    const emailVerificationFetcher = useFetcher()
     const loading = fetcher.state==="submitting";
 
     const { simpleAddMessage } = useContext(MessagesContext)
 
     useEffect(() => {
         if (fetcher.data) {
-            if (fetcher.data.succeeded) {
+            let succeeded = false
+            if (fetcher.data.error !== null && Object.keys(fetcher.data.error).length===1 && "email_verification_code" in fetcher.data.error)
+            {
+                // we know we didnt send verification code so we will act like this is a success for now
+                succeeded = true
+            }
+            if (succeeded) {
                 setStep(1)
+                emailVerificationFetcher.submit({email: getFromName("email").value}, { method: "POST", action: "/email_verification" })
                 simpleAddMessage("Great! Check your email for a verification code.", {severity: "success"})
                 setError({})
             } else {
@@ -65,58 +73,72 @@ function SignupForm({ setStep, getFromName, setError }) {
         }
     }, [fetcher.data])
 
-
-    return <fetcher.Form action='/email_verification' method="POST">
-        <Stack flexDirection={"column"} gap={2}>
-            <Typography variant="h5" color="primary" gutterBottom sx={{textAlign: "center"}}>Sign Up</Typography>
-                        <Stack alignItems="center">
-                            <GoogleButton />
-                        </Stack>
-                        <Divider variant="middle" flexItem sx={{my: "1rem"}} />
-            <Grid container spacing={2}>
-                <Grid xs={12} md={6}
-                    item
-                >
-                    <TextField {...getFromName("first_name")}
-                    label="First Name"
-                    sx={{width: "100%"}}
-                    required />
-                </Grid>
-                <Grid xs={12} md={6}
-                    item
-                >
-                    <TextField {...getFromName("last_name")}
-                        sx={{width: "100%"}}
-                        label="Last Name"
-                        required/>
-                </Grid>
-            </Grid>
-            <TextField
-                type="email"
-                {...getFromName("email")}
-                label="email"
-                required
-            />
-                        <PassInput
-                {...getFromName("password")}
-                label="password"
-                required
-            />
-            {
-                getFromName("non_field_errors").error &&
-                <Typography id="user-login-form-non-field-errors" color="error">
-                    {getFromName("non_field_errors").helperText}
-                </Typography>
+    useEffect(() => {
+        if (emailVerificationFetcher.data) {
+            if (emailVerificationFetcher.data.succeeded) {
+                // dont say anything cause we already told them to check their email
+            } else {
+                if (emailVerificationFetcher.data.error) {
+                    setError(emailVerificationFetcher.data.error)
+                }
+                simpleAddMessage(emailVerificationFetcher.data.errorMessage, {severity: "error"})
             }
+        }
+    }, [emailVerificationFetcher])
 
-            <Stack flexDirection="row" justifyContent="space-between">
-                <Box />
-                <Button variant="contained" color="primary" type="submit" startIcon={loading && <Spinner />}>
-                    Submit
-                </Button>
-            </Stack>
+    return ( 
+        <Stack gap={2} alignItems="center">
+            <fetcher.Form action='/signup' method="POST">
+                <Stack flexDirection={"column"} gap={2}>
+                    <Typography variant="h5" color="primary" gutterBottom sx={{textAlign: "center"}}>Sign Up</Typography>
+                    <Stack alignItems="center">
+                        <GoogleButton />
+                    </Stack>
+                    <Divider variant="middle" flexItem sx={{my: "1rem"}} />
+                    <Grid container spacing={2}>
+                        <Grid xs={12} md={6}
+                            item
+                        >
+                            <TextField {...getFromName("first_name")}
+                            label="First Name"
+                            sx={{width: "100%"}}
+                            required />
+                        </Grid>
+                        <Grid xs={12} md={6}
+                            item
+                        >
+                            <TextField {...getFromName("last_name")}
+                                sx={{width: "100%"}}
+                                label="Last Name"
+                                required/>
+                        </Grid>
+                    </Grid>
+                    <TextField
+                        type="email"
+                        {...getFromName("email")}
+                        label="Email"
+                        required
+                    />
+                    <PassInput
+                        {...getFromName("password")}
+                        required
+                    />
+                    {
+                        getFromName("non_field_errors").error &&
+                        <Typography id="user-login-form-non-field-errors" color="error">
+                            {getFromName("non_field_errors").helperText}
+                        </Typography>
+                    }
+                    <Stack flexDirection="row" justifyContent="space-between">
+                        <Box />
+                        <Button variant="contained" color="primary" type="submit" startIcon={loading && <Spinner />}>
+                            Submit
+                        </Button>
+                    </Stack>
+                </Stack>
+            </fetcher.Form>
         </Stack>
-    </fetcher.Form>
+    )
 }
 
 function VerificationForm({ setStep, getFromName }) {
@@ -159,7 +181,6 @@ function VerificationForm({ setStep, getFromName }) {
                 <input type='hidden' {...getFromName("last_name", true)} />
                 <input type='hidden' {...getFromName("email", true)} />
                 <input type='hidden' {...getFromName("password", true)} />
-                {/* <input value={getFromName("email_verification_code").value} /> */}
                 <VerificationInput
                   classNames={{
                     container: "container",
