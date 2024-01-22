@@ -168,7 +168,7 @@ export default function Admin() {
                             {variant.images.map((image, imageIndex) => (
                                 <Stack gap="2rem" key={imageIndex} sx={{ pl: {xs: "2rem", sm: "3rem", md: "4rem", lg: "6rem"} }} flexWrap="wrap" flexDirection="row" alignItems="center">
                                     <TextField {...addFromName(`variants[${variantIndex}][images][${imageIndex}][alt]`)} onChange={e => handleVariantImageAlt(e, variantIndex, imageIndex, setProduct)} value={image.alt} label="Name for Image" id="form-admin-product-variants-images-image-alt" variant={inputVariant} />
-                                    <FileInput text="Upload Image for Variant *" name={`variants[${variantIndex}][images][${imageIndex}][image]`} inputProps={{onChange: e => handleVariantChangeImage(e, variantIndex, imageIndex, setProduct), required: true, accept: "image/*" }} url={image.image} id={`variant image ${variantIndex} ${imageIndex}`} />
+                                    <ImageCropUploader cropInfoInputsName={getCropInfoInputsNameForVariantImage(variantIndex, imageIndex)} setCroppedData={(value) => setVariantImageForCropComp(value, variantIndex, imageIndex, setProduct)} croppedData={image} fileInputProps={{ buttonText: "Upload Image For Variant *", inputProps: { name: `variants[${variantIndex}][images][${imageIndex}][image]`, required: true }}} />
                                     <Stack flexDirection="row" alignItems="center">
                                         <IconButton sx={{aspectRatio: "1/1"}} aria-label="add image to variant" onClick={e => handleVariantImageAdd(e, variantIndex, imageIndex, setProduct)}>
                                           <PlusIcon />
