@@ -18,9 +18,10 @@ function Plus({isEquals=false, ...props}) {
     </Stack>
 }
 
-export default function FrequentlyBoughtTogether({ product, ...props }) {
-    const allFrequentlyBoughtTogether = [product, ...product.frequentlyBoughtTogether]
-    const totalCost = product.price + product.frequentlyBoughtTogether.reduce((acc, product) => acc+product.price,0)
+export default function FrequentlyBoughtTogether({ product, products, ...props }) {
+    const frequentlyBoughtTogether = product.frequentlyBoughtTogether.map(productId => products.find(product => product.id === productId))
+    const allFrequentlyBoughtTogether = [product, ...frequentlyBoughtTogether]
+    const totalCost = product.price + frequentlyBoughtTogether.reduce((acc, product) => acc+product.price,0)
 
     const sumGridProps = { xs: 12, sm: 6, md: 12, lg:3, }
     const productGridProps = { xs: 12, sm: 4.5, md: 3.25, lg:2, }
