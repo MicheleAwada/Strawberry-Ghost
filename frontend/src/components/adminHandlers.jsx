@@ -162,6 +162,11 @@ function handleVariantChangeImage(event, variantIndex, imageIndex, setProduct) {
 function handleVariantImageAlt(event, variantIndex, imageIndex, setProduct) {
     variantImageBaseChange({alt: event.target.value}, variantIndex, imageIndex, setProduct)
 }
+
+function getCropInfoInputsNameForVariantImage(variantIndex, imageIndex) {
+    return { x: `variants[${variantIndex}][images][${imageIndex}][image_crop_x]`, y: `variants[${variantIndex}][images][${imageIndex}][image_crop_y]`, width: `variants[${variantIndex}][images][${imageIndex}][image_crop_width]`, height: `variants[${variantIndex}][images][${imageIndex}][image_crop_height]` }
+}
+
 function setVariantImageForCropComp(value, variantIndex, imageIndex, setProduct) {
     if (typeof value === "function") {
         return variantImageBaseFunctionChange(value, variantIndex, imageIndex, setProduct)
