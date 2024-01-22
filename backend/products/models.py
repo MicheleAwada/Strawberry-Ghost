@@ -15,7 +15,6 @@ class Product(models.Model):
 class Variant(models.Model):
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=7, default=None, null=True, blank=True)
-    default = models.BooleanField(default=False, blank=True)
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE, related_name="variants")
 
 
