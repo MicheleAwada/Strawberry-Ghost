@@ -74,7 +74,7 @@ class VariantSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     variants = VariantSerializer(many=True, read_only=False)
     class Meta:
-        fields = ["id", "slug", "title", "description", "price", "thumbnail", "variants", "frequentlyBoughtTogether"]
+        fields = ["id", "slug", "title", "frequentlyBoughtTogether", "description", "price", "variants", "thumbnail", "thumbnail_crop_x", "thumbnail_crop_y", "thumbnail_crop_width", "thumbnail_crop_height"]
         model = models.Product
     def validate_variants(self, value):
         if not (len(value) > 0):
