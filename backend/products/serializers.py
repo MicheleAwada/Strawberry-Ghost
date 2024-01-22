@@ -54,7 +54,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         variants_data = validated_data.pop('variants')
+        frequentlyBoughtTogether_data = validated_data.pop('frequentlyBoughtTogether', [])
         product = models.Product.objects.create(**validated_data)
+        for product_fbt in frequentlyBoughtTogether_data:
+            product.frequentlyBoughtTogether.add(product_fbt)
 
         variant_serializer = VariantSerializer(data=variants_data, many=True)
         variant_serializer.is_valid(raise_exception=True)
