@@ -104,3 +104,56 @@ function FileCropInput({ croppedData=null, setCroppedData=null, imageDisplayName
             setCroppedDataValue(baseState)
             reset_input(fileInputRef.current)
         };
+        
+        return (
+            <Box>
+            <Box>
+                <input type="hidden" value={imgCropInfo.x} name={cropInfoInputsName.x} />
+                <input type="hidden" value={imgCropInfo.y} name={cropInfoInputsName.y} />
+                <input type="hidden" value={imgCropInfo.width} name={cropInfoInputsName.width} />
+                <input type="hidden" value={imgCropInfo.height} name={cropInfoInputsName.height} />
+            </Box>
+            <FileInput onImageSelected={onImageSelected} inputRef={fileInputRef} hideButton={currentPage!=="choose-img"} {...fileInputProps} />
+			{currentPage === "crop-img" && (
+				<ImageCropper
+					image={image}
+					onCropDone={onCropDone}
+					onCropCancel={onCropCancel}
+                    {...imageCropperProps}
+				/>
+			)}
+            {currentPage === "img-cropped" && (
+				<Stack flexDirection="row" gap={2} alignItems="center">
+
+					<Button
+						onClick={() => {
+							setCurrentPage("crop-img");
+						}}
+						size="small"
+						variant="outlined"
+					>
+						Crop Again
+					</Button>
+					<Button
+						onClick={() => {
+							onCropCancel()
+						}}
+						size="small"
+						variant="outlined"
+					>
+						New Image
+					</Button>
+                    <Box
+						component="img"
+						alt="Cropped Image"
+						sx={{ objectFit: "contain", height: "2rem", aspectRatio: 4 / 3 }}
+						src={imgAfterCrop}
+					/>
+				</Stack>
+			)}
+		</Box>
+	);
+}
+
+export default FileCropInput;
+export { baseState };
