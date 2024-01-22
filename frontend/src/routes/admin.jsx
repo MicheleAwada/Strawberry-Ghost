@@ -217,19 +217,34 @@ export default function Admin() {
                 </Stack>
                 <Button type="sumbit" fullWidth variant="contained" startIcon={isLoading ? <Spinner /> : undefined}>SUBMIT</Button>
             </ReactRouterForm>
-            <Button type="button" sx={{ mt: "2rem" }} onClick={e => setDemo(true)} fullWidth variant="contained">VIEW DEMO!!</Button>
-            <Box ref={productDemoRef}><Divider
-                      variant="inset"
-                      orientation="horizontal"
-                      sx={{ my: "4rem" }}
-                    ><Typography>How this Product will look like</Typography></Divider>
-            <ProductView product={productDemo} />
+            <Stack alignItems="center" ref={productDemoRef}>
                 <Divider
-                      variant="inset"
+                      variant="middle"
+                      flexItem
+                      orientation="horizontal"
+                      sx={{ my: "1.5rem" }}
+                    />
+                <Typography variant="h6" color="primary" sx={{textAlign: "center"}}>How this Product will look like</Typography>
+                <ProductView product={productDemo} products={products} />
+                <Divider
+                        variant="middle"
+                        flexItem
                         orientation="horizontal"
-                      sx={{ my: "4rem" }}
-                    ><Typography>How this Product will look like In the HomePage with The other products (current product is the first)</Typography></Divider>
-            <ProductListView products={[productDemo, ...products]} /></Box>
+                        sx={{ my: "1.5rem" }}
+                        />
+                <Typography variant="h6" color="primary" sx={{textAlign: "center"}}>How this Product will look like In the HomePage with The other products (current product is the first)</Typography>
+                <ProductListView products={[productDemo, ...products]} />
+            </Stack>
+            <Modal open={showFrequentlyBoughtTogetherModal}>
+                <Paper elevation={6} sx={{ height: {xs: "95vh", md: "90vh"}, width: {xs: "95vw", md: "90vw"}, position: "absolute", overflow: "scroll", top: "50%", left: "50%", transform: "translate(-50%, -50%)", py: "2rem", px: { xs: "1rem", sm: "2rem", md: "3rem", lg: "4rem" }, boxSizing: "border-box" }}>
+                    <Stack>
+                        <Stack flexDirection="row" gap={4} justifyContent="end" >
+                            <IconButton onClick={e => setShowFrequentlyBoughtTogetherModal(false)}><HighlightOffOutlinedIcon /></IconButton>
+                        </Stack>
+                        <SelectProducts products={products} selectedProductIdState={[product.frequentlyBoughtTogether, setFrequentlyBoughtTogether]} />
+                    </Stack>
+                </Paper>
+            </Modal>
         </Container>
     )
 }
