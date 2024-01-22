@@ -89,6 +89,9 @@ class GoogleAuth(APIView):
             name = idinfo.get('name').split(" ")
             first_name = name[0] or ""
             last_name = name[1] or ""
+            email_verified = idinfo.get('email_verified', False)
+            if email_verified==False:
+                return Response({"status": "email not verified"}, status=400)
             google_users_group, created = Group.objects.get_or_create(name="google_users")
 
 
@@ -97,6 +100,8 @@ class GoogleAuth(APIView):
             if user_exists:# login account
                 user = user.first()
             else: # create account
+                if UserModel.objects.filter(email=email).exists():
+                    return Response({"status": "Email already exists (for a non google account)"}, status=400)
                 user = UserModel.objects.create_user(email=email, password="", first_name=first_name, last_name=last_name, google_id=userid) # empty "" password is never equal to a password
                 user.groups.add(google_users_group)
             return return_user_data(user)
