@@ -63,3 +63,31 @@ class ProductSerializer(serializers.ModelSerializer):
         variant_serializer.is_valid(raise_exception=True)
         variant_serializer.save(product=product)
         return product
+    def update(self, instance, validated_data):
+        variants_data = validated_data.pop('variants', [])
+        instance = super().update(instance, validated_data)
+
+        existing_variant_ids = [variant.id for variant in instance.variants.all()]
+
+        new_added_variant_id = []
+
+        for variant_data in variants_data:
+            variant_id = variant_data.get('for_update_id', None)
+
+            if variant_id in existing_variant_ids:
+                variant = instance.variants.get(id=variant_id)
+
+                variant_serializer = VariantSerializer(variant, data=variant_data, partial=True)
+            else:
+                variant_serializer = VariantSerializer(data=variant_data)
+
+            variant_serializer.is_valid(raise_exception=True)
+            variant_serializer.save(product=instance)
+
+        for variant in instance.variants.all():
+            if variant.id not in new_added_variant_id:
+                variant.delete()
+
+
+        return instance
+
