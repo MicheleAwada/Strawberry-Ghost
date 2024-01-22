@@ -21,6 +21,7 @@ import { set_token, signup, verification } from '../api'
 import Spinner from '../components/spinner'
 import { MessagesContext } from '../root';
 import { UserContext } from "../components/user";
+import PassInput from "../components/passInput";
 
 
 export async function action({ request }) {
@@ -90,8 +91,7 @@ function SignupForm({ setStep, getFromName, setError }) {
                 label="email"
                 required
             />
-            <TextField
-                type="password"
+                        <PassInput
                 {...getFromName("password")}
                 label="password"
                 required
