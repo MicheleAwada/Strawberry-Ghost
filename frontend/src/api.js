@@ -31,11 +31,13 @@ function findError(error) {
 			errorMessage = "Oops, check to see a field has a error to fix it";
 			errorValue = error.response.data;
 		}
-		if (error.response.data.detail) {
+		if (error.response.data.detail && typeof error.response.data.detail === "string") {
 			errorMessage = error.response.data.detail;
+			errorValue = null;
 		}
-		if (error.response.data.message !== undefined) {
-			errorMessage = error.response.data.message;
+		if (error.response.data.status && typeof error.response.data.status === "string") {
+			errorMessage = error.response.data.status;
+			errorValue = null;
 		}
 	}
 	return { errorMessage: errorMessage, error: errorValue, errorType: type };
@@ -120,7 +122,7 @@ async function getProduct({ slug }) {
 	const product = products_cache.find(product => {
 		return product.slug === slug
 	})
-	if (product.length===0) return undefined //wasnt found
+	if (product===undefined) return undefined //wasnt found
 	return product
 }
 
