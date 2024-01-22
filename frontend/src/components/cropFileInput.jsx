@@ -23,4 +23,41 @@ function FileCropInput({ croppedData=null, setCroppedData=null, imageDisplayName
 
         [croppedData, setCroppedData] = useState(baseState);
     }
-}
+
+
+    function setCroppedDataValue(data) {
+        setCroppedData(oldData => ({...oldData, ...data}))
+    }
+
+    const currentPage = croppedData.currentPage
+    function setCurrentPage(value) {
+        setCroppedDataValue({currentPage: value})
+    }
+
+    const image = croppedData.rawImage
+    function setImage(value) {
+        setCroppedDataValue({rawImage: value})
+    }
+    
+    const imgAfterCrop = croppedData[imageDisplayName]
+    function setImgAfterCrop(value) {
+        if ((value) === "") {
+            value = "https://creativelittlewomen.com/wp-content/uploads/2021/11/IMG_2439.jpg"
+        }
+        setCroppedDataValue({[imageDisplayName]: value})
+    }
+
+    const imgCropInfo = croppedData.imgCropInfo
+    function setImgCropInfo(value) {
+        setCroppedDataValue({imgCropInfo: value})
+    }
+
+
+
+
+
+
+	const onImageSelected = (selectedImg) => {
+        setImage(selectedImg);
+		setCurrentPage("crop-img");
+	};
