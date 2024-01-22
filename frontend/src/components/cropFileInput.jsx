@@ -61,3 +61,46 @@ function FileCropInput({ croppedData=null, setCroppedData=null, imageDisplayName
         setImage(selectedImg);
 		setCurrentPage("crop-img");
 	};
+
+
+	const onCropDone = (imgCroppedArea) => {
+        setImgCropInfo(imgCroppedArea)
+        
+		const canvasEle = document.createElement("canvas");
+		canvasEle.width = imgCroppedArea.width;
+		canvasEle.height = imgCroppedArea.height;
+        
+		const context = canvasEle.getContext("2d");
+        
+		let imageObj1 = new Image();
+		imageObj1.src = image;
+		imageObj1.onload = function () {
+            context.drawImage(
+                imageObj1,
+				imgCroppedArea.x,
+				imgCroppedArea.y,
+				imgCroppedArea.width,
+				imgCroppedArea.height,
+				0,
+				0,
+				imgCroppedArea.width,
+				imgCroppedArea.height
+                );
+                
+                const dataURL = canvasEle.toDataURL("image/jpeg");
+                
+                setImgAfterCrop(dataURL);
+                setCurrentPage("img-cropped");
+            };
+        };
+
+        const fileInputRef = useRef()
+        function reset_input(element) {
+            element.value = null
+        }
+        
+        // Handle Cancel Button Click
+        const onCropCancel = () => {
+            setCroppedDataValue(baseState)
+            reset_input(fileInputRef.current)
+        };
