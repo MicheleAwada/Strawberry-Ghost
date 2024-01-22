@@ -29,11 +29,12 @@ function handleOnError(simpleAddMessage) {
 
 export function useGoogleOneTapLogin() {
     const { simpleAddMessage } = useContext(MessagesContext)
-    const [_, setUser] = useContext(UserContext)
+    const [user, setUser] = useContext(UserContext)
 
     googleUseGoogleOneTapLogin({
         onSuccess: (cred) => handleOnSuccess(cred, setUser, simpleAddMessage),
         onError: () => handleOnError(simpleAddMessage),
+        disabled: user.is_authenticated,
       })
 }
 
