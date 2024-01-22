@@ -1,6 +1,13 @@
+import io
+
 from rest_framework import serializers
 from . import models
 from django.apps import apps
+from PIL import Image
+import time, os.path
+from io import StringIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
 
 CartItemModel = apps.get_model('products', 'CartItem')
 class CartSerializer(serializers.ModelSerializer):
@@ -17,15 +24,21 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItemModel
         fields = ("id", "quantity", "user", "variant", "product")
+
+
+
 class VariantImageSerializer(serializers.ModelSerializer):
     image_crop_x = serializers.IntegerField(write_only=True)
     image_crop_y = serializers.IntegerField(write_only=True)
     image_crop_width = serializers.IntegerField(write_only=True)
     image_crop_height = serializers.IntegerField(write_only=True)
+
     for_update_id = serializers.IntegerField(write_only=True, required=False)
+
     class Meta:
         fields = ["id", "for_update_id", "image", "alt", "image_crop_x", "image_crop_y", "image_crop_width", "image_crop_height"]
         model = models.VariantImage
+
     def create(self, validated_data):
         #img crop
         oldImage = validated_data.get("image")
@@ -65,7 +78,7 @@ class VariantImageSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 class VariantSerializer(serializers.ModelSerializer):
-    images = VariantImageSerializer(many=True, read_only=False)
+    images = VariantImageSerializer(many=True, read_only=False, required=True)
 
     for_update_id = serializers.IntegerField(write_only=True, required=False)
     class Meta:
@@ -114,11 +127,21 @@ class VariantSerializer(serializers.ModelSerializer):
 
 
         return instance
+
+
+
 class ProductSerializer(serializers.ModelSerializer):
-    variants = VariantSerializer(many=True, read_only=False)
+    variants = VariantSerializer(many=True, read_only=False, required=True)
+    thumbnail_crop_x = serializers.IntegerField(write_only=True)
+    thumbnail_crop_y = serializers.IntegerField(write_only=True)
+    thumbnail_crop_width = serializers.IntegerField(write_only=True)
+    thumbnail_crop_height = serializers.IntegerField(write_only=True)
+
+
     class Meta:
         fields = ["id", "slug", "title", "frequentlyBoughtTogether", "description", "price", "variants", "thumbnail", "thumbnail_crop_x", "thumbnail_crop_y", "thumbnail_crop_width", "thumbnail_crop_height"]
         model = models.Product
+
     def validate_variants(self, value):
         if not (len(value) > 0):
             raise serializers.ValidationError("Number of variants must be more than 0.")
@@ -148,6 +171,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         variants_data = validated_data.pop('variants')
+
         frequentlyBoughtTogether_data = validated_data.pop('frequentlyBoughtTogether', [])
         product = models.Product.objects.create(**validated_data)
         for product_fbt in frequentlyBoughtTogether_data:
