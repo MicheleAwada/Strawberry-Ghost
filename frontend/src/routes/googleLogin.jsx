@@ -3,7 +3,7 @@ import { useGoogleOneTapLogin as googleUseGoogleOneTapLogin } from "@react-oauth
 import { useContext } from 'react';
 import { MessagesContext } from '../root';
 
-import { google_login } from '../api';
+import { google_login, set_token } from '../api';
 import { UserContext } from '../components/user';
 
 async function handleOnSuccess(credentialResponse, setUser, simpleAddMessage) {
@@ -12,6 +12,7 @@ async function handleOnSuccess(credentialResponse, setUser, simpleAddMessage) {
     const response = await google_login(credentialResponse)
     if (response.succeeded) {
         simpleAddMessage("Woohoo, Google Login Succeeded", {severity: "success"})
+        set_token(response.response.auth_token)
         setUser({...response.response, is_authenticated: true, is_google_user: true})
     } else {
         simpleAddMessage("Whops, Google Login Failed", {severity: "error"})
