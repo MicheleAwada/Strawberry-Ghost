@@ -70,7 +70,7 @@ const DefaultProductCardActions = ({product}) => {
 	const { simpleAddMessage } = useContext(MessagesContext)
 
 	const defaultQuantity = 1
-	const initalVariantsId = product.variants[0].id
+	const initalVariantsId = product.variants[0].id || -1
 	function getCartItem() {
 		if (!user.is_authenticated) return false
 		const cartItem = user.cartitem_set.find((cartItem) => initalVariantsId === cartItem.variant) || false
@@ -108,7 +108,7 @@ const DefaultProductCardActions = ({product}) => {
 }
 const DefaultProductCardExtras = ({ children }) => <Stack flexDirection="row" flexWrap="wrap" alignItems="center" mt="0.5rem">{children}</Stack>
 
-export default function ProductItem({ product, titleVariant=null, ProductCartActions=DefaultProductCardActions, ProductCardExtras = DefaultProductCardExtras }) {
+export default function ProductItem({ product, titleVariant=null, ProductCardActions=DefaultProductCardActions, ProductCardExtras = DefaultProductCardExtras }) {
     const isMd = useMediaQuery(theme => theme.breakpoints.up('md'));
 	const productLink = `/products/${product.slug}`
 
@@ -137,7 +137,7 @@ export default function ProductItem({ product, titleVariant=null, ProductCartAct
 					</ProductCardExtras>
 				</CardContent>
 				<CardActions>
-					<ProductCartActions product={product} />
+					<ProductCardActions product={product} />
 				</CardActions>
 			</Card>
 	);

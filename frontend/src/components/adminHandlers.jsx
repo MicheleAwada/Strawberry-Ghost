@@ -216,7 +216,6 @@ function defaultImageWithIds(products) {
 function defaultVariantWithIds(products) {
     const highestId = Math.max(...flattenArray(products.map(product => product.variants.map(variant => variant.id))))
 
-    console.log({ ...defaultVariant, id: (highestId+1), images: [defaultImageWithIds(products)] } )
     return { ...defaultVariant, id: (highestId+1), images: [defaultImageWithIds(products)] }
 }
 
@@ -225,7 +224,6 @@ function defaultProductWithIds(products) {
     const highestId = Math.max(...products.map(product => product.id))
 
 
-    console.log({ ...defaultProduct, id: (highestId+1), variants: [defaultVariantWithIds(products)] } )
     return { ...defaultProduct, id: (highestId+1), variants: [defaultVariantWithIds(products)] } 
 
 }
