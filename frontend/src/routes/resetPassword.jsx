@@ -21,6 +21,7 @@ import { reset_password } from "../api";
 import { getFullError } from "../components/errorMessage";
 import { MessagesContext } from "../root";
 import Spinner from "../components/spinner";
+import PassInput from "../components/passInput";
 
 export async function action({ request }) {
     const formData = await request.formData()
@@ -72,8 +73,8 @@ function EnterPassword({getFromName, setError, setStep}) {
             <Stack gap={0}>
                 <Typography variant='h5' color="primary" sx={{ textAlign: "center" }}>Enter New Password</Typography>
             </Stack>
-            <TextField required type="password" {...getFromName("password1")} label="Password1" />
-            <TextField required type="password" {...getFromName("password2")} label="Password2" />
+            <PassInput required {...getFromName("password1")} label="Password" />
+            <PassInput required {...getFromName("password2")} label="Confirm Password" />
             <Stack flexDirection="row" justifyContent="space-between">
                 <Button type="button" variant="outlined" onClick={() => setStep(step => step-1)}>
                     Back
@@ -186,8 +187,6 @@ export default function SignUp() {
     }
     function getFromName(name, hidden=false, onChangeInfoArgs=[]) {
         const fullError = getFullError(error, name)
-        console.log("the name is " + name)
-        console.log(fullError)
         let baseReturn = { name: name, value: fieldInfo[name], onChange: e => onChangeInfo(e, name, ...onChangeInfoArgs)}
         if (hidden) return baseReturn
         baseReturn = {...baseReturn, helperText: fullError.error, error: fullError.isError}
