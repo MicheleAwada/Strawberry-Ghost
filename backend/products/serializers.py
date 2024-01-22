@@ -18,10 +18,32 @@ class CartSerializer(serializers.ModelSerializer):
         model = CartItemModel
         fields = ("id", "quantity", "user", "variant", "product")
 class VariantImageSerializer(serializers.ModelSerializer):
+    image_crop_x = serializers.IntegerField(write_only=True)
+    image_crop_y = serializers.IntegerField(write_only=True)
+    image_crop_width = serializers.IntegerField(write_only=True)
+    image_crop_height = serializers.IntegerField(write_only=True)
     for_update_id = serializers.IntegerField(write_only=True, required=False)
     class Meta:
         fields = ["id", "for_update_id", "image", "alt", "image_crop_x", "image_crop_y", "image_crop_width", "image_crop_height"]
         model = models.VariantImage
+    def create(self, validated_data):
+        #img crop
+        oldImage = validated_data.get("image")
+        x = validated_data.pop("image_crop_x")
+        y = validated_data.pop("image_crop_y")
+        width = validated_data.pop("image_crop_width")
+        height = validated_data.pop("image_crop_height")
+
+        img = Image.open(oldImage)
+        newImage = img.crop((x, y, x + width, y + height))
+        newImageFormat = img.format.lower()
+
+        buffer = io.BytesIO()
+        newImage.save(buffer, format=newImageFormat)
+        buffer.seek(0)
+
+        validated_data["image"].file = buffer
+        return super().create(validated_data)
 
 class VariantSerializer(serializers.ModelSerializer):
     images = VariantImageSerializer(many=True, read_only=False)
