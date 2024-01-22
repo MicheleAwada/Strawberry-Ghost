@@ -162,6 +162,12 @@ function handleVariantChangeImage(event, variantIndex, imageIndex, setProduct) {
 function handleVariantImageAlt(event, variantIndex, imageIndex, setProduct) {
     variantImageBaseChange({alt: event.target.value}, variantIndex, imageIndex, setProduct)
 }
+function setVariantImageForCropComp(value, variantIndex, imageIndex, setProduct) {
+    if (typeof value === "function") {
+        return variantImageBaseFunctionChange(value, variantIndex, imageIndex, setProduct)
+    }
+    return variantImageBaseChange(value, variantIndex, imageIndex, setProduct)
+}
 
 
 
