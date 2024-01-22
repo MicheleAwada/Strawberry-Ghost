@@ -20,7 +20,7 @@ export async function loader() {
     let user = null;
     if (is_authenticated()) {
         const userGot = await getUser()
-        if (!userGot.succeeded && userGot.errorType=="external") {
+        if (!userGot.succeeded && userGot.errorType=="external" && userGot.errorMessage === "Invalid token.") {
             logout()
         }
         if (userGot.succeeded) {
@@ -32,7 +32,7 @@ export async function loader() {
 
 export default function Root() {
     const gotUser = useLoaderData()
-    const [user, setUser] = useContext(UserContext)
+    const [_, setUser] = useContext(UserContext)
     useEffect(() => {
         if (gotUser) {
             setUser({...gotUser, is_authenticated: true})
