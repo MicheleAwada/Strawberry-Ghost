@@ -26,6 +26,7 @@ UserModel = get_user_model()
 ProductModel = apps.get_model('products', 'Product')
 
 def return_user_data(user):
+    Token.objects.get_or_create(user=user)
     userdata = serializers.MyUserSerializer(user)
     return Response(userdata.data)
 class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.ListModelMixin, GenericViewSet):
