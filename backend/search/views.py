@@ -32,6 +32,21 @@ def search(request, query, *args, **kwargs):
                 filter_query &= Q(average_reviews_range=review_range)
         if filter_query:
                 search_products = search_products.filter(filter_query)
+        #sorting
+        sorted = []
+        def get_sort(field_name, queryname, query):
+                sort = params.get(queryname, "false") == "true"
+                sort = field_name if sort else None
+                if sort:
+                        if len(sorted) > 1:
+                                raise
+                        query = query.order_by(sort)
+                return query
+        quick_get_sort = lambda a, b: get_sort(a, b, search_products)
+        search_products = quick_get_sort("-price", "price_high_to_low")
+        search_products = quick_get_sort("price", "price_low_to_high")
+        search_products = quick_get_sort("-variants__reviews__rating", "reviews_high_to_low")
+        search_products = quick_get_sort("-created_on", "latest")
 
         return to_pk_list(search_products)
 
