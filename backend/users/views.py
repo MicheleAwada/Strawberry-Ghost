@@ -143,15 +143,20 @@ def reset_password(request):
 
 
 class ChangePasswordView(APIView):
-    def post(self, request):
+    permission_classes = [IsAuthenticated, permissions.IsUserOrNone]
+
+
+    def put(self, request):
         user = request.user
-        serializer = serializers.ChangePasswordSerializer(data=request.data)
-
-        if serializer.is_valid():
-            if not user.check_password(serializer.data.get("old_password")):
-                return Response({"old_password": ["Wrong password."]}, status=HTTP_400_BAD_REQUEST)
-            user.set_password(serializer.data.get("password"))
-            user.save()
-            return Response({"status": "success"}, status=HTTP_200_OK)
-
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        serializer = serializers.ChangePasswordSerializer(instance=user, data=request.data, partial=False)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return return_user_data(user, request)
+class ChangeEmailView(APIView):
+    permission_classes = [IsAuthenticated, permissions.IsUserOrNone]
+    def put(self, request):
+        user = request.user
+        serializer = serializers.ChangeEmailSerializer(instance=user, data=request.data, partial=False)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return return_user_data(user, request)
