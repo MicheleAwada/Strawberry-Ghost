@@ -72,7 +72,26 @@ def login(request):
 
 
 GOOGLE_CLIENT_ID = settings.GOOGLE_CLIENT_ID
+def add_image_from_url(obj, image_field_name, image_url):
+    response = requests.get(image_url)
 
+    if response.status_code != 200:
+        return False
+    image_content = ContentFile(response.content)
+    try:
+        img = Image.open(image_content)
+        img.verify()
+    except:
+        return False
+
+
+    # Save the image to the image field
+    image_field = getattr(obj, image_field_name)
+    image_field.save(
+        'google user image.png',
+        image_content,
+        save=True
+    )
 class GoogleAuth(APIView):
     def post(self, request):
         data = request.data
