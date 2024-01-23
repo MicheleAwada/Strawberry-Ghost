@@ -56,17 +56,19 @@ class EmailVerificationViewSet(mixins.CreateModelMixin, GenericViewSet):
     serializer_class = serializers.EmailVerificationSerializer
     queryset = models.EmailVerification.objects.all()
 
+@api_view(['POST'])
+def login(request):
+    def wrong_email_or_password():
+        return Response({"non_field_errors": ["Wrong email or password."]}, status=HTTP_400_BAD_REQUEST)
+    try:
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = get_object_or_404(UserModel, email=email)
+    except:
+        return wrong_email_or_password()
+    if not user.check_password(password): return wrong_email_or_password()
+    return return_user_data(user, request)
 
-class login(ObtainAuthToken):
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data,
-                                           context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        Token.objects.get_or_create(user=user)
-        userdata = serializers.MyUserSerializer(user)
-        return Response(userdata.data)
 
 
 GOOGLE_CLIENT_ID = settings.GOOGLE_CLIENT_ID
