@@ -9,7 +9,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from . import models
 from rest_framework.authtoken.models import Token
-
+from PIL import Image
 from django.core.mail import send_mail
 
 from django.conf import settings
@@ -17,39 +17,60 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
+from . import permissions
 
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
 from rest_framework import generics
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from django.core.files.base import ContentFile
+import requests
 
 UserModel = get_user_model()
 ProductModel = apps.get_model('products', 'Product')
 
-def return_user_data(user):
-    Token.objects.get_or_create(user=user)
-    userdata = serializers.MyUserSerializer(user)
+def return_user_data(user, request):
+    # Token.objects.get_or_create(user=user)
+    userdata = serializers.MyUserSerializer(user, context={'request': request})
     return Response(userdata.data)
+@api_view(['POST'])
+def delete_user(request):
+    if not request.user.is_authenticated:
+        raise ValidationError("Not authenticated")
+    serializer = serializers.CheckPasswordUserSerializer(instance=request.user, data=request.data, partial=False)
+    serializer.is_valid(raise_exception=True)
+    request.user.delete()
+    return Response(status=204)
+
 class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.ListModelMixin, GenericViewSet):
     serializer_class = serializers.MyUserSerializer
     queryset = UserModel.objects.all()
-    permission_classes = [IsAuthenticated]
-
+    permission_classes = [IsAuthenticated, permissions.IsUserOrNone]
     def list(self, request, *args, **kwargs):
-        return return_user_data(request.user)
+        instance = request.user
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        return return_user_data(user)
-
-
-    def get_serializer_class(self, *args, **kwargs):
+        return return_user_data(user, request)
+    # def update(self, request, *args, **kwargs):
+    #     # partial = kwargs.pop('partial', False)
+    #     # instance = request.user
+    #     # serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    #     # serializer.is_valid(raise_exception=True)
+    #     # user = serializer.save()
+    #     return return_user_data(user)
+    def get_serializer_class(self):
         if self.action == 'create':
             return serializers.CreateUserSerializer
-        return self.serializer_class
+        if self.action == 'destroy':
+            return serializers.CheckPasswordUserSerializer
+        return super().get_serializer_class()
     def get_permissions(self):
         if self.action == 'create':
-            return []
+            return [permissions.NotAuthenticated()]
         return super().get_permissions()
 
 class EmailVerificationViewSet(mixins.CreateModelMixin, GenericViewSet):
@@ -96,8 +117,6 @@ class GoogleAuth(APIView):
     def post(self, request):
         data = request.data
         token = data.get('credential')
-        print("new request")
-        print(token)
         try:
             idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), GOOGLE_CLIENT_ID)
 
@@ -114,7 +133,7 @@ class GoogleAuth(APIView):
             last_name = name[1] or ""
             email_verified = idinfo.get('email_verified', False)
             if email_verified==False:
-                return Response({"status": "email not verified"}, status=400)
+                return Response({"status": "Google's email not verified"}, status=400)
             google_users_group, created = Group.objects.get_or_create(name="google_users")
 
 
@@ -127,20 +146,22 @@ class GoogleAuth(APIView):
                     return Response({"status": "Email already exists (for a non google account)"}, status=400)
                 user = UserModel.objects.create_user(email=email, password="", first_name=first_name, last_name=last_name, google_id=userid) # empty "" password is never equal to a password
                 user.groups.add(google_users_group)
-            return return_user_data(user)
+
+                picture_url = idinfo.get("picture", None)
+                if picture_url is not None:
+                    add_image_from_url(user, "avatar", picture_url)
+            return return_user_data(user, request)
 
 
 
 @api_view(['PUT'])
 def reset_password(request):
     user = get_object_or_404(UserModel, email=request.data.get('email'))
-    serializer = serializers.ResetPasswordSerializer(instance=user, data=request.data, partial=False)
+    serializer = serializers.ResetPasswordSerializer(instance=user, data=request.data, partial=False,
+                                                     context={"request": request})
     serializer.is_valid(raise_exception=True)
     user = serializer.save()
-    return return_user_data(user)
-
-
-
+    return return_user_data(user, request)
 
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated, permissions.IsUserOrNone]
