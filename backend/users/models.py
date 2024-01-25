@@ -26,6 +26,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30, blank=True)
 
+    avatar = models.ImageField(upload_to="users_avatars", blank=True, null=True)
+
     google_id = models.CharField(null=True, blank=True, max_length=256)
 
     payment_info = models.OneToOneField("users.UserPayment", on_delete=models.CASCADE, blank=True, null=True)
