@@ -30,7 +30,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     google_id = models.CharField(null=True, blank=True, max_length=256)
 
-    payment_info = models.OneToOneField("users.UserPayment", on_delete=models.CASCADE, blank=True, null=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -42,12 +41,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-
-class UserPayment(models.Model):
-    address = models.CharField(null=True, blank=True, max_length=100)
-    card_number = models.CharField(null=True, blank=True, max_length=20)
-    card_holder_name = models.CharField(null=True, blank=True, max_length=100)
-    card_cvv = models.CharField(null=True, blank=True, max_length=10)
 
 class EmailVerification(models.Model):
     email = models.EmailField(blank=False)
