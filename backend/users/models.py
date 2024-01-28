@@ -55,7 +55,7 @@ class EmailVerification(models.Model):
 
         return self.time_created < x_minutes_ago
     def too_much_attempts(self, raise_exception=True):
-        if self.attempts > 30 or self.blocked:
+        if self.attempts > 12 or self.blocked:
             if raise_exception: raise ValidationError("Cannot verify, too much attempts, please contact us")
             self.attempts +=1
             return True
@@ -70,6 +70,7 @@ class EmailVerification(models.Model):
             self.attempts += 1
             if raise_exception: raise ValidationError("Cannot verify, token expired")
             return False
+        self.attempts = 0
         return True
     def is_valid_to_mail(self, raise_exception=True):
         self.attempts += 1
