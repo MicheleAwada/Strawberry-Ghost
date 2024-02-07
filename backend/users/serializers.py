@@ -26,13 +26,18 @@ class MyUserSerializer(serializers.ModelSerializer):
         fields = ("id", "email", "first_name", "last_name", "cartitem_set", "auth_token")
 class CreateUserSerializer(serializers.ModelSerializer):
     email_verification_code = serializers.CharField(max_length=100, required=True)
+    agreed_to_terms = serializers.BooleanField(required=True)
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-
+    def validate_agreed_to_terms(self, value):
+        if not value:
+            raise serializers.ValidationError("You must agree to the terms and conditions")
+        return value
     class Meta:
         model = UserModel
-        fields = ["email", "first_name", "last_name", "password", "email_verification_code"]
+        fields = ["email", "first_name", "agreed_to_terms", "last_name", "password", "email_verification_code"]
     def validate(self, attrs):
         email = attrs["email"]
+        assert attrs.pop("agreed_to_terms", False) == True
         email_verification_code = attrs.pop("email_verification_code")
         email_validation = models.EmailVerification.objects.get(email=email)
         if not email_validation.is_valid(token=email_verification_code):
