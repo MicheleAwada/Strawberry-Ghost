@@ -21,6 +21,47 @@ class SimpleCartSerializer(serializers.ModelSerializer):
 
 class MyUserSerializer(serializers.ModelSerializer):
     cartitem_set = SimpleCartSerializer(many=True, read_only=True)
+
+    avatar_crop_data_x = serializers.IntegerField(min_value=0, max_value=2<<14, write_only=True)
+    avatar_crop_data_y = serializers.IntegerField(min_value=0, max_value=2<<14, write_only=True)
+    avatar_crop_data_w = serializers.IntegerField(min_value=0, max_value=2<<14, write_only=True)
+    avatar_crop_data_h = serializers.IntegerField(min_value=0, max_value=2<<14, write_only=True)
+    avatar = FullUrlImageField()
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        avatar_crop_data = [attrs.pop(f"avatar_crop_data_{x}", None) for x in ["x", "y", "w", "h"]]
+        avatar_crop_data_exists = avatar_crop_data is not None and all((x is not None) for x in avatar_crop_data)
+        if avatar_crop_data_exists:
+            avatar_crop_data[2] += avatar_crop_data[0]
+            avatar_crop_data[3] += avatar_crop_data[1]
+        attrs["avatar_crop_data"] = avatar_crop_data
+        image = attrs.get(f"avatar", None)
+        image_exists = image is not None
+        if image_exists != avatar_crop_data_exists:
+            raise serializers.ValidationError("avatar_crop_data is required if avatar is provided and vice versa")
+        return attrs
+
+    def update(self, instance, validated_data):
+        avatar_crop_data = validated_data.pop(f"avatar_crop_data")
+        image = validated_data.get("avatar", None)
+        image_exists = image is not None
+        if image_exists: instance.avatar.delete(save=False)
+        instance = super().update(instance, validated_data)
+        if image_exists:
+            def smaller_image(image):
+                image = image.convert("RGB")
+                image = image.crop(avatar_crop_data)
+                min_size = min(image.height, image.width)
+                image = image.crop((0, 0, min_size, min_size))
+                min_size = min(min_size, 400)
+                image = image.resize((min_size, min_size))
+                return image
+            editImage(instance.avatar, smaller_image)
+        return instance
+    def to_representation(self, instance):
+        # Token.objects.get_or_create(user=self.instance)
+        ret = super().to_representation(instance)
+        return ret
     class Meta:
         model = UserModel
         fields = ("id", "email", "first_name", "last_name", "cartitem_set", "auth_token")
