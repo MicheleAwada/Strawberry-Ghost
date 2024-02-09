@@ -64,7 +64,8 @@ class MyUserSerializer(serializers.ModelSerializer):
         return ret
     class Meta:
         model = UserModel
-        fields = ("id", "email", "first_name", "last_name", "cartitem_set", "auth_token")
+        fields = ("id", "email", "first_name", "last_name", "avatar", "avatar_crop_data_x", "avatar_crop_data_y", "avatar_crop_data_w", "avatar_crop_data_h", "cartitem_set", "auth_token", "is_staff")
+        read_only_fields = ["id", "email", "cartitem_set", "auth_token", "is_staff"]
 class CreateUserSerializer(serializers.ModelSerializer):
     email_verification_code = serializers.CharField(max_length=100, required=True)
     agreed_to_terms = serializers.BooleanField(required=True)
