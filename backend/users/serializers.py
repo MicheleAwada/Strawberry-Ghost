@@ -104,7 +104,7 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
         fields = ["email"]
     def validate(self, attrs):
         email = attrs["email"]
-        if get_old_emails_attempts(email)>30:
+        if get_old_emails_attempts(email)>12:
             raise ValidationError("Too many attempts, please contact us")
         return attrs
     def create(self, validated_data):
