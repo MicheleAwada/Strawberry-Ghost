@@ -13,7 +13,24 @@ from django.contrib.auth.password_validation import validate_password
 CartItemModel = apps.get_model('products', 'CartItem')
 UserModel = get_user_model()
 from django.contrib.auth.models import Group
+from products.serializers import CartSerializer as SimpleCartSerializer
+from products.utils import editImage
+from django.conf import settings
+from products.serializers_fields import FullUrlImageField
 
+
+CONTACT_PAGE_URL = settings.CONTACT_PAGE_URL
+
+class CheckPasswordUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    def validate_password(self, value):
+        user = self.instance
+        if not user.check_password(value):
+            raise serializers.ValidationError("The password is incorrect")
+        return value
+    class Meta:
+        model = UserModel
+        fields = ["password"]
 
 class MyUserSerializer(serializers.ModelSerializer):
     cartitem_set = SimpleCartSerializer(many=True, read_only=True)
