@@ -13,10 +13,6 @@ from django.contrib.auth.password_validation import validate_password
 CartItemModel = apps.get_model('products', 'CartItem')
 UserModel = get_user_model()
 from django.contrib.auth.models import Group
-class SimpleCartSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CartItemModel
-        fields = ("id", "quantity", "variant", "product")
 
 
 class MyUserSerializer(serializers.ModelSerializer):
