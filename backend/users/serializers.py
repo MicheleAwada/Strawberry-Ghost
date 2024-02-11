@@ -155,6 +155,47 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ChangeEmailSerializer(serializers.ModelSerializer):
+    email_verification_code = serializers.CharField(max_length=100, required=True)
+    password = serializers.CharField(write_only=True, required=True)
+    class Meta:
+        model = models.User
+        fields = ["email", "password", "email_verification_code"]
+    def validate_password(self, value):
+        user = self.instance
+        if not user.check_password(value):
+            raise serializers.ValidationError("Password is not correct")
+        return value
+    def validate_email(self, value):
+        if UserModel.objects.filter(email=value).exists():
+            raise ValidationError("Email already exists")
+        return value
+    def validate(self, attrs):
+        new_email = attrs["email"]
+        email_verification_code = attrs.pop("email_verification_code")
+        email_validation = models.EmailVerification.objects.get(email=new_email)
+        if not email_validation.is_valid(token=email_verification_code):
+            raise ValidationError("Invalid verification code")
+        super().validate(attrs)
+        return attrs
+    def update(self, instance, validated_data):
+        old_email = instance.email
+        new_email = validated_data["email"]
+        instance.email = new_email
+        instance.save()
+        # message old account about change
+        send_mail(
+            "StrawberryGhost Email Changed",
+            f"Your account's email has been changed to {validated_data['new_email']}!\n\n\nIf this wasnt you, please contact us immediately at {CONTACT_PAGE_URL}.",
+            "no-reply@strawberryghost.org",
+            [old_email],
+        )
+
+        return instance
+    def to_representation(self, instance):
+        return MyUserSerializer(instance).data
+
+
 
 class ChangePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
