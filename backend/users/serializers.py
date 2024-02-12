@@ -203,18 +203,29 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ('old_password', 'password', 'password2')
+        fields = ('old_password', 'password')
 
 
     def validate_old_password(self, value):
-        user = self.context['request'].user
+        user = self.instance
         if not user.check_password(value):
-            raise serializers.ValidationError({"old_password": "Old password is not correct"})
+            raise serializers.ValidationError("Old password is not correct")
         return value
 
     def update(self, instance, validated_data):
 
         instance.set_password(validated_data['password'])
         instance.save()
+        print("test")
+        print(instance.auth_token.key)
+        recreate_token(instance)
+        print(instance.auth_token.key)
+
+        send_mail(
+            "StrawberryGhost Password Changed",
+            f"Your password has been changed!\n\n\nIf this wasnt you, please contact us immediately using our websites contact page at {CONTACT_PAGE_URL}\n\n\n",
+            "no-reply@strawberryghost.org",
+            [instance.email],
+        )
 
         return instance
