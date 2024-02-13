@@ -137,6 +137,12 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
         )
         return object
 
+def recreate_token(user):
+    token, created = Token.objects.get_or_create(user=user)
+    token.delete()
+    token, created = Token.objects.get_or_create(user=user)
+    return token
+
 class ResetPasswordSerializer(serializers.ModelSerializer):
     email_verification_code = serializers.CharField(max_length=100, required=True)
     class Meta:
