@@ -144,7 +144,8 @@ def recreate_token(user):
     return token
 
 class ResetPasswordSerializer(serializers.ModelSerializer):
-    email_verification_code = serializers.CharField(max_length=100, required=True)
+    email_verification_code = serializers.CharField(max_length=6, required=True)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     class Meta:
         model = models.User
         fields = ["email", "password", "email_verification_code"]
@@ -158,6 +159,13 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.set_password(validated_data["password"])
         instance.save()
+        recreate_token(instance)
+        send_mail(
+            "StrawberryGhost Password Reset",
+            f"Your password has been reset.\n\n\n if this wasn't you, immediately contact us at {CONTACT_PAGE_URL}.",
+            "no-reply@strawberryghost.org",
+            [instance.email],
+        )
         return instance
 
 
