@@ -128,13 +128,14 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
         token = object.generate_token()
         object.save()
         object.is_valid_to_mail()
+        print("SENDED TO " + email)
         send_mail(
-            "Strawberry Ghost verification code",
-            f"Your 6 digit verification code for strawberry ghost is {token}, psst don't share this with anyone",
-            "info@strawberryghost.com",
+            "StrawberryGhost Verification Code",
+            f"Your 6 digit verification code for strawberry ghost is {token}, psst don't share this with anyone\n\n\nIf this wasn't you, you may safely ignore this email.",
+            "no-reply@strawberryghost.org",
             [email],
-            fail_silently=False,
         )
+        print("finished..")
         return object
 
 def recreate_token(user):
