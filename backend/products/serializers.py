@@ -10,6 +10,20 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 CartItemModel = apps.get_model('products', 'CartItem')
+class OrderSerializer(serializers.ModelSerializer):
+    order_product_items = OrderProductSerializer(many=True, required=False)
+    time_created = serializers.DateTimeField(format="%B %d %Y")
+    price = serializers.SerializerMethodField()
+    def get_price(self, obj):
+        return obj.total_cost()
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['order_product_items'] = [d for d in data['order_product_items'] if not ((variant:=models.Variant.objects.get(id=d['variant'])).removed or variant.product.removed)]
+        return data
+
+    class Meta:
+        model = OrderItem
+        fields = ["status", "paid", "price", "time_created", "order_product_items"]
 class CartSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     def validate(self, attrs):
