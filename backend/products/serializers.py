@@ -10,6 +10,10 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 CartItemModel = apps.get_model('products', 'CartItem')
+class OrderProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderProductItem
+        fields = ["product", "variant", "quantity"]
 class OrderSerializer(serializers.ModelSerializer):
     order_product_items = OrderProductSerializer(many=True, required=False)
     time_created = serializers.DateTimeField(format="%B %d %Y")
