@@ -30,19 +30,34 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = ["status", "paid", "price", "time_created", "order_product_items"]
 class CartSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    def validate(self, attrs):
-        variant = attrs.get("variant")
-        product = attrs.get("product")
-
-        if variant not in product.variants.all():
-            raise serializers.ValidationError("Variant does not belong to product.")
-        return attrs
-
-
     class Meta:
         model = CartItemModel
-        fields = ("id", "quantity", "user", "variant", "product")
+        fields = ("id", "quantity", "user", "variant", "product", "saveForLater")
+    def validate_variant(self, variant):
+        if variant.removed or variant.product.removed: raise serializers.ValidationError("removed")
+        return variant
+    def validate(self, attrs):
+        super().validate(attrs)
+        instance = self.instance
+        variant = attrs.get("variant", getattr(instance, "variant", None))
+        product = attrs.get("product", getattr(instance, "product", None))
+        quantity = attrs.get("quantity", getattr(instance, "quantity", None))
+        if variant is None or product is None or quantity is None: raise serializers.ValidationError("variant, product and quantity are required")
+        if variant.product != product:
+            raise serializers.ValidationError("variant must belong to product")
+        if variant.stock < quantity: raise serializers.ValidationError("not enough stock")
+        if quantity <= 0: raise serializers.ValidationError("quantity must be greater than 0")
+        return attrs
+# class UpdateCartSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = CartItemModel
+#         fields = ("id", "quantity", "saveForLater")
 
+
+# base_image_operation = lambda size: lambda image: image.resize((w:=(int(min(size, image.width))), int(w/(4/3)) ))
+# variant_image_operation = base_image_operation(2600)
+# thumbnail_image_operation = base_image_operation(400)
 
 
 class VariantImageSerializer(serializers.ModelSerializer):
