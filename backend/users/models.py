@@ -39,6 +39,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ["first_name", "last_name"]
 
+    def has_bought_variant(self, variant):
+        return self.orderitem_set.filter(order_product_items__variant=variant, paid=True).exists()
+    def has_reviewed_variant(self, variant):
+        return self.reviews.filter(variant=variant).exists()
     def __str__(self):
         return self.email
 
