@@ -111,17 +111,51 @@ class VariantImageSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 class VariantSerializer(serializers.ModelSerializer):
-    images = VariantImageSerializer(many=True, read_only=False, required=True)
+    images = VariantImageSerializer(many=True, read_only=False, required=True, partial=True)
 
     for_update_id = serializers.IntegerField(write_only=True, required=False)
+
+    # average_rating = serializers.SerializerMethodField(read_only=True)
+    #
+    # def get_average_rating(self, obj):
+    #     return obj.reviews.aggregate(average_rating=django_db_models.Avg("rating"))["average_rating"]
+
+    posted_review = serializers.SerializerMethodField(read_only=True)
+
+    def get_posted_review(self, obj):
+        user = self.context["request"].user
+        if not user.is_authenticated: return None
+        review = user.reviews.filter(variant=obj)
+        if review.exists():
+            review = review.first()
+            review = ReadReviewSerializer(review)
+            return review.data
+        return None
+
+    can_review = serializers.SerializerMethodField(read_only=True)
+    def get_can_review(self, obj):
+        user = self.context["request"].user
+        has_bought = user.is_authenticated and user.has_bought_variant(obj)
+        has_reviewed = user.is_authenticated and user.has_reviewed_variant(obj)
+        #PROD
+        # return (has_bought and not )
+        return not has_reviewed
     class Meta:
-        fields = ["id", "for_update_id", "color", "name", "images"]
+        fields = ["id", "removed", "stock", "for_update_id", "posted_review", "can_review", "color", "name", "images"]
         model = models.Variant
 
-    def validate_images(self, value):
-        if not (len(value) > 0):
+    def validate_images(self, images):
+        if not (len(images) > 0):
             raise serializers.ValidationError("Number of images must be more than 0.")
-        return value
+        # if self.context["request"].method != "POST": #updating product
+        #     for image in images:
+        #         if id:=image.get("for_update_id") is not None:
+        #             instance = models.VariantImage.objects.get(pk=id)
+        #             serializer = VariantImageSerializer(instance, data=image, partial=True)
+        #         else:
+        #             serializer = VariantImageSerializer(data=image)
+        #         serializer.is_valid(raise_exception=True)
+        return images
 
     def create(self, validated_data):
         images_data = validated_data.pop('images')
@@ -144,7 +178,8 @@ class VariantSerializer(serializers.ModelSerializer):
             image_id = image_data.get('for_update_id', None)
             if image_id in existing_images_ids:
                 image = instance.images.get(id=image_id)
-
+                if image.variant != instance:
+                    raise serializers.ValidationError("Image must belong to the same variant")
                 image_serializer = VariantImageSerializer(image, data=image_data, partial=True)
             else:
                 image_serializer = VariantImageSerializer(data=image_data)
@@ -158,8 +193,10 @@ class VariantSerializer(serializers.ModelSerializer):
             if image.id not in new_added_images_id:
                 image.delete()
 
+        CartItem.objects.all().filter(variant__stock__lte=0).delete()
 
         return instance
+
 
 
 
