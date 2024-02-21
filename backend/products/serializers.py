@@ -59,6 +59,22 @@ class CartSerializer(serializers.ModelSerializer):
 # variant_image_operation = base_image_operation(2600)
 # thumbnail_image_operation = base_image_operation(400)
 
+def base_image_operation(size):
+    def upper_operation(cropInfo):
+        def nested_operation(image):
+            image = image.convert("RGB")
+            image = image.crop(cropInfo)
+            min_size = (int(min(size, image.width)))
+            image = image.resize((min_size, int(min_size / (4 / 3))))
+            return image
+
+        return nested_operation
+    return upper_operation
+
+
+variant_image_operation = base_image_operation(2600)
+
+thumbnail_image_operation = base_image_operation(400)
 
 class VariantImageSerializer(serializers.ModelSerializer):
     image_crop_x = serializers.IntegerField(write_only=True)
