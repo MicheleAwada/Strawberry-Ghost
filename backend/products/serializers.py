@@ -83,48 +83,35 @@ class VariantImageSerializer(serializers.ModelSerializer):
     image_crop_height = serializers.IntegerField(write_only=True)
 
     for_update_id = serializers.IntegerField(write_only=True, required=False)
-
+    image = FullUrlImageField()
     class Meta:
         fields = ["id", "for_update_id", "image", "alt", "image_crop_x", "image_crop_y", "image_crop_width", "image_crop_height"]
         model = models.VariantImage
-
     def create(self, validated_data):
-        #img crop
-        oldImage = validated_data.get("image")
-        x = validated_data.pop("image_crop_x")
-        y = validated_data.pop("image_crop_y")
-        width = validated_data.pop("image_crop_width")
-        height = validated_data.pop("image_crop_height")
-
-        img = Image.open(oldImage)
-        newImage = img.crop((x, y, x + width, y + height))
-        newImageFormat = img.format.lower()
-
-        buffer = io.BytesIO()
-        newImage.save(buffer, format=newImageFormat)
-        buffer.seek(0)
-
-        validated_data["image"].file = buffer
-        return super().create(validated_data)
+        cropInfo = [validated_data.pop(f'image_crop_{v}', None) for v in ["x", "y", "width", "height"]]
+        cropInfoExists = not any(x is None for x in cropInfo)
+        image_exists = validated_data.get("image") is not None
+        if cropInfoExists != image_exists:
+            raise serializers.ValidationError("image and crop info must match")
+        instance = super().create(validated_data)
+        if image_exists and cropInfoExists:
+            cropInfo[2] += cropInfo[0]
+            cropInfo[3] += cropInfo[1]
+            editImage(instance.image, variant_image_operation(cropInfo))
+        return instance
     def update(self, instance, validated_data):
-        #img crop
-        uncroppedImage = validated_data.get("image", None)
-        if uncroppedImage is not None:
-            x = validated_data.pop("image_crop_x")
-            y = validated_data.pop("image_crop_y")
-            width = validated_data.pop("image_crop_width")
-            height = validated_data.pop("image_crop_height")
+        cropInfo = [validated_data.pop(f'image_crop_{v}', None) for v in ["x", "y", "width", "height"]]
+        cropInfoExists = not any(x is None for x in cropInfo)
+        image_exists = validated_data.get("image") is not None
+        if cropInfoExists != image_exists:
+            raise serializers.ValidationError("image and crop info must match")
 
-            img = Image.open(uncroppedImage)
-            newImage = img.crop((x, y, x + width, y + height))
-            newImageFormat = img.format.lower()
-
-            buffer = io.BytesIO()
-            newImage.save(buffer, format=newImageFormat)
-            buffer.seek(0)
-
-            validated_data["image"].file = buffer
-        return super().update(instance, validated_data)
+        instance = super().update(instance, validated_data)
+        if image_exists and cropInfoExists:
+            cropInfo[2] += cropInfo[0]
+            cropInfo[3] += cropInfo[1]
+            editImage(instance.image, variant_image_operation(cropInfo))
+        return instance
 
 class VariantSerializer(serializers.ModelSerializer):
     images = VariantImageSerializer(many=True, read_only=False, required=True, partial=True)
