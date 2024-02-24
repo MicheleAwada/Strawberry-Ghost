@@ -1,13 +1,24 @@
 import io
-
+import math
 from rest_framework import serializers
 from . import models
 from django.apps import apps
 from PIL import Image
-import time, os.path
+import os.path
 from io import StringIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from datetime import timedelta
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django.conf import settings
+from review.serializers import ReadReviewSerializer
+from .models import CartItem, OrderItem, OrderProductItem
+from django.db import models as django_db_models
+from .utils import editImage
+from .serializers_fields import FullUrlImageField
+UserModel = get_user_model()
 
+MEDIA_ROOT = settings.MEDIA_ROOT
 
 CartItemModel = apps.get_model('products', 'CartItem')
 class OrderProductSerializer(serializers.ModelSerializer):
