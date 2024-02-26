@@ -21,6 +21,8 @@ UserModel = get_user_model()
 MEDIA_ROOT = settings.MEDIA_ROOT
 
 CartItemModel = apps.get_model('products', 'CartItem')
+ReviewModel = apps.get_model('review', 'Review')
+
 class OrderProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderProductItem
@@ -215,81 +217,124 @@ class VariantSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    variants = VariantSerializer(many=True, read_only=False, required=True)
+    variants = VariantSerializer(many=True, read_only=False, required=True, partial=True)
     thumbnail_crop_x = serializers.IntegerField(write_only=True)
     thumbnail_crop_y = serializers.IntegerField(write_only=True)
     thumbnail_crop_width = serializers.IntegerField(write_only=True)
     thumbnail_crop_height = serializers.IntegerField(write_only=True)
+    thumbnail = FullUrlImageField()
+    recommended_reviews = ReadReviewSerializer(many=True, read_only=True)
 
+    reviews_length = serializers.SerializerMethodField(read_only=True)
+    def get_reviews_length(self, obj):
+        return obj.get_reviews().count()
 
+    average_rating = serializers.SerializerMethodField(read_only=True)
+    def get_average_rating(self, obj):
+        rating = obj.variants.aggregate(average_rating=django_db_models.Avg("reviews__rating"))["average_rating"]
+        if rating is None:
+            return None
+        return round(rating, 1)
+    new = serializers.SerializerMethodField(read_only=True)
+    def get_new(self, obj):
+        obj_date = obj.created_on
+        return obj_date > (timezone.now() - timedelta(days=7))
     class Meta:
-        fields = ["id", "slug", "title", "frequentlyBoughtTogether", "description", "price", "variants", "thumbnail", "thumbnail_crop_x", "thumbnail_crop_y", "thumbnail_crop_width", "thumbnail_crop_height"]
+        fields = ["id", "slug", "new", "average_rating", "reviews_length", "recommended_reviews", "title", "frequentlyBoughtTogether", "recommended_products", "description", "price", "variants", "thumbnail", "thumbnail_alt", "thumbnail_crop_x", "thumbnail_crop_y", "thumbnail_crop_width", "thumbnail_crop_height"]
         model = models.Product
 
-    def validate_variants(self, value):
-        if not (len(value) > 0):
+
+    def validate_variants(self, variants):
+        if not (len(variants) > 0):
             raise serializers.ValidationError("Number of variants must be more than 0.")
-        return value
+        # if self.context["request"].method != "POST": #updating product
+        #     for variant in variants:
+        #         if id := variant.get("for_update_id") is not None:
+        #             instance = models.Variant.objects.get(pk=id)
+        #             serializer = VariantSerializer(instance, data=variant, partial=True)
+        #         else:
+        #             serializer = VariantSerializer(data=variant)
+        #         if not serializer.is_valid():
+        #             raise serializers.ValidationError(serializer.errors)
+        return variants
+
+    # def create(self, validated_data):
+    #     variants_data = validated_data.pop('variants')
+    #
+    #     frequentlyBoughtTogether_data = validated_data.pop('frequentlyBoughtTogether', [])
+    #     product = models.Product.objects.create(**validated_data)
+    #     for product_fbt in frequentlyBoughtTogether_data:
+    #         product.frequentlyBoughtTogether.add(product_fbt)
+    #
+    #     variant_serializer = VariantSerializer(data=variants_data, many=True)
+    #     variant_serializer.is_valid(raise_exception=True)
+    #     variant_serializer.save(product=product)
+    #     return product
     def validate(self, attrs):
         attrs = super().validate(attrs)
-        #img crop
-        oldThumbnail = attrs.get("thumbnail", None)
-        if oldThumbnail is None:
-            return attrs
-        x = attrs.pop("thumbnail_crop_x")
-        y = attrs.pop("thumbnail_crop_y")
-        width = attrs.pop("thumbnail_crop_width")
-        height = attrs.pop("thumbnail_crop_height")
-
-        img = Image.open(oldThumbnail)
-        newThumbnail = img.crop((x, y, x + width, y + height))
-        newThumbnailFormat = img.format.lower()
-
-        buffer = io.BytesIO()
-        newThumbnail.save(buffer, format=newThumbnailFormat)
-        buffer.seek(0)
-
-        attrs["thumbnail"].file = buffer
-
+        cropInfo = [attrs.pop(f'thumbnail_crop_{v}', None) for v in ["x", "y", "width", "height"]]
+        cropInfoExists = all(x is not None for x in cropInfo)
+        if cropInfoExists:
+            cropInfo[2] += cropInfo[0]
+            cropInfo[3] += cropInfo[1]
+        attrs["cropInfo"] = cropInfo
+        image = attrs.get("thumbnail")
+        image_exists = image is not None
+        attrs["image_exists"] = image_exists and cropInfoExists
+        if image_exists!= cropInfoExists:
+            raise serializers.ValidationError("Thumbnail have crop info and vice versa")
         return attrs
-
     def create(self, validated_data):
         variants_data = validated_data.pop('variants')
+        # cropInfo = {v: validated_data.pop(f'thumbnail_crop_{v}', None) for v in ["x", "y", "width", "height"]}
+        cropInfo = validated_data.pop('cropInfo')
+        image_exists = validated_data.pop('image_exists')
 
-        frequentlyBoughtTogether_data = validated_data.pop('frequentlyBoughtTogether', [])
-        product = models.Product.objects.create(**validated_data)
-        for product_fbt in frequentlyBoughtTogether_data:
-            product.frequentlyBoughtTogether.add(product_fbt)
+
+        instance = super().create(validated_data)
+        if image_exists:
+            editImage(instance.thumbnail, thumbnail_image_operation(cropInfo))
 
         variant_serializer = VariantSerializer(data=variants_data, many=True)
         variant_serializer.is_valid(raise_exception=True)
-        variant_serializer.save(product=product)
-        return product
+        variant_serializer.save(product=instance)
+
+        return instance
     def update(self, instance, validated_data):
-        variants_data = validated_data.pop('variants', [])
+        variants_data = validated_data.pop('variants')
+        cropInfo = validated_data.pop('cropInfo')
+        image_exists = validated_data.pop('image_exists')
+
         instance = super().update(instance, validated_data)
 
-        existing_variant_ids = [variant.id for variant in instance.variants.all()]
+        if image_exists:
+            editImage(instance.thumbnail, thumbnail_image_operation(cropInfo))
+
+
 
         new_added_variant_id = []
 
+        for variant in instance.variants.all():
+            variant.removed=True
+            variant.save()
+
         for variant_data in variants_data:
-            variant_id = variant_data.get('for_update_id', None)
-
-            if variant_id in existing_variant_ids:
+            variant_id = variant_data.get('for_update_id')
+            if variant_id is not None:
                 variant = instance.variants.get(id=variant_id)
-
+                if variant.product != instance:
+                    raise serializers.ValidationError("Variant belongs to another product")
                 variant_serializer = VariantSerializer(variant, data=variant_data, partial=True)
             else:
                 variant_serializer = VariantSerializer(data=variant_data)
 
             variant_serializer.is_valid(raise_exception=True)
-            variant_serializer.save(product=instance)
-
-        for variant in instance.variants.all():
-            if variant.id not in new_added_variant_id:
-                variant.delete()
+            variant_instance = variant_serializer.save(product=instance, removed=False)
+            new_added_variant_id.append(variant_instance.id)
 
 
         return instance
-
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['variants'] = [variant_data for variant_data in data['variants'] if not variant_data['removed']]
+        return data
