@@ -41,11 +41,34 @@ class CartItem(AbstractOrderItem):
 
 
 class OrderProductItem(AbstractOrderItem):
-    order = models.ForeignKey("products.OrderItem", on_delete=models.CASCADE)
+    order = models.ForeignKey("products.OrderItem", on_delete=models.CASCADE, related_name="order_product_items")
 
 class OrderItem(models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(default="designing", blank=True, max_length=100)
-    def get_user(self):
-        return self.orderproductitem_set.first().user
+    time_payed = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(default="unpaid", blank=True, max_length=100)
+    paid = models.BooleanField(default=False, blank=True)
+    info = models.JSONField(null=True, blank=True)
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+
+    @property
+    def author(self):
+        return self.user
+    def money_paid(self, info):
+        self.status = "designing"
+        self.paid = True
+        self.time_payed = timezone.now()
+        self.info = info
+        self.save()
+        user = self.user
+        user.cartitem_set.all().delete()
+    def total_cost(self):
+        cost = 0
+        for order_product_item in self.order_product_items.all():
+            cost += order_product_item.quantity * order_product_item.product.price
+        return int(cost*100)/100
+
+    class Meta:
+        ordering = ["-time_created", "-id"]
+
 
