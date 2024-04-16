@@ -19,8 +19,8 @@ class Variant(models.Model):
 
 
 class VariantImage(models.Model):
-    image = models.ImageField()
-    alt = models.CharField(max_length=100, default="Image for Variant", blank=True)
+    image = models.ImageField(upload_to="variants_images/%Y/%m/%d")
+    alt = models.CharField(max_length=250, blank=True)
     variant = models.ForeignKey("products.Variant", on_delete=models.CASCADE, related_name="images")
 
 class AbstractOrderItem(models.Model):
