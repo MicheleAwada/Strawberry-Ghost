@@ -16,7 +16,15 @@ class Variant(models.Model):
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=7, default=None, null=True, blank=True)
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE, related_name="variants")
+    removed = models.BooleanField(default=False, blank=True)
+    stock = models.IntegerField(default=0, blank=True)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.removed:
+            CartItem.objects.filter(variant=self).delete()
+        else:
+            CartItem.objects.all().filter(variant__stock__lt=models.F("quantity")).delete()
 
 class VariantImage(models.Model):
     image = models.ImageField(upload_to="variants_images/%Y/%m/%d")
