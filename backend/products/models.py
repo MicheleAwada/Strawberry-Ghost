@@ -1,16 +1,35 @@
 from django.db import models
-
+from review.models import Review
+from django.utils import timezone
 # Create your models here.
+
+
+
 class Product(models.Model):
     title = models.CharField(max_length=750)
     description = models.TextField()
-    thumbnail = models.ImageField()
+    thumbnail = models.ImageField(upload_to="products_thumbnails/%Y/%m/%d")
+    thumbnail_alt = models.CharField(max_length=250, default="Thumbnail Image", blank=True)
     frequentlyBoughtTogether = models.ManyToManyField("self", blank=True)
+    recommended_products = models.ManyToManyField("self", editable=False, blank=True)
     price = models.DecimalField(decimal_places=2, max_digits=20)
     slug = models.SlugField(max_length=100, unique=True, blank=False)
+    removed = models.BooleanField(default=False, blank=True)
 
+    created_on = models.DateTimeField(auto_now_add=True)
+    def get_reviews(self):
+        return Review.objects.filter(variant__product=self)
+    @property
+    def average_reviews(self):
+        return self.get_reviews().aggregate(rating_avg = models.Avg("rating"))["rating_avg"]
+    @property
+    def recommended_reviews(self):
+        return self.get_reviews().order_by("-rating", "?")[:2]
     def is_in_cart(self, user):
         return user.cart.filter(product=self).exists()
+    class Meta:
+        ordering = ["-created_on", "title", "-id"]
+
 
 class Variant(models.Model):
     name = models.CharField(max_length=100)
