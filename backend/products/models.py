@@ -54,17 +54,24 @@ class AbstractOrderItem(models.Model):
     quantity = models.IntegerField()
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
     variant = models.ForeignKey("products.Variant", on_delete=models.CASCADE)
+
+    # @property
+    # def product(self):
+    #     return self.variant.product
+    class Meta:
+        abstract = True
+
+
+class CartItem(AbstractOrderItem):
+    saveForLater = models.BooleanField(default=False, blank=True)
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
 
     @property
     def author(self):
         return self.user
-    class Meta:
-        abstract = True
-        unique_together = [["user", "variant"]]
 
-class CartItem(AbstractOrderItem):
-    saveForLater = models.BooleanField(default=False, blank=True)
+    class Meta:
+        unique_together = [["user", "variant"]]
 
 
 class OrderProductItem(AbstractOrderItem):
