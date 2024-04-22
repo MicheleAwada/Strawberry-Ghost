@@ -42,29 +42,42 @@ class CartViewSet(viewsets.ModelViewSet):
         userdata = MyUserSerializer(request.user)
         return Response(userdata.data, status=status.HTTP_200_OK)
 
+class ProductPaginator(PageNumberPagination):
+    page_size = 1
+
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(removed=False)
     permission_classes = [permissions.IsStaffOrReadOnly]
     lookup_field = "slug"
+    # pagination_class = ProductPaginator
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.removed = True
+        instance.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     def create(self, request, *args, **kwargs):
 
         form = NestedForm(request.data)
-        form.is_nested(raise_exception=True)
+        data = request.data
+        if form.is_nested():
+            data = form.data
 
-        serializer = self.get_serializer(data=form.data)
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     def update(self, request, *args, **kwargs):
         form = NestedForm(request.data)
-        form.is_nested(raise_exception=True)
+        data = request.data
+        if form.is_nested():
+            data = form.data
 
         partial = kwargs.pop('partial', False)
 
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=form.data, partial=partial)
+        serializer = self.get_serializer(instance, data=data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
