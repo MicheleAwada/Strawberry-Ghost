@@ -42,6 +42,13 @@ class CartViewSet(viewsets.ModelViewSet):
         userdata = MyUserSerializer(request.user)
         return Response(userdata.data, status=status.HTTP_200_OK)
 
+class OrderViewSet(generics.ListAPIView):
+    queryset = OrderItem.objects.filter(paid=True)
+    serializer_class = serializers.OrderSerializer
+    permission_classes = [drf_permissions.IsAuthenticated]
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
 class ProductPaginator(PageNumberPagination):
     page_size = 1
 
