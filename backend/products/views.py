@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import ProductSerializer
-from .models import Product
+from .models import Product, OrderItem
 from drf_nested_forms.utils import NestedForm
 
 from rest_framework import mixins
@@ -11,35 +11,40 @@ from rest_framework.viewsets import GenericViewSet
 from . import serializers, permissions
 from rest_framework import permissions as drf_permissions
 from django.apps import apps
-
+from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
 from users.serializers import MyUserSerializer
 
 
 CartItemModel = apps.get_model('products', 'CartItem')
 
 class CartViewSet(viewsets.ModelViewSet):
-    queryset = CartItemModel.objects.all()
+    queryset = CartItemModel.objects.filter(product__removed=False)
     serializer_class = serializers.CartSerializer
     permission_classes = [drf_permissions.IsAuthenticated, permissions.IsAuthorOrNone]
+    # def get_serializer_class(self):
+    #     if self.action == "create":
+    #         return serializers.CartSerializer
+    #     return serializers.UpdateCartSerializer
     def filter_queryset(self, queryset):
         if self.action == "list":
             return queryset.filter(user=self.request.user)
         return super().filter_queryset(queryset)
     def create(self, request, *args, **kwargs):
         super().create(request, *args, **kwargs)
-        userdata = MyUserSerializer(request.user)
+        userdata = MyUserSerializer(request.user, context=self.get_serializer_context())
         return Response(userdata.data, status=status.HTTP_201_CREATED)
     def update(self, request, *args, **kwargs):
         super().update(request, *args, **kwargs)
-        userdata = MyUserSerializer(request.user)
+        userdata = MyUserSerializer(request.user, context=self.get_serializer_context())
         return Response(userdata.data, status=status.HTTP_200_OK)
     def partial_update(self, request, *args, **kwargs):
         super().partial_update(request, *args, **kwargs)
-        userdata = MyUserSerializer(request.user)
+        userdata = MyUserSerializer(request.user, context=self.get_serializer_context())
         return Response(userdata.data, status=status.HTTP_200_OK)
     def destroy(self, request, *args, **kwargs):
         super().destroy(request, *args, **kwargs)
-        userdata = MyUserSerializer(request.user)
+        userdata = MyUserSerializer(request.user, context=self.get_serializer_context())
         return Response(userdata.data, status=status.HTTP_200_OK)
 
 class OrderViewSet(generics.ListAPIView):
