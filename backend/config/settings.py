@@ -32,7 +32,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -144,8 +143,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -154,26 +152,55 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.User"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
+IS_HTTPS = os.environ.get("IS_HTTPS") == "True"
+
+def add_http(name, https=IS_HTTPS):
+    if https:
+        return "https://"+name
+    else:
+        return "http://"+name
+
+BACKEND_NAME = os.environ.get("BASE_BACKEND_DOMAIN_NAME")
+BACKEND_URL = add_http(BACKEND_NAME)
+
+FRONTEND_NAME = os.environ.get("BASE_FRONTEND_DOMAIN_NAME")
+FRONTEND_URL = add_http(FRONTEND_NAME)
+
+
+
+MEDIA_URL = f"/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+ALLOWED_HOSTS = [
+    BACKEND_NAME,
+]
+if DEBUG and BACKEND_NAME=="127.0.0.1:8000":
+    ALLOWED_HOSTS.append("127.0.0.1")
+CSRF_TRUSTED_ORIGINS = [
+    BACKEND_URL
+]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")  # Your Gmail email address
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')  # Your Gmail password or app password
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT"))
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS") == "True"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+CONTACT_PAGE_URL = os.environ.get("CONTACT_PAGE_URL")
+
 
 
 
 # django cors header
 CORS_ALLOWED_ORIGINS = [
-    "https://example.com",
-    "https://sub.example.com",
-    "http://localhost:8080",
-    "http://127.0.0.1:9000",
+    FRONTEND_URL
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
-if DEBUG: CORS_ALLOW_ALL_ORIGINS = True
+
+# if DEBUG: CORS_ALLOW_ALL_ORIGINS = True
 
 # rest framework
 
@@ -185,8 +212,15 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-    ]
+    ],
 }
 
 # google
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+
+#stripe
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
+
+
+SEARCH_NICHE = os.environ.get("SEARCH_NICHE")
