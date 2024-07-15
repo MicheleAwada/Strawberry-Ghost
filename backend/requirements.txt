@@ -4,3 +4,7 @@ django-cors-headers
 drf-nested-forms
 google-auth
 requests
+gunicorn
+Pillow
+stripe
+psycopg2-binary
