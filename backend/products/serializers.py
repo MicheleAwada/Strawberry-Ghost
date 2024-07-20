@@ -61,16 +61,6 @@ class CartSerializer(serializers.ModelSerializer):
         if variant.stock < quantity: raise serializers.ValidationError("not enough stock")
         if quantity <= 0: raise serializers.ValidationError("quantity must be greater than 0")
         return attrs
-# class UpdateCartSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = CartItemModel
-#         fields = ("id", "quantity", "saveForLater")
-
-
-# base_image_operation = lambda size: lambda image: image.resize((w:=(int(min(size, image.width))), int(w/(4/3)) ))
-# variant_image_operation = base_image_operation(2600)
-# thumbnail_image_operation = base_image_operation(400)
 
 def base_image_operation(size):
     def upper_operation(cropInfo):
@@ -131,11 +121,6 @@ class VariantSerializer(serializers.ModelSerializer):
 
     for_update_id = serializers.IntegerField(write_only=True, required=False)
 
-    # average_rating = serializers.SerializerMethodField(read_only=True)
-    #
-    # def get_average_rating(self, obj):
-    #     return obj.reviews.aggregate(average_rating=django_db_models.Avg("rating"))["average_rating"]
-
     posted_review = serializers.SerializerMethodField(read_only=True)
 
     def get_posted_review(self, obj):
@@ -163,14 +148,6 @@ class VariantSerializer(serializers.ModelSerializer):
     def validate_images(self, images):
         if not (len(images) > 0):
             raise serializers.ValidationError("Number of images must be more than 0.")
-        # if self.context["request"].method != "POST": #updating product
-        #     for image in images:
-        #         if id:=image.get("for_update_id") is not None:
-        #             instance = models.VariantImage.objects.get(pk=id)
-        #             serializer = VariantImageSerializer(instance, data=image, partial=True)
-        #         else:
-        #             serializer = VariantImageSerializer(data=image)
-        #         serializer.is_valid(raise_exception=True)
         return images
 
     def create(self, validated_data):
@@ -213,9 +190,6 @@ class VariantSerializer(serializers.ModelSerializer):
 
         return instance
 
-
-
-
 class ProductSerializer(serializers.ModelSerializer):
     variants = VariantSerializer(many=True, read_only=False, required=True, partial=True)
     thumbnail_crop_x = serializers.IntegerField(write_only=True)
@@ -247,29 +221,8 @@ class ProductSerializer(serializers.ModelSerializer):
     def validate_variants(self, variants):
         if not (len(variants) > 0):
             raise serializers.ValidationError("Number of variants must be more than 0.")
-        # if self.context["request"].method != "POST": #updating product
-        #     for variant in variants:
-        #         if id := variant.get("for_update_id") is not None:
-        #             instance = models.Variant.objects.get(pk=id)
-        #             serializer = VariantSerializer(instance, data=variant, partial=True)
-        #         else:
-        #             serializer = VariantSerializer(data=variant)
-        #         if not serializer.is_valid():
-        #             raise serializers.ValidationError(serializer.errors)
         return variants
 
-    # def create(self, validated_data):
-    #     variants_data = validated_data.pop('variants')
-    #
-    #     frequentlyBoughtTogether_data = validated_data.pop('frequentlyBoughtTogether', [])
-    #     product = models.Product.objects.create(**validated_data)
-    #     for product_fbt in frequentlyBoughtTogether_data:
-    #         product.frequentlyBoughtTogether.add(product_fbt)
-    #
-    #     variant_serializer = VariantSerializer(data=variants_data, many=True)
-    #     variant_serializer.is_valid(raise_exception=True)
-    #     variant_serializer.save(product=product)
-    #     return product
     def validate(self, attrs):
         attrs = super().validate(attrs)
         cropInfo = [attrs.pop(f'thumbnail_crop_{v}', None) for v in ["x", "y", "width", "height"]]
@@ -286,7 +239,6 @@ class ProductSerializer(serializers.ModelSerializer):
         return attrs
     def create(self, validated_data):
         variants_data = validated_data.pop('variants')
-        # cropInfo = {v: validated_data.pop(f'thumbnail_crop_{v}', None) for v in ["x", "y", "width", "height"]}
         cropInfo = validated_data.pop('cropInfo')
         image_exists = validated_data.pop('image_exists')
 

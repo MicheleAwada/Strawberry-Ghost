@@ -23,14 +23,12 @@ class ReviewSerializer(serializers.ModelSerializer):
     def validate_variant(self, variant):
         user = self.context["request"].user
 
-        #PROD
-        # if not user.has_bought_variant(variant):
-        #     raise serializers.ValidationError("You need to buy this product to review it")
+        if not user.has_bought_variant(variant):
+            raise serializers.ValidationError("You need to buy this product to review it")
         return variant
     def validate_rating(self, rating):
         return is_valid_rating(rating, errorToRaise=serializers.ValidationError)
     def validate(self, attrs):
-        print(attrs)
         return super().validate(attrs)
     class Meta:
         model = Review

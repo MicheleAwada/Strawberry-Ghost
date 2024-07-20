@@ -30,7 +30,6 @@ UserModel = get_user_model()
 ProductModel = apps.get_model('products', 'Product')
 
 def return_user_data(user, request):
-    # Token.objects.get_or_create(user=user)
     userdata = serializers.MyUserSerializer(user, context={'request': request})
     return Response(userdata.data)
 @api_view(['POST'])
@@ -55,13 +54,6 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.ListM
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         return return_user_data(user, request)
-    # def update(self, request, *args, **kwargs):
-    #     # partial = kwargs.pop('partial', False)
-    #     # instance = request.user
-    #     # serializer = self.get_serializer(instance, data=request.data, partial=partial)
-    #     # serializer.is_valid(raise_exception=True)
-    #     # user = serializer.save()
-    #     return return_user_data(user)
     def get_serializer_class(self):
         if self.action == 'create':
             return serializers.CreateUserSerializer

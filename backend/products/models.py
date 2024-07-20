@@ -1,7 +1,6 @@
 from django.db import models
 from review.models import Review
 from django.utils import timezone
-# Create your models here.
 
 
 
@@ -55,9 +54,6 @@ class AbstractOrderItem(models.Model):
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
     variant = models.ForeignKey("products.Variant", on_delete=models.CASCADE)
 
-    # @property
-    # def product(self):
-    #     return self.variant.product
     class Meta:
         abstract = True
 

@@ -22,10 +22,6 @@ class CartViewSet(viewsets.ModelViewSet):
     queryset = CartItemModel.objects.filter(product__removed=False)
     serializer_class = serializers.CartSerializer
     permission_classes = [drf_permissions.IsAuthenticated, permissions.IsAuthorOrNone]
-    # def get_serializer_class(self):
-    #     if self.action == "create":
-    #         return serializers.CartSerializer
-    #     return serializers.UpdateCartSerializer
     def filter_queryset(self, queryset):
         if self.action == "list":
             return queryset.filter(user=self.request.user)
@@ -54,15 +50,11 @@ class OrderViewSet(generics.ListAPIView):
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
 
-class ProductPaginator(PageNumberPagination):
-    page_size = 1
-
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.filter(removed=False)
     permission_classes = [permissions.IsStaffOrReadOnly]
     lookup_field = "slug"
-    # pagination_class = ProductPaginator
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.removed = True

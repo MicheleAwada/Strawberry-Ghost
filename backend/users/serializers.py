@@ -72,7 +72,6 @@ class MyUserSerializer(serializers.ModelSerializer):
             editImage(instance.avatar, smaller_image)
         return instance
     def to_representation(self, instance):
-        # Token.objects.get_or_create(user=self.instance)
         ret = super().to_representation(instance)
         return ret
     class Meta:
@@ -128,14 +127,12 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
         token = object.generate_token()
         object.save()
         object.is_valid_to_mail()
-        print("SENDED TO " + email)
         send_mail(
             "StrawberryGhost Verification Code",
             f"Your 6 digit verification code for strawberry ghost is {token}, psst don't share this with anyone\n\n\nIf this wasn't you, you may safely ignore this email.",
             "no-reply@strawberryghost.org",
             [email],
         )
-        print("finished..")
         return object
 
 def recreate_token(user):
@@ -231,10 +228,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
         instance.set_password(validated_data['password'])
         instance.save()
-        print("test")
-        print(instance.auth_token.key)
         recreate_token(instance)
-        print(instance.auth_token.key)
 
         send_mail(
             "StrawberryGhost Password Changed",
