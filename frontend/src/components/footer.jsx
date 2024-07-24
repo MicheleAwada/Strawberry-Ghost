@@ -12,15 +12,12 @@ import { Link as ReactRouterLink } from "react-router-dom"
 
 
 const info = [
-    ["about us", "careers", "investors", "sustainability", "press", "social impact"],
-    ["contact us", "faq", "shipping", "returns", "warranty", "affiliates", "corporate sales"],
-    ["privacy policy", "terms of use", "cookie policy", "shipping", "returns", "warranty", "corporate sales", "corporate sales"],
-    ["terms of service", "shipping", "returns", "warranty", "corporate sales", "corporate sales"],
+    [{name: "Terms of Service", link: "/terms_of_services"}],
 ]
 
 export default function Footer() {
     return (
-        <Box component="footer" sx={{ width: "100%", bgcolor: "primary.dark", mt: "8rem", borderRadius: "4rem 4rem 0 0" }}>
+        <Box component="footer" sx={{ width: "100%", bgcolor: "primary.dark", mt: "8rem", borderRadius: "0 0 0 0" }}>
             <Stack>
                 <Box sx={{ px: {xs: "1rem", sm: "2rem", md: "4rem"}, pt: "6rem", pb: "3rem", boxSizing: "border-box", }}>
                     <Stack justifyContent="center" alignItems="center" sx={{ width: "100%" }}>
@@ -32,13 +29,13 @@ export default function Footer() {
                 <Stack flexDirection="row" justifyContent="space-around" flexWrap="wrap" gap={8} sx={{ px: {xs: "1rem", sm: "2rem", md: "4rem"}, pb: "2rem", boxSizing: "border-box", }}>
                     {info.map((column, index) =>
                         <List key={index} >
-                            {column.map((text, index) => <ListItem key={index} sx={{my:"0.5rem"}}><Link component={ReactRouterLink} to={`/${text}`} variant="h6" sx={{ textAlign: "center", width: "100%" }} color="primary.contrastText">{text}</Link></ListItem>)}
+                            {column.map((text, index) => <ListItem key={index} sx={{my:"0.5rem"}}><Link component={ReactRouterLink} to={text.link} variant="h6" sx={{ textAlign: "center", width: "100%" }} color="primary.contrastText">{text.name}</Link></ListItem>)}
                         </List>
                         )}
                 </Stack>
                 <Box sx={{ bgcolor: "primary.extraDark", px: {xs: "1rem", sm: "2rem", md: "4rem"}, boxSizing: "border-box", borderRadius: "4rem 4rem 0 0" }}>
                     <Typography variant="body1" color="primary.contrastText" sx={{ mt:"8rem", mb: "4rem" }}>
-                        Strawberry Ghost. All rights probably reserved.
+                        Strawberry Ghost. Copyright 2024 © - All rights reserved. 
                     </Typography>
                 </Box>
             </Stack>
