@@ -11,10 +11,13 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
 import Divider from '@mui/material/Divider'
 import Typography from '@mui/material/Typography'
+import Link from '@mui/material/Link'
 
-import { Form, useActionData, useFetcher, useNavigate, useNavigation, useSubmit } from 'react-router-dom'
+import { Form, Link as ReactRouterLink, useActionData, useFetcher, useNavigate, useNavigation, useSubmit } from 'react-router-dom'
 
 import { getFullError } from '../components/errorMessage'
 import { useContext, useEffect, useRef, useState } from 'react'
@@ -24,6 +27,7 @@ import { MessagesContext } from '../root';
 import { UserContext } from "../components/user";
 import { GoogleButton } from "./googleLogin";
 import PassInput from "../components/passInput";
+import ResendVerifyEmail from "../components/resendVerifyEmail";
 
 
 export async function action({ request }) {
@@ -54,7 +58,7 @@ function SignupForm({ setStep, getFromName, setError }) {
     useEffect(() => {
         if (fetcher.data) {
             let succeeded = false
-            if (fetcher.data.error !== null && Object.keys(fetcher.data.error).length===1 && "email_verification_code" in fetcher.data.error)
+            if (fetcher.data?.error && Object.keys(fetcher.data.error).length===1 && "email_verification_code" in fetcher.data.error)
             {
                 // we know we didnt send verification code so we will act like this is a success for now
                 succeeded = true
@@ -78,9 +82,6 @@ function SignupForm({ setStep, getFromName, setError }) {
             if (emailVerificationFetcher.data.succeeded) {
                 // dont say anything cause we already told them to check their email
             } else {
-                if (emailVerificationFetcher.data.error) {
-                    setError(emailVerificationFetcher.data.error)
-                }
                 simpleAddMessage(emailVerificationFetcher.data.errorMessage, {severity: "error"})
             }
         }
@@ -123,6 +124,13 @@ function SignupForm({ setStep, getFromName, setError }) {
                         {...getFromName("password")}
                         required
                     />
+                    {/* <PassInput
+                        {...getFromName("password2")}
+                        required
+                    /> */}
+                    <FormControlLabel control={<Checkbox required aria-required {...getFromName("agreed_to_terms", true, [e => e.target.checked])} />} label={<Typography component="span">
+                        By signing up with an account, you agree to Strawberry Ghost's <Link component={ReactRouterLink} to="/terms_of_services">Terms of Service</Link>.
+                    </Typography>} />
                     {
                         getFromName("non_field_errors").error &&
                         <Typography id="user-login-form-non-field-errors" color="error">
@@ -135,41 +143,20 @@ function SignupForm({ setStep, getFromName, setError }) {
                             Submit
                         </Button>
                     </Stack>
+                    <Divider variant="middle" flexItem sx={{my: "1rem"}} />
+                    <Link component={ReactRouterLink} to="/login" color="primary"><Typography>Login instead?</Typography></Link>
                 </Stack>
             </fetcher.Form>
         </Stack>
     )
 }
 
-function VerificationForm({ setStep, getFromName }) {
+function VerificationForm({ setStep, getFromName, setError }) {
     const navigation = useNavigation();
-    const loading = navigation.state==="submitting";
-
-    const fetcher = useFetcher()
-    const resendEmailLoading = fetcher.state === "submitting";
-    const { simpleAddMessage } = useContext(MessagesContext)
-    useEffect(() => {
-        if (fetcher.data) {
-            if (fetcher.data.succeeded) {
-                simpleAddMessage("Resended Verificaiton Code to Email.", {severity: "success"})
-            } else {
-                if (fetcher.data.error) {
-                    setError(fetcher.data.error)
-                }
-                simpleAddMessage(fetcher.data.errorMessage, {severity: "error"})
-            }
-        }
-    }, [fetcher.data])
-
-    function resendEmail() {
-        const formData = new FormData();
-        formData.append("email", getFromName("email").value)
-        fetcher.submit(formData, { method: "POST", action: "/email_verification" })
-    }
+    const loading = navigation.state==="submitting"; 
 
 
-
-    const validationGetFromName = getFromName("email_verification_code", true, [true])
+    const validationGetFromName = getFromName("email_verification_code", true, [e => e])
     return (
         <Form method="POST">
             <Stack flexDirection={"column"} gap={2}>
@@ -181,6 +168,7 @@ function VerificationForm({ setStep, getFromName }) {
                 <input type='hidden' {...getFromName("last_name", true)} />
                 <input type='hidden' {...getFromName("email", true)} />
                 <input type='hidden' {...getFromName("password", true)} />
+                <input type='hidden' {...getFromName("agreed_to_terms", true, [e => e.target.checked])} />
                 <VerificationInput
                   classNames={{
                     container: "container",
@@ -197,7 +185,7 @@ function VerificationForm({ setStep, getFromName }) {
                     </Typography>
                 }
                 <Stack gap={4}>
-                    <Button variant="outlined" onClick={resendEmail} startIcon={resendEmailLoading ? <Spinner /> : null}>Resend Email</Button>
+                    <ResendVerifyEmail email={getFromName("email").value} />
                     <Stack flexDirection="row" justifyContent="space-between">
                         <Button variant="outlined" color="primary" type="button" onClick={() => setStep(step => step-1)}>
                             Back
@@ -217,7 +205,7 @@ function GetContentFromStep({step, setStep, setError, getFromName}) {
         case 0:
             return <SignupForm setStep={setStep} setError={setError} getFromName={getFromName} />
         case 1:
-            return <VerificationForm setStep={setStep} getFromName={getFromName} />
+            return <VerificationForm setStep={setStep} setError={setError} getFromName={getFromName} />
     }
 }
 
@@ -252,10 +240,11 @@ export default function SignUp() {
         first_name: "",
         last_name: "",
         email_verification_code: "",
+        agreed_to_terms: false
     })
     const [error, setError] = useState({})
-    function onChangeInfo(e, name, eIsValue=false) {
-        const value = eIsValue ? e : e.target.value
+    function onChangeInfo(e, name, getValueFromE=(e) => e.target.value) {
+        const value = getValueFromE(e)
         setInfo(oldInfo => ({...oldInfo, [name]: value}))
     }
     function getFromName(name, hidden=false, onChangeInfoArgs=[]) {
