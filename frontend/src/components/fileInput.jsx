@@ -21,6 +21,7 @@ export default function FileInput({ text="Upload Image", url, error, helperText,
         handleFileChange(event)
     }
     inputProps.onChange = inputOnChange
+    
     return (
         <label htmlFor={id}>
                     <input
@@ -35,9 +36,9 @@ export default function FileInput({ text="Upload Image", url, error, helperText,
                             <Button color={error ? "error" : "primary"} variant="contained" component="span" {...buttonProps} startIcon={<FileUploadIcon />}>
                                 {text}
                             </Button>
-                            {error && <Typography variant="body1" color="initial">
+                            <Typography variant="body1" color={error ? "error" : "initial"}>
                                 {helperText}
-                            </Typography>}
+                            </Typography>
                         </Stack>
                         {isFileUploaded && <img component="img" src={url} style={{ aspectRatio: "4/3", objectFit: "cover", width: "3rem", height: "auto" }}>
                         </img>}
