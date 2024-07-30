@@ -107,12 +107,12 @@ function FileCropInput({ croppedData=null, setCroppedData=null, imageDisplayName
         
         return (
             <Box>
-            <Box>
+            {currentPage === "img-cropped" && <Box>
                 <input type="hidden" value={imgCropInfo.x} name={cropInfoInputsName.x} />
                 <input type="hidden" value={imgCropInfo.y} name={cropInfoInputsName.y} />
                 <input type="hidden" value={imgCropInfo.width} name={cropInfoInputsName.width} />
                 <input type="hidden" value={imgCropInfo.height} name={cropInfoInputsName.height} />
-            </Box>
+            </Box>}
             <FileInput onImageSelected={onImageSelected} inputRef={fileInputRef} hideButton={currentPage!=="choose-img"} {...fileInputProps} />
 			{currentPage === "crop-img" && (
 				<ImageCropper
