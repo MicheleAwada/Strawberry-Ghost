@@ -1,8 +1,20 @@
+import ErrorTypography from "./errorTypography";
+
 function formatError(errorArray) {
     if (!Array.isArray(errorArray) || errorArray.length === 0) {
       return null;
     }
-    const clonedErrorArray = [...errorArray];
+    let clonedErrorArray = [...errorArray];
+    clonedErrorArray = clonedErrorArray.map((error, index) => {
+      let new_error = error
+      if (new_error.charAt(new_error.length - 1)===".") {
+        new_error = new_error.slice(0, -1)
+      }
+      if (index === clonedErrorArray.length - 1) {
+        new_error += "."
+      }
+      return new_error
+    })
     const lastElement = clonedErrorArray.pop();
   
     if (clonedErrorArray.length > 0) {
@@ -31,7 +43,7 @@ function getFullError(error, itemLocation) {
     isError = true;
     
     let stringError = formatError(currentError);
-    return {error: stringError, isError: isError};
+    return {error: <ErrorTypography>{stringError}</ErrorTypography>, isError: isError};
   }
 function getErrorMessage(error, itemLocation) {
     return getFullError(error, itemLocation).error;
