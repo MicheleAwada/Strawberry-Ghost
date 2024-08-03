@@ -18,6 +18,9 @@ function handleVerifySlug(slug) {
 function handleChangeSlug(event, setProduct) {
     baseProductChange({slug: event.target.value}, setProduct)
 }
+function handleChangeThumbnailAlt(event, setProduct) {
+    baseProductChange({thumbnail_alt: event.target.value}, setProduct)
+}
 
 
 const priceRegex = new RegExp(/^\d*(\.\d{0,2})?$/)
@@ -55,11 +58,20 @@ function baseChangeVariant(variantIndex, newVariant, setProduct) {
 function handleVariantName(event, variantIndex, setProduct) {
     baseChangeVariant(variantIndex, {name: event.target.value}, setProduct)
 }
+function handleVariantStock(event, variantIndex, setProduct) {
+    const value = event.target.value
+    const numberTestRegrex = /^\d+$/
+    const numberTest = numberTestRegrex.test(value)
+    if (numberTest) {
+        baseChangeVariant(variantIndex, {stock: parseInt(value)}, setProduct)
+    }
+}
 function handleVariantColor(event, variantIndex, setProduct) {
     baseChangeVariant(variantIndex, {color: event.target.value}, setProduct)
 }
 function handleVariantIsColor(event, variantIndex, product, setProduct) {
-    baseChangeVariant(variantIndex, {isColor: !product.variants[variantIndex].isColor}, setProduct)
+    const newValue = !product.variants[variantIndex].isColor
+    baseChangeVariant(variantIndex, {isColor: newValue, color: (newValue ? "#000" : null)}, setProduct)
 }
 
 function insertItemAt(array, item, index) {
@@ -78,9 +90,9 @@ function moveToFront(array, index) {
 }
       
 
-function handleVariantAdd(event, variantIndex, setProduct) {
+function handleVariantAdd(event, variantIndex, products, setProduct) {
     setProduct((product) => {
-        insertItemAt(product.variants, defaultVariant, variantIndex+1)
+        insertItemAt(product.variants, defaultVariantWithIds(products), variantIndex+1)
         return {...product}
     })
 }
@@ -113,9 +125,9 @@ function baseVariantImageAffect(variantIndex, changeFunction, setProduct) {
     })
 }
 
-function handleVariantImageAdd(event, variantIndex, imageIndex, setProduct) {
+function handleVariantImageAdd(event, variantIndex, imageIndex, products, setProduct) {
     const changeFunction = (oldProduct) => {
-        insertItemAt(oldProduct.variants[variantIndex].images, defaultImage, imageIndex+1)
+        insertItemAt(oldProduct.variants[variantIndex].images, defaultImageWithIds(products), imageIndex+1)
         return oldProduct.variants[variantIndex].images
     }
     baseVariantImageAffect(variantIndex, changeFunction, setProduct)
@@ -189,8 +201,11 @@ const defaultVariant = {
         ],
         isColor: false,
         default: false,
-        color: "",
-        name: ""
+        color: null,
+        posted_review: false,
+        can_review: false,
+        name: "",
+        stock: 0
 }
 
 const defaultProduct = {
@@ -203,34 +218,48 @@ const defaultProduct = {
         defaultVariant,
     ],
     ...baseCropImageState,
-    thumbnail: "https://creativelittlewomen.com/wp-content/uploads/2021/11/IMG_2439.jpg"
+    thumbnail: "https://creativelittlewomen.com/wp-content/uploads/2021/11/IMG_2439.jpg",
+    thumbnail_alt: "",
+    new: true,
+    average_rating: null,
+    reviews_length: 0,
+    recommended_products: [],
+    recommended_reviews: [],
 }
 
+let currentVariantImageId = 0
 function defaultImageWithIds(products) {
     const highestId = Math.max(...flattenArray(products.map(product => product.variants.map(variant => variant.images.map(image => image.id)))))
 
-    return { ...defaultImage, id: (highestId+1), }
+    return { ...defaultImage, id: (highestId+(currentVariantImageId++)+1), }
 
 }
 
+let currentVariantId = 0
 function defaultVariantWithIds(products) {
     const highestId = Math.max(...flattenArray(products.map(product => product.variants.map(variant => variant.id))))
-
-    return { ...defaultVariant, id: (highestId+1), images: [defaultImageWithIds(products)] }
+    return { ...defaultVariant, id: (highestId+(currentVariantId++)+1), images: [defaultImageWithIds(products)] }
 }
 
-
-function defaultProductWithIds(products) {
+function defaultProductWithIds(products, product=null) {
     const highestId = Math.max(...products.map(product => product.id))
 
-
-    return { ...defaultProduct, id: (highestId+1), variants: [defaultVariantWithIds(products)] } 
+    const result = { ...(product!==null && {...baseCropImageState,}), ...(product===null ? defaultProduct : product), id: (highestId+1), variants: (product===null ? [defaultVariantWithIds(products)] : 
+        product.variants.map(variant => {
+            const id = variant.id
+            const newImages = variant.images.map(image => {
+                const id = image.id
+                return { ...({...baseCropImageState,}), ...image, for_update_id: id}
+            })
+            return {...variant, for_update_id: id, images: newImages}
+        })) }
+    return result
 
 }
 
 
 export { defaultProductWithIds,
     handleVerifySlug,
-    handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeSlug,
-    handleVariantAdd, handleVariantRemove, handleVariantToFront, handleVariantName, handleVariantColor, handleVariantIsColor,
+    handleChangeTitle, handleChangeDescription, handleChangePrice, handleChangeSlug, handleChangeThumbnailAlt,
+    handleVariantAdd, handleVariantRemove, handleVariantToFront, handleVariantName, handleVariantStock, handleVariantColor, handleVariantIsColor,
     handleVariantImageAdd, handleVariantImageRemove, handleVariantImageToFront, handleVariantImageAlt, getCropInfoInputsNameForVariantImage, setVariantImageForCropComp }
