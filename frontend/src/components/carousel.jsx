@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography'
 
 
 
-export default function IndexCarousel(props)
+export default function IndexCarousel({buttonOnClick, ...props}, args)
 {
     const isMd = useMediaQuery(theme => theme.breakpoints.up("md"))
     const isSm = useMediaQuery(theme => theme.breakpoints.up("sm"))
@@ -23,7 +23,7 @@ export default function IndexCarousel(props)
         if (children===null) {
             children = <>
                 <Typography color={textColor} textAlign={textAlign} width={"30%"} sx={{ fontSize: { xs: "0.75rem", sm: "1.5rem", md: "2rem", lg: "2.5rem" }, lineHeight: {xs: "1rem", sm: "1.75rem", md: "2.25rem", lg: "2.75rem"} }}>{text}</Typography>
-                <Button variant="contained" size={isMd ? "large" : isSm ? "medium" : "small"}>Shop Now</Button>
+                <Button onClick={buttonOnClick} variant="contained" size={isMd ? "large" : isSm ? "medium" : "small"}>Shop Now</Button>
             </>;
         }
         return <Stack gap={gap} justifyContent={justifyContent} alignItems={alignItems} py={py} px={px} height={height} sx={{boxSizing: "border-box", ...sx}} pr={pr} pl={pl} {...props}>
