@@ -4,6 +4,7 @@ import Collapse from '@mui/material/Collapse';
 import Box from '@mui/material/Box';
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { HeaderHeightContext } from "./header";
 
 function getLastKey(dict) {
 	if (!dict) {
@@ -108,11 +109,13 @@ export function RenderMessages({messages = null}) {
 	if (messages===null) {
 		messages = useContext(MessagesContext).messages;
 	}
+
+	const [headerHeight] = useContext(HeaderHeightContext)
 	return (
 		<Stack
 		sx={{
 			position: "fixed",
-			top: "1rem",
+			top: `calc(1rem + ${0}px)`,
 			right: "1rem",
 			width: '20rem',
 			gap: 0,
