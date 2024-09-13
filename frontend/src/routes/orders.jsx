@@ -1,4 +1,3 @@
-import { getOrders } from "../fakeApi";
 import { useLoaderData } from "react-router-dom"
 
 
@@ -9,6 +8,7 @@ import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
 import Chip from '@mui/material/Chip'
 import Collapse from '@mui/material/Collapse'
+import Tooltip from '@mui/material/Tooltip'
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -16,14 +16,47 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { useState } from "react";
 import ProductListView from "../components/productListView";
 
-import { OrderProductCardActions } from "./cart";
-import { OrderProductCardExtras } from "./cart";
-import Divider from '@mui/material/Divider'
 
+import Divider from '@mui/material/Divider'
+import { getProducts, get_orders } from "../api"
+
+
+function OrderProductCardActions({ product }) {
+    return (
+        <></>
+    )
+}
+
+function OrderProductCardExtras({ children, product }) {
+    return (
+            <Stack flexDirection="row" gap={2} mt={2}>
+                {children}
+                <Tooltip title="Variant specified">
+                    <Chip label={product.variant.name} color="primary" variant='filled' sx={{cursor: "pointer"}} />
+                </Tooltip>
+                <Tooltip title="Quantity specified">
+                    <Chip label={product.quantity} color="primary" variant='outlined' sx={{cursor: "pointer"}} />
+                </Tooltip>
+            </Stack>
+    )
+}
 
 
 export async function loader() {
-    return await getOrders()
+    const [{value: orders}, {value: products}] = await Promise.allSettled([get_orders(), getProducts()])
+    if (!orders.succeeded) {
+        throw new Error("Failed to load orders, perhaps our server is down")
+    }
+    const mapped_orders = orders.response.map(order => {
+        const order_product_items = order.order_product_items.map(order_product_item => {
+            const product = products.find(product => product.id === order_product_item.product)
+            const variant = product.variants.find(variant => variant.id === order_product_item.variant)
+            if (variant === undefined) {throw new Error("Variant not found in product")}
+            return {...order_product_item, product, variant}
+        })
+        return {...order, order_product_items}
+    })
+    return mapped_orders
 }
 
 export default function Orders() {
@@ -46,7 +79,7 @@ export default function Orders() {
     }[status] || "primary");
 
     const getOrderProducts = (order) => {
-        return order.productsBought.map((productDetail) => {
+        return order.order_product_items.map((productDetail) => {
             const variant = productDetail.variant
             const quantity = 2
             return {...productDetail.product, variant, quantity }
@@ -55,14 +88,15 @@ export default function Orders() {
     return (
         <Container maxWidth="xl" sx={{ my: 4 }}>
             <Stack gap={4}>
-                {orders.map(order => {
+                {orders.length === 0 ? <Typography variant="h4" color="initial">No orders found</Typography> : null}
+                {orders.map((order, index) => {
                     const isOpened = isOrderOpened(order.id)
-                    return <Paper key={order.id} variant="outlined" >
+                    return <Paper key={order.id || index} variant="outlined" >
                         <Stack>
                             <Stack component="button" sx={{ cursor: "pointer", bgcolor: "grey.100", border: "none", px: {xs:2, md:4}, py:4 }} onClick={() => handleOrderClick(order.id)} flexDirection="row" justifyContent="space-between">
                                 <Stack gap={2} flexDirection="row" alignItems="end" flexWrap="wrap">
                                     <Typography variant="h4" color="initial">
-                                        Order on {order.time}
+                                        Order on {order.time_created}
                                     </Typography>
                                     <Chip label={`${order.status}`} color={getStatusColor(order.status)} variant="outlined" sx={{ mb: 0.5 }} />
                                 </Stack>
