@@ -15,6 +15,7 @@ import Step from "@mui/material/Step"
 import StepLabel from "@mui/material/StepLabel"
 
 import Typography from "@mui/material/Typography"
+import Divider from "@mui/material/Divider"
 
 import { useContext, useEffect, useState } from "react";
 import { reset_password } from "../api";
@@ -22,6 +23,7 @@ import { getFullError } from "../components/errorMessage";
 import { MessagesContext } from "../root";
 import Spinner from "../components/spinner";
 import PassInput from "../components/passInput";
+import ResendVerifyEmail from "../components/resendVerifyEmail";
 
 export async function action({ request }) {
     const formData = await request.formData()
@@ -54,8 +56,8 @@ function EnterEmail({getFromName, setError, setStep}) {
 
     return (
         <fetcher.Form action="/email_verification" method="POST">
-            <Stack gap={2}>
-                <Stack gap={0}>
+            <Stack spacing={2}>
+                <Stack spacing={0}>
                     <Typography variant='h5' color="primary" sx={{ textAlign: "center" }}>Enter your email</Typography>
                 </Stack>
                 <TextField required type="email" {...getFromName("email")} label="Email" />
@@ -69,8 +71,8 @@ function EnterEmail({getFromName, setError, setStep}) {
 }
 function EnterPassword({getFromName, setError, setStep}) {
     return (
-        <Stack gap={2}>
-            <Stack gap={0}>
+        <Stack spacing={2}>
+            <Stack spacing={0}>
                 <Typography variant='h5' color="primary" sx={{ textAlign: "center" }}>Enter New Password</Typography>
             </Stack>
             <PassInput required {...getFromName("password1")} label="Password" />
@@ -120,27 +122,32 @@ function VerificationCode({ setError, getFromName, setStep }) {
 
     return (
         <Form method="POST">
-            <Stack gap={2}>
-                <Stack gap={0}>
+            <Stack spacing={4}>
+                <Stack spacing={0}>
                     <Typography variant='h5' color="primary" sx={{ textAlign: "center" }}>Enter the code</Typography>
                     <Typography variant='body1' color="primary" sx={{ textAlign: "center" }}>that we sent to your email</Typography>
                 </Stack>
                 <input type="hidden" name="email" value={getFromName("email").value} />
                 <input type="hidden" name="password" value={getFromName("password1").value} />
-                <VerificationInput
-                    classNames={{
-                    container: "container",
-                    character: "character",
-                    characterInactive: "character--inactive",
-                    characterSelected: "character--selected",
-                    characterFilled: "character--filled",
-                    }}
-                inputProps={{name: validationGetFromName.name}} value={validationGetFromName.value} onChange={validationGetFromName.onChange} validChars="0-9" placeholder="."  />
-                <Stack flexDirection="row" justifyContent="space-between">
-                    <Button type="button" variant="outlined" onClick={() => setStep(step => step-1)}>
-                        Back
-                    </Button>
-                    <Button type="sumbit" variant="contained" startIcon={loading ? <Spinner /> : null}>Submit</Button>
+                <Stack alignItems="center">
+                    <VerificationInput
+                        classNames={{
+                        container: "container",
+                        character: "character",
+                        characterInactive: "character--inactive",
+                        characterSelected: "character--selected",
+                        characterFilled: "character--filled",
+                        }}
+                    inputProps={{name: validationGetFromName.name}} value={validationGetFromName.value} onChange={validationGetFromName.onChange} validChars="0-9" placeholder="."  />
+                </Stack>
+                <Stack spacing={4}>
+                    <ResendVerifyEmail />
+                    <Stack flexDirection="row" justifyContent="space-between">
+                        <Button type="button" variant="outlined" onClick={() => setStep(step => step-1)}>
+                            Back
+                        </Button>
+                        <Button type="sumbit" variant="contained" startIcon={loading ? <Spinner /> : null}>Submit</Button>
+                    </Stack>
                 </Stack>
             </Stack>
         </Form>
@@ -163,7 +170,7 @@ function GetContentFromStep({step, setStep, setError, getFromName}) {
 
 
 
-export default function SignUp() {
+export default function ResetPassword() {
     const [step, setStep] = useState(0)
 
     const steps = [
@@ -210,10 +217,12 @@ export default function SignUp() {
     return (
         <Stack alignItems="center" justifyContent="center" sx={{width: "100%", height: "100%", py: {xs: "1rem", md: "2rem"}, px: {xs: "0rem", md: "2rem"}, boxSizing: "border-box"}}>
             <Paper sx={{p: {xs: "1rem", sm: "2rem", md: "3rem", lg: "4rem"}}}>
-                <Stack gap={2}>
-                    <HorizontalLinearAlternativeLabelStepper  />
-                    <GetContentFromStep step={step} setStep={setStep} setError={setError} getFromName={getFromName} />
-                </Stack>
+                    <Stack gap={4}>
+                        <Typography variant='h4' color="primary" sx={{ textAlign: "center" }}>Reset Password</Typography>
+                        <HorizontalLinearAlternativeLabelStepper  />
+                        <Divider />
+                        <GetContentFromStep step={step} setStep={setStep} setError={setError} getFromName={getFromName} />
+                    </Stack>
             </Paper>
         </Stack>
     )
