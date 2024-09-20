@@ -1,5 +1,5 @@
 
-import { Form, useActionData, useNavigate, useNavigation } from "react-router-dom"
+import { Form, useActionData, useNavigate, useNavigation, Link as ReactRouterLink } from "react-router-dom"
 import { login, set_token } from "../api"
 
 import TextField from '@mui/material/TextField'
@@ -10,6 +10,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
+import Link from '@mui/material/Link'
 
 import { UserContext } from "../components/user"
 import { MessagesContext } from "../root"
@@ -35,7 +36,7 @@ export async function action({request}) {
 
 export default function Login() {
 
-    const [user, setUser] = useContext(UserContext)
+    const [_, setUser] = useContext(UserContext)
     const { simpleAddMessage } = useContext(MessagesContext)
 
     
@@ -50,10 +51,13 @@ export default function Login() {
             if (actionData.succeeded) {
                 simpleAddMessage("Successfully Logged In", {severity: "success"})
                 setUser({...actionData.response, is_authenticated: true})
+                setError({})
                 navigate("/")
             }
             else {
-                setError(actionData.error)
+                if (actionData.error) {
+                    setError(actionData.error)
+                }
                 simpleAddMessage(actionData.errorMessage, {severity: "error"})
             }
         }
@@ -64,15 +68,17 @@ export default function Login() {
     }
 
     return (
-        <Stack alignItems="center" justifyContent="center" sx={{width: "100%", height: "100%", p: {xs: "1rem", sm: "2rem", md: "3rem", lg: "4rem"}, boxSizing: "border-box"}}>
-            <Paper sx={{p: {xs: "1rem", sm: "2rem", md: "3rem", lg: "4rem"}}}>
+        <Stack alignItems="center" justifyContent="center" sx={{width: "100%", height: "100%", py: "2rem", px: {xs: "1rem", sm: "2rem", md: "3rem", lg: "4rem"}, boxSizing: "border-box"}}>
+            <Paper sx={{px: {xs: "1rem", sm: "2rem", md: "3rem", lg: "4rem"}, py: "3rem"}}>
                 <Stack alignItems="center" gap={2}>
+                    <Typography gutterBottom variant="h4" color="primary" sx={{textAlign: "center"}}>Log In</Typography>
+                    <GoogleButton />
+                    <Divider variant="middle" flexItem sx={{}} />
                     <Form method="POST">
                         <Stack flexDirection={"column"} gap={2}>
-                            <Typography variant="h5" color="primary" sx={{textAlign: "center"}}>Log In</Typography>
                             <TextField
                               id="email"
-                              {...getFromName("username")}
+                              {...getFromName("email")}
                               label="Email"
                               required
                             />
@@ -83,17 +89,16 @@ export default function Login() {
                             />
                             {
                                 getFullError(error, "non_field_errors").isError &&
-                                <Typography id="user-login-form-non-field-errors" color="error">
-                                {getFullError(error, "non_field_errors").error}
-                            </Typography>
+                                getFullError(error, "non_field_errors").error
                             }
                             <Button variant="contained" color="primary" type="submit" startIcon={loading && <Spinner />}>
                                 Submit
                             </Button>
+                            <Link variant="body1" component={ReactRouterLink} to="/reset_password" sx={{textAlign: "center"}}>Forgot Password</Link>
                         </Stack>
                     </Form>
                     <Divider variant="middle" flexItem sx={{}} />
-                    <GoogleButton />
+                    <Link component={ReactRouterLink} to="/signup" sx={{textAlign: "center"}}><Typography>Sign up instead?</Typography></Link>
                 </Stack>
             </Paper>
         </Stack>
