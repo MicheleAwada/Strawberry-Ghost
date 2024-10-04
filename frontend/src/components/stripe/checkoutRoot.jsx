@@ -16,8 +16,7 @@ import { create_payment_intent, getProducts } from "../../api";
 import { UserContext } from "../user";
 import { getVariant } from "../../utils";
 
-// PROD
-// export const stripePromise = loadStripe("pk_live_51ObSfPGnyNBIXyJqYewc0ZX8M65XjZKAT40IpdC2kIqt7481lmp9C7UDnIXelQWF0EctbVP7c5nR27PK92zT9hyQ000jQ3A7FM");
+// export const stripePromise = stripecode
 
 export default function CheckoutRoot() {
     const [user] = useContext(UserContext)
