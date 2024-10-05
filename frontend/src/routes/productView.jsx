@@ -244,9 +244,11 @@ export function ProductDetail({ product }) {
                                         <input type="hidden" name="quantity" value={quantity} />
                                         <TooltipIf placement='top' tooltipText={selectedVariantOutOfStock ? (!is_authenticated ? "This variant is out of stock, and you need to login": "This variant is out of stock") : "You need to login first"} condition={!is_authenticated || selectedVariantOutOfStock}>
                                             <Box>
-                                                <Button disabled={selectedVariantOutOfStock} type={is_authenticated ? "submit" : "button"} onClick={() => {
+                                                <Button disabled={selectedVariantOutOfStock} type={is_authenticated ? "button" : "button"} onClick={() => {
                                                     if (!is_authenticated) {
-                                                        simpleAddMessage("You cannot checkout before you login", {severity: "error"})
+                                                        simpleAddMessage("You cannot checkout before you login. Additionally, checking out is temporarily disabled due to some complications with stripe", {severity: "error"})
+                                                    } else {
+                                                        simpleAddMessage("Checking out is temporarily disabled due to some complications with stripe", {severity: "error"})
                                                     }
                                                 }} variant="contained" color="primary" sx={{width: "100%"}} startIcon={<ShoppingCartCheckoutIcon />}>
                                                     Buy Now

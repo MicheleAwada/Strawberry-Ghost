@@ -35,11 +35,9 @@ export default function CheckoutRoot() {
 
     useEffect(() => {
         
-        console.log(formData);
         const clientSecret = new URLSearchParams(location.search).get("payment_intent_client_secret") || null
         if (clientSecret===null) {
             (async () => {
-                console.log("STARTED")
                 const data = await create_payment_intent(formData)
                 if (data.succeeded) {
                     setClientSecret(data.response.clientSecret)
