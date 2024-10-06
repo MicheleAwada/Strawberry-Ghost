@@ -35,30 +35,8 @@ export default function Review({ review, variant="elevation", elevation=(variant
                 </Box>
                 <Divider orientation="horizontal" variant="middle" flexItem />
             </Stack>
-            {/* <Box sx={{ display: { xs: "none", sm: "block"} }} width="100%">
-                <Divider orientation="horizontal" variant="middle" />
-            </Box> */}
             <Typography>{review.body}</Typography>
         </Stack>
     </Paper>
 </Box>
 }
-// export default function Review({ review, variant="elevation", elevation=(variant==="elevation" ? 4 : 0) }) {
-//     const name = review.user.first_name + " " + review.user.last_name
-//     return <Box key={review.id} sx={{ width: "100%"}}>
-//     <Paper variant={variant} elevation={elevation} sx={{ p: 2, bgcolor: "background.default" }}>
-//         <Stack spacing={2}>
-//             <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
-//                 <Avatar src={review.user.avatar} />
-//                 <Stack>
-//                     <Typography>{name}</Typography>
-//                     <Chip label="Verified Buyer" icon={<CheckIcon color="primary" />} />
-//                 </Stack>
-//                 <Divider orientation="vertical" variant="middle" flexItem />
-//                 <Rating readOnly value={review.rating} precision={0.5} />
-//             </Box>
-//             <Typography>{review.body}</Typography>
-//         </Stack>
-//     </Paper>
-// </Box>
-// }

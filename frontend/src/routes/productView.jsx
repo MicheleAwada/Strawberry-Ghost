@@ -173,16 +173,6 @@ export function ProductDetail({ product }) {
         }
     }, [fetcher.data])
 
-
-
-    
-    // const initalVariantsId = getInitialVariant(product).id
-    // const variantState = useState(initalVariantsId)
-    // const [formSelectedVariant, setFormSelectedVariant] = variantState
-    // const formSelectedActualVariant = product.variants.find(variant => variant.id === formSelectedVariant)
-    // const formSelectedVariantStock = formSelectedActualVariant?.stock
-    // const formSelectedVariantOutOfStock = formSelectedActualVariant && formSelectedVariantStock <= 0
-    
     const defaultQuantity = 1
     const quantityState = useState(defaultQuantity)
     const [quantity, setQuantity] = quantityState

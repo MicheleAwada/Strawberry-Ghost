@@ -51,7 +51,6 @@ export default function DeleteUser() {
     const submit = useSubmit()
     function getFormData() {
         const formData = new FormData(formRef.current)
-        console.log(formData)
         return formData
     }
     function deleteAction() {

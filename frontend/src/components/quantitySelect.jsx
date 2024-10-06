@@ -37,7 +37,6 @@ export default function QuantitySelect({ quantityState = React.useState(1), id, 
 	};
 	const handleChangeTextInputQuantity = (value) => {
 		const valid_num = validate(value)
-		console.log(value)
 		if (valid_num===false) {return}
 		setTextInputQuantity(valid_num)
 	}

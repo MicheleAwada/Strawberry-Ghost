@@ -15,6 +15,10 @@ import { MessagesContext } from "../messages";
 import { useNavigate } from "react-router-dom";
 import { ProductPrice } from "../productItem";
 
+// DEV
+// const return_url = "http://localhost:5173/checkout"
+// PROD
+const return_url = "https://strawberryghost.org/checkout"
 
 export default function CheckoutForm({ totalPrice }) {
   const { simpleAddMessage } = useContext(MessagesContext)
@@ -76,9 +80,7 @@ export default function CheckoutForm({ totalPrice }) {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // PROD
-        // return_url: "http://localhost:5173/checkout",
-        return_url: "https://strawberryghost.org/checkout",
+        return_url: return_url,
       },
     });
 

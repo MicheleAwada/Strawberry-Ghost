@@ -16,12 +16,10 @@ import { getFullError } from "./errorMessage"
 
 export async function updateReviewAction({ request }) {
     const formData = await request.formData()
-    console.log(formData)
     return await change_review(formData)
 }
 export async function createReviewAction({ request }) {
     const formData = await request.formData()
-    console.log(formData)
     return await create_review(formData)
 }
 

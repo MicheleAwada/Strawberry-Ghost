@@ -64,10 +64,6 @@ export default function FrequentlyBoughtTogether({ product, products, ...props }
     const allFrequentlyBoughtTogether = [product, ...frequentlyBoughtTogether]
     const totalCost = allFrequentlyBoughtTogether.reduce((acc, product) => acc+parseFloat(product.price),0)
 
-    // const sumGridProps = { xs: 12, sm: 6, md: 4, lg:12, }
-    // const productGridProps = { xs: 12, sm: 4.5, md: 4, lg:3, }
-    // const plusGridProps = { xs: 12, sm: 1, md: 2, lg:1, height: {xs: "2rem", sm: "initial"} }
-    // const equalsGridProps = { xs: 12, sm: 1, md: 1, lg:12, height: {xs: "2rem", sm: "initial"} }
     return (
         <Stack sx={{ width: "100%"}}>
             <Box sx={{ backgroundImage: `url(${wave})`, backgroundRepeat: "no-repeat", backgroundSize: "contain", aspectRatio: 9/1, width: "100%" }} />

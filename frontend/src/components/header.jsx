@@ -199,7 +199,6 @@ export default function Header() {
 					showLabels
 					value={currentPage()}
 					onChange={(_, newValue) => {
-						console.log(newValue)
 						navigatePage(newValue)
 					}}
 				>

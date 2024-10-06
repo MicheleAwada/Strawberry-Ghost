@@ -7,8 +7,6 @@ import { google_login, set_token } from '../api';
 import { UserContext } from '../components/user';
 
 async function handleOnSuccess(credentialResponse, setUser, simpleAddMessage) {
-
-    console.log(credentialResponse);
     const response = await google_login(credentialResponse)
     if (response.succeeded) {
         simpleAddMessage("Woohoo, Google Login Succeeded", {severity: "success"})
@@ -17,12 +15,9 @@ async function handleOnSuccess(credentialResponse, setUser, simpleAddMessage) {
     } else {
         simpleAddMessage(response.errorMessage, {severity: "error"})
     }
-    console.log("response of google login")
-    console.log(response)
     
 }
 function handleOnError(simpleAddMessage) {
-
     console.error('Google Login Failed');
     simpleAddMessage("Whops, Google Login Failed", {severity: "error"})
 }

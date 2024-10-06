@@ -44,10 +44,6 @@ export async function loader({ params }) {
     return [reviews_response.response, product]
 }
 
-// export function getUrlParams({ productid, variantid=null, ratingFilterLTE=10, ratingFilterGTE=0 }) {
-//     return `${productid}/${variantid}/${ratingFilterLTE}/${ratingFilterGTE}`
-
-// }
 export function getDefaultProductUrl(product) {
     return `/reviews/${product.slug}/null/0.5/5`
 }
@@ -116,16 +112,6 @@ export default function ReviewsPage() {
                             />
                         </Box>
                     </Collapse>
-                    {/* <ListItem>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <FilterAltIcon/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                Apply Filters
-                            </ListItemText>
-                        </ListItemButton>
-                    </ListItem> */}
                     <Box sx={{ px: 2, boxSizing: "border-box" }} onClick={applyFilters}>
                         <Button variant="contained" fullWidth startIcon={<FilterAltIcon />}>
                             Apply Filters

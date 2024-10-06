@@ -11,9 +11,8 @@ import Container from '@mui/material/Container'
 import { HeaderHeightContext } from '../components/header';
 
 export async function loader() {
-    const b =  await getProducts()
-    console.log(b)
-    return b
+    const products =  await getProducts()
+    return products
 }
 
 
